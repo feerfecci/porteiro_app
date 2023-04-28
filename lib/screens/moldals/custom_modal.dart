@@ -59,7 +59,7 @@ class _WidgetCustomModalState extends State<WidgetCustomModal> {
         Row(
           children: [
             SizedBox(
-              width: size.width * 0.6,
+              width: size.width * 0.85,
               child: Consts.buildTextFormField(label: widget.label),
             ),
             SizedBox(

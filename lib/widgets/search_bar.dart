@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../consts.dart';
+
 class SearchBar extends StatefulWidget {
   const SearchBar({super.key});
 
@@ -12,14 +14,8 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.05, vertical: size.height * 0.025),
-      child: TextFormField(
-        decoration: InputDecoration(
-            suffixIcon: Icon(Icons.person_search, color: Colors.black),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black))),
-      ),
-    );
+        padding: EdgeInsets.symmetric(
+            horizontal: size.width * 0.05, vertical: size.height * 0.025),
+        child: Consts.buildTextFormField(label: 'Pesquise um apartamento'));
   }
 }

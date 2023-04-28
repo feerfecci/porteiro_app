@@ -23,7 +23,7 @@ class _ListTileApState extends State<ListTileAp> {
         padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
         child: IconButton(
           onPressed: () {
-            showCustomModalBottom(context,label: label,title: title);
+            showCustomModalBottom(context, label: label, title: title);
           },
           icon: Icon(icon),
         ),
@@ -48,7 +48,8 @@ class _ListTileApState extends State<ListTileAp> {
       ),
       title: Text('Apartamento ${widget.ap}'),
       subtitle: Text('Bloco ${widget.bloco}'),
-      shape: Border.all(strokeAlign: BorderSide.strokeAlignOutside),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16), side: BorderSide()),
     );
   }
 }
