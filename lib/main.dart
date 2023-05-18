@@ -1,4 +1,7 @@
+import 'package:app_porteiro/screens/login/login_screen.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'screens/home/home_page.dart';
 
@@ -17,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Portaria App'),
+      home: const SplashScreen(),
     );
   }
 }

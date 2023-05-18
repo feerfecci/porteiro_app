@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../consts.dart';
+import '../consts/consts.dart';
+import '../consts/consts_widget.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({super.key});
@@ -16,6 +17,7 @@ class _SearchBarState extends State<SearchBar> {
     return Padding(
         padding: EdgeInsets.symmetric(
             horizontal: size.width * 0.05, vertical: size.height * 0.025),
-        child: Consts.buildTextFormField(label: 'Pesquise um apartamento'));
+        child:
+            ConstsWidget.buildTextFormField(label: 'Pesquise um apartamento'));
   }
 }

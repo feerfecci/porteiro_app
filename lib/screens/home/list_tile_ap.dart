@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:app_porteiro/screens/moldals/custom_modal.dart';
 
@@ -16,16 +18,19 @@ class _ListTileApState extends State<ListTileAp> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Widget buildActionIcon(
-        {required String title,
-        required String label,
+        {required String titleModal,
+        required String labelModal,
         required IconData icon}) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
         child: IconButton(
           onPressed: () {
-            showCustomModalBottom(context, label: label, title: title);
+            showCustomModalBottom(context,
+                label: labelModal, title: titleModal);
           },
-          icon: Icon(icon),
+          icon: Icon(
+            icon,
+          ),
         ),
       );
     }
@@ -35,14 +40,24 @@ class _ListTileApState extends State<ListTileAp> {
         mainAxisSize: MainAxisSize.min,
         children: [
           buildActionIcon(
-            title: 'Correspondências',
-            label: 'Remetente',
+            titleModal: 'Correspondências',
+            labelModal: 'Remetente',
             icon: Icons.email,
           ),
           buildActionIcon(
+            icon: Icons.shopping_bag_rounded,
+            titleModal: 'Encomenda',
+            labelModal: 'Remetente',
+          ),
+          buildActionIcon(
             icon: Icons.delivery_dining,
-            title: 'Delivery',
-            label: 'Restaurante',
+            titleModal: 'Delivery',
+            labelModal: 'Restaurante',
+          ),
+          buildActionIcon(
+            icon: Icons.person_pin_sharp,
+            titleModal: 'Visitas',
+            labelModal: 'Nome',
           ),
         ],
       ),

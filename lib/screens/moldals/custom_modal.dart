@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../consts.dart';
+import '../../consts/consts.dart';
+import '../../consts/consts_widget.dart';
 
 showCustomModalBottom(BuildContext context,
     {required String title, required String label}) {
@@ -54,16 +55,16 @@ class _WidgetCustomModalState extends State<WidgetCustomModal> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-          child: Consts.buildTitleText(widget.title),
+          child: ConstsWidget.buildTitleText(widget.title),
         ),
         Row(
           children: [
             SizedBox(
-              width: size.width * 0.85,
-              child: Consts.buildTextFormField(label: widget.label),
+              width: size.width * 0.80,
+              child: ConstsWidget.buildTextFormField(label: widget.label),
             ),
             SizedBox(
-              width: 15,
+              width: size.width * 0.005,
             ),
             // Container(
             //   height: 30,

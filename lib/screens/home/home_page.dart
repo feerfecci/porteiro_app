@@ -3,26 +3,30 @@
 import 'package:app_porteiro/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/custom_drawer.dart';
 import 'list_tile_ap.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({
+    super.key,
+  });
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+List<String> aps = ['16', '18', '20', '22', '24', '26', '28', '30', '32'];
+List<String> blocos = ['1', '2', '3'];
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('widget.title'),
       ),
-      endDrawer: Drawer(),
+      endDrawer: CustomDrawer(),
       body: Center(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.02),
@@ -32,13 +36,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: ClampingScrollPhysics(),
-                itemCount: 36,
+                itemCount: aps.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding:
                         EdgeInsets.symmetric(vertical: size.height * 0.005),
                     child: ListTileAp(
-                      ap: '36',
+                      ap: aps.elementAt(index),
                       bloco: '1',
                     ),
                   );
