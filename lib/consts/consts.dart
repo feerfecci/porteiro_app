@@ -9,10 +9,10 @@ class FuncionarioInfos {
   static String? nome_condominio;
   static String? nome_funcionario;
   static String? login;
-  static bool? avisa_corresp;
-  static bool? avisa_visita;
-  static bool? avisa_delivery;
-  static bool? avisa_encomendas;
+  static bool avisa_corresp = false;
+  static bool avisa_visita = false;
+  static bool avisa_delivery = false;
+  static bool avisa_encomendas = false;
 }
 
 class Consts {

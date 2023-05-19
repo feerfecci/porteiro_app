@@ -1,3 +1,4 @@
+import 'package:app_porteiro/widgets/my_textform_field.dart';
 import 'package:flutter/material.dart';
 
 import '../consts/consts.dart';
@@ -17,7 +18,9 @@ class _SearchBarState extends State<SearchBar> {
     return Padding(
         padding: EdgeInsets.symmetric(
             horizontal: size.width * 0.05, vertical: size.height * 0.025),
-        child:
-            ConstsWidget.buildTextFormField(label: 'Pesquise um apartamento'));
+        child: StatefulBuilder(builder: (context, setState) {
+          return buildMyTextFormField(context,
+              title: 'Pesquise um apartamento');
+        }));
   }
 }

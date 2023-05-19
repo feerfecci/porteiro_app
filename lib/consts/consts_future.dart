@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:app_porteiro/consts/consts.dart';
+import 'package:app_porteiro/items_bottom.dart';
 import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/screens/login/login_screen.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
@@ -45,7 +46,7 @@ class ConstsFuture {
         Navigator.pop(context);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => HomePage(),
+              builder: (context) => ItemsBottom(),
             ),
             (route) => true);
       } else {

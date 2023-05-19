@@ -1,9 +1,14 @@
+import 'dart:convert';
+
+import 'package:app_porteiro/widgets/my_textform_field.dart';
 import 'package:flutter/material.dart';
 import '../../consts/consts.dart';
+import '../../consts/consts_future.dart';
 import '../../consts/consts_widget.dart';
+import 'package:http/http.dart' as http;
 
 showCustomModalBottom(BuildContext context,
-    {required String title, required String label}) {
+    {required String title, required String label, required int idunidade}) {
   var size = MediaQuery.of(context).size;
   showModalBottomSheet(
     enableDrag: false,
@@ -18,7 +23,8 @@ showCustomModalBottom(BuildContext context,
         height: size.height * 0.7,
         child: Padding(
           padding: EdgeInsets.all(size.height * 0.01),
-          child: WidgetCustomModal(title: title, label: label),
+          child: WidgetCustomModal(
+              title: title, label: label, idunidade: idunidade),
         )),
   );
 }
@@ -26,14 +32,31 @@ showCustomModalBottom(BuildContext context,
 class WidgetCustomModal extends StatefulWidget {
   final String title;
   final String label;
+  final int idunidade;
   const WidgetCustomModal(
-      {required this.title, required this.label, super.key});
+      {required this.title,
+      required this.label,
+      required this.idunidade,
+      super.key});
 
   @override
   State<WidgetCustomModal> createState() => _WidgetCustomModalState();
 }
 
 class _WidgetCustomModalState extends State<WidgetCustomModal> {
+  lauchNotification(int idunidade) async {
+    // var url = Uri.parse(
+    //     'https://a.portariaapp.com/sindico/api/notificacao/?fn=enviarNotificacoes&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade');
+    // var resposta = await http.get(url);
+    print(idunidade);
+
+    // if (resposta.statusCode == 200) {
+    //   return json.encode(resposta.body);
+    // } else {
+    //   return false;
+    // }
+  }
+
   int qnt = 0;
   increment() {
     setState(() {
@@ -55,23 +78,12 @@ class _WidgetCustomModalState extends State<WidgetCustomModal> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-          child: ConstsWidget.buildTitleText(widget.title),
+          child: buildMyTextFormField(context, title: widget.title),
         ),
+        buildMyTextFormField(context, title: widget.label),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: size.width * 0.80,
-              child: ConstsWidget.buildTextFormField(label: widget.label),
-            ),
-            SizedBox(
-              width: size.width * 0.005,
-            ),
-            // Container(
-            //   height: 30,
-            //   width: 30,
-            //   color: Colors.grey,
-            //   child: Icon(Icons.remove_outlined),
-            // ),
             IconButton(
                 onPressed: qnt == 0
                     ? () {}
@@ -90,7 +102,6 @@ class _WidgetCustomModalState extends State<WidgetCustomModal> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-
             IconButton(
                 onPressed: () {
                   increment();
@@ -99,19 +110,16 @@ class _WidgetCustomModalState extends State<WidgetCustomModal> {
                   Icons.add_circle,
                   size: size.height * 0.035,
                 )),
-            // Container(
-            //   height: 30,
-            //   width: 30,
-            //   color: Colors.grey,
-            //   child: Icon(Icons.plus_one),
-            // ),
           ],
         ),
         SizedBox(
           height: size.height * 0.01,
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+            lauchNotification(widget.idunidade);
+          },
           child: Padding(
             padding: EdgeInsets.all(12),
             child: Text(
