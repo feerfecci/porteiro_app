@@ -18,7 +18,7 @@ class _ChangeThemeButtonState extends State<ChangeThemeButton> {
         themeProvider.isDarkMode ? 'Ativar Modo Claro' : 'Ativar Modo Escuro';
     bool isOn = themeProvider.isDarkMode;
     return ListTile(
-      title: ConstsWidget.buildTitleText(title),
+      title: ConstsWidget.buildTitleText(context, title: title),
       iconColor: Theme.of(context).iconTheme.color,
       leading: isOn ? Icon(Icons.light_mode) : Icon(Icons.dark_mode_rounded),
       trailing: Switch.adaptive(

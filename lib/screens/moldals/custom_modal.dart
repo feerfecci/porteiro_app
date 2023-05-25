@@ -1,14 +1,16 @@
 import 'dart:convert';
-
-import 'package:app_porteiro/widgets/my_textform_field.dart';
+import 'package:app_porteiro/widgets/snack_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../consts/consts.dart';
-import '../../consts/consts_future.dart';
 import '../../consts/consts_widget.dart';
 import 'package:http/http.dart' as http;
 
+import '../correspondencias/correspondencias_screen.dart';
+
 showCustomModalBottom(BuildContext context,
-    {required String title, required String label, required int idunidade}) {
+    {required String title, required int idunidade, required int tipoAviso}) {
   var size = MediaQuery.of(context).size;
   showModalBottomSheet(
     enableDrag: false,
@@ -20,114 +22,155 @@ showCustomModalBottom(BuildContext context,
     ),
     context: context,
     builder: (context) => SizedBox(
-        height: size.height * 0.7,
-        child: Padding(
-          padding: EdgeInsets.all(size.height * 0.01),
-          child: WidgetCustomModal(
-              title: title, label: label, idunidade: idunidade),
-        )),
+      height: size.height * 0.7,
+      child: Padding(
+        padding: EdgeInsets.all(size.height * 0.01),
+        child: WidgetCustomModalCorresp(
+            title: title, idunidade: idunidade, tipoAviso: tipoAviso),
+      ),
+    ),
   );
 }
 
-class WidgetCustomModal extends StatefulWidget {
+class WidgetCustomModalCorresp extends StatefulWidget {
   final String title;
-  final String label;
   final int idunidade;
-  const WidgetCustomModal(
+  final int? tipoAviso;
+  const WidgetCustomModalCorresp(
       {required this.title,
-      required this.label,
       required this.idunidade,
+      required this.tipoAviso,
       super.key});
 
   @override
-  State<WidgetCustomModal> createState() => _WidgetCustomModalState();
+  State<WidgetCustomModalCorresp> createState() =>
+      _WidgetCustomModalCorrespState();
 }
 
-class _WidgetCustomModalState extends State<WidgetCustomModal> {
+class _WidgetCustomModalCorrespState extends State<WidgetCustomModalCorresp> {
+  final _formKey = GlobalKey<FormState>();
   lauchNotification(int idunidade) async {
-    // var url = Uri.parse(
-    //     'https://a.portariaapp.com/sindico/api/notificacao/?fn=enviarNotificacoes&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade');
-    // var resposta = await http.get(url);
-    print(idunidade);
+    var url = Uri.parse(
+        '${Consts.apiPortaria}notificacao/?fn=enviarNotificacoes&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade');
+    var resposta = await http.get(url);
 
-    // if (resposta.statusCode == 200) {
-    //   return json.encode(resposta.body);
-    // } else {
-    //   return false;
-    // }
+    if (resposta.statusCode == 200) {
+      return json.encode(resposta.body);
+    } else {
+      return false;
+    }
   }
 
-  int qnt = 0;
-  increment() {
-    setState(() {
-      qnt++;
-    });
+  launchIncluiCorresp(
+      {required int idunidade,
+      required String dataInclusao,
+      required String remetente,
+      required String descricao,
+      required int tipoAviso}) async {
+    var url = Uri.parse(
+        '${Consts.apiPortaria}correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.id}&datarecebimento=$dataInclusao&tipo=$tipoAviso&remetente=$remetente&descricao=$descricao');
+    var resposta = await http.get(url);
+
+    if (resposta.statusCode == 200) {
+      return json.encode(resposta.body);
+    } else {
+      return false;
+    }
   }
 
-  decrement() {
-    setState(() {
-      qnt--;
-    });
-  }
+  String? dataInclusaoText;
+  String? remetenteText;
+  String? descricaoText;
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-          child: buildMyTextFormField(context, title: widget.title),
-        ),
-        buildMyTextFormField(context, title: widget.label),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-                onPressed: qnt == 0
-                    ? () {}
-                    : () {
-                        decrement();
-                      },
-                icon: Icon(
-                  Icons.remove_circle,
-                  color: qnt == 0 ? Colors.grey : Colors.black,
-                  size: size.height * 0.035,
-                )),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: size.width * 0.02),
-              child: Text(
-                '$qnt',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            IconButton(
-                onPressed: () {
-                  increment();
-                },
-                icon: Icon(
-                  Icons.add_circle,
-                  size: size.height * 0.035,
-                )),
-          ],
-        ),
-        SizedBox(
-          height: size.height * 0.01,
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-            lauchNotification(widget.idunidade);
-          },
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Text(
-              'Salvar e avisar',
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.close)),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+            child: ConstsWidget.buildTitleText(context, title: widget.title),
+          ),
+          ConstsWidget.buildMyTextFormObrigatorio(
+            context,
+            'Remetente',
+            onSaved: (text) {
+              remetenteText = text;
+            },
+          ),
+          ConstsWidget.buildMyTextFormObrigatorio(
+            context,
+            'Descrição',
+            onSaved: (text) {
+              descricaoText = text;
+            },
+          ),
+          ConstsWidget.buildMyTextFormObrigatorio(
+            context,
+            'Data',
+            inputFormatters: [MaskTextInputFormatter(mask: '##/##/####')],
+            onSaved: (text) {
+              var ano = text!.substring(6);
+              var mes = text.substring(3, 5);
+
+              var dia = text.substring(0, 2);
+              dataInclusaoText = '$ano-$mes-$dia';
+            },
+            // validator: Validatorless.date('Data invalida'),
+            initialValue: DateFormat('dd/MM/yyy').format(
+              DateTime.now(),
             ),
           ),
-        ),
-      ],
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          ConstsWidget.buildCustomButton(
+            context,
+            'Salvar e avisar',
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                Navigator.pop(context);
+                _formKey.currentState!.save();
+                // print(dataInclusao);
+                // print(remetente);
+                // print(descricao);
+                widget.tipoAviso == 1 || widget.tipoAviso == 2
+                    ? launchIncluiCorresp(
+                        idunidade: widget.idunidade,
+                        dataInclusao: dataInclusaoText!,
+                        descricao: descricaoText!,
+                        remetente: remetenteText!,
+                        tipoAviso: widget.tipoAviso!)
+                    : lauchNotification(widget.idunidade);
+                setState(() {
+                  // Navigator.pop(context);
+
+                  apiListarCorrespondencias(
+                      idunidade: widget.idunidade,
+                      tipoAviso: widget.tipoAviso!);
+                });
+              } else {
+                buildMinhaSnackBar(
+                  context,
+                );
+              }
+            },
+          )
+        ],
+      ),
     );
   }
 }

@@ -1,12 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:async';
-import 'package:app_porteiro/items_bottom.dart';
 import 'package:app_porteiro/repositories/shared_preferences.dart';
 import 'package:app_porteiro/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import '../../consts/consts.dart';
 import '../../consts/consts_future.dart';
-import '../../consts/consts_widget.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

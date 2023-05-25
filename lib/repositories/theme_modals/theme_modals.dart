@@ -17,13 +17,13 @@ ThemeData themeLight(BuildContext context) {
     primaryIconTheme: IconThemeData(color: Colors.black),
     iconTheme: IconThemeData(color: Colors.black),
     appBarTheme: AppBarTheme(backgroundColor: Colors.blue),
-    colorScheme: ColorScheme.light(primary: Colors.black),
+    colorScheme: ColorScheme.light(primary: Color.fromARGB(255, 38, 43, 62)),
     scaffoldBackgroundColor: Consts.kBackPageColor,
     dialogBackgroundColor: Color.fromARGB(255, 245, 245, 255),
     primaryColor: Colors.white,
     textTheme: Theme.of(context)
         .textTheme
-        .apply(fontSizeDelta: 1, bodyColor: Colors.black),
+        .apply(fontSizeDelta: 1, bodyColor: Color.fromARGB(155, 38, 43, 62)),
   );
 }
 

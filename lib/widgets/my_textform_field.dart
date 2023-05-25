@@ -10,6 +10,7 @@ Widget buildMyTextFormField(BuildContext context,
     List<TextInputFormatter>? inputFormatters,
     String? hintText,
     String? initialValue,
+    void Function()? onTap,
     final void Function(String? text)? onSaved}) {
   var size = MediaQuery.of(context).size;
   return Padding(
@@ -19,6 +20,7 @@ Widget buildMyTextFormField(BuildContext context,
       inputFormatters: [MaskTextInputFormatter(mask: mask)],
       initialValue: initialValue,
       onSaved: onSaved,
+      onTap: onTap,
       textAlign: TextAlign.start,
       textInputAction: TextInputAction.next,
       keyboardType: keyboardType,

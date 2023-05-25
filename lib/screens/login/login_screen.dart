@@ -2,11 +2,9 @@ import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:validatorless/validatorless.dart';
-
 import '../../consts/consts.dart';
 import '../../repositories/shared_preferences.dart';
 import '../../widgets/snack_bar.dart';
-import '../home/home_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

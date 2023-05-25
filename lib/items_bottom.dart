@@ -1,6 +1,10 @@
+import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/widgets/custom_drawer/custom_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+
+import 'screens/home/search_page.dart';
 
 class ItemsBottom extends StatefulWidget {
   const ItemsBottom({super.key});
@@ -10,13 +14,21 @@ class ItemsBottom extends StatefulWidget {
 }
 
 class _ItemsBottomState extends State<ItemsBottom> {
-  late PageController _pageController = PageController();
+  late final PageController _pageController = PageController();
   int currentTab = 0;
+
+  String oneSignalAppId = "56d855ee-f534-4c40-97b5-272bebcee2f1";
+  Future oneSignalNotification() async {
+    OneSignal.shared.setAppId(oneSignalAppId);
+    OneSignal.shared.promptUserForPushNotificationPermission().then((value) {
+      OneSignal.shared.setExternalUserId('26');
+    });
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    // oneSignalNotification();
   }
 
   @override
@@ -26,6 +38,8 @@ class _ItemsBottomState extends State<ItemsBottom> {
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leadingWidth: 40,
         leading: Padding(
@@ -33,6 +47,20 @@ class _ItemsBottomState extends State<ItemsBottom> {
           child: Image.network(
             'https://www.portariaapp.com/wp-content/uploads/2023/03/portria.png',
           ),
+        ),
+      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: SizedBox(
+        height: size.height * 0.1,
+        width: size.width * 0.15,
+        child: FloatingActionButton(
+          isExtended: true,
+          onPressed: () {
+            showSearch(context: context, delegate: SearchPage());
+          },
+          backgroundColor: Consts.kColorApp,
+          foregroundColor: Colors.white,
+          child: Icon(Icons.search),
         ),
       ),
       endDrawer: CustomDrawer(),

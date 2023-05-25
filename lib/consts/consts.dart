@@ -27,4 +27,6 @@ class Consts {
   static const kColorApp = Color.fromARGB(255, 127, 99, 254);
 
   static const String iconApi = 'https://escritorioapp.com/img/ico-';
+
+  static const String apiPortaria = 'https://a.portariaapp.com/portaria/api/';
 }

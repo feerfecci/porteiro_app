@@ -1,34 +1,109 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:validatorless/validatorless.dart';
 
 import 'consts.dart';
 
 class ConstsWidget {
-  static Widget buildTitleText(String title) {
+  static Widget buildTitleText(
+    BuildContext context, {
+    Color? color,
+    required String? title,
+  }) {
     return Text(
-      title,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      title ?? '',
+      style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: color ?? Theme.of(context).colorScheme.primary),
     );
   }
 
-  static Widget buildSubTitleText(String subTitle) {
+  static Widget buildSubTitleText(
+    BuildContext context, {
+    Color? color,
+    required String subTitle,
+  }) {
     return Text(
       subTitle,
-      style: TextStyle(fontSize: 16),
+      style: TextStyle(
+          fontSize: 14, color: color ?? Theme.of(context).colorScheme.primary),
     );
   }
 
-  static Widget buildTextFormField({required String label}) {
-    return TextFormField(
-      style: TextStyle(fontSize: 20),
-      decoration: InputDecoration(
-        label: Text(label),
-        fillColor: Colors.grey[200],
-        filled: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(
-            color: Colors.black,
-            width: 1,
+  static Widget buildMyTextFormField(BuildContext context,
+      {required String title,
+      String? mask,
+      TextInputType? keyboardType,
+      List<TextInputFormatter>? inputFormatters,
+      String? hintText,
+      String? initialValue,
+      final void Function(String? text)? onSaved}) {
+    var size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      child: TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        inputFormatters: [MaskTextInputFormatter(mask: mask)],
+        initialValue: initialValue,
+        onSaved: onSaved,
+        textAlign: TextAlign.start,
+        textInputAction: TextInputAction.next,
+        keyboardType: keyboardType,
+        maxLines: 5,
+        minLines: 1,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: size.width * 0.04),
+          filled: true,
+          fillColor: Theme.of(context).canvasColor,
+          label: Text(title),
+          hintText: hintText,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Colors.black26),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Widget buildMyTextFormObrigatorio(BuildContext context, String title,
+      {String mensagem = 'Este campo é obrigatótio',
+      List<TextInputFormatter>? inputFormatters,
+      String? hintText,
+      String? initialValue,
+      String? Function(String?)? validator,
+      final void Function(String? text)? onSaved}) {
+    var size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      child: TextFormField(
+        initialValue: initialValue,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        textAlign: TextAlign.start,
+        textInputAction: TextInputAction.next,
+        onSaved: onSaved,
+        maxLines: 5,
+        minLines: 1,
+        inputFormatters: inputFormatters,
+        validator: validator ??
+            Validatorless.multiple([Validatorless.required(mensagem)]),
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: size.width * 0.02),
+          filled: true,
+          fillColor: Theme.of(context).canvasColor,
+          label: Text(title),
+          hintText: hintText,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Colors.black26),
           ),
         ),
       ),
@@ -72,6 +147,18 @@ class ConstsWidget {
             icon != null ? Icon(size: 18, icon, color: iconColor) : SizedBox(),
           ],
         ),
+      ),
+    );
+  }
+
+  static Widget buildAtivoInativo(BuildContext context, bool ativo) {
+    return Container(
+      decoration: BoxDecoration(
+          color: ativo ? Colors.green : Colors.red,
+          borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: buildTitleText(context, title: ativo ? 'Ativo' : 'Inativo'),
       ),
     );
   }

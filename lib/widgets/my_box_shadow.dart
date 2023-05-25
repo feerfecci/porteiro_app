@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class MyBoxShadow extends StatefulWidget {
   final dynamic child;
   final double paddingAll;
+  final Color? color;
   const MyBoxShadow({
     required this.child,
+    this.color,
     // required this.paddingAll,
     super.key,
     this.paddingAll = 0.02,
@@ -22,14 +24,16 @@ class MyBoxShadowState extends State<MyBoxShadow> {
       padding: EdgeInsets.all(size.height * 0.01),
       child: Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            color: widget.color ?? Theme.of(context).primaryColor,
             boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).shadowColor,
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: Offset(2, 2), // changes position of shadow
-              ),
+              widget.color == null
+                  ? BoxShadow(
+                      color: Theme.of(context).shadowColor,
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(2, 2), // changes position of shadow
+                    )
+                  : BoxShadow(),
             ],
             // border: Border.all(color: Theme.of(context).colorScheme.primary),
             borderRadius: BorderRadius.circular(16)),

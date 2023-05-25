@@ -19,7 +19,6 @@ buildMinhaSnackBar(
   //     return null;
   //   }
   // }
-
   // Widget buildCorpoSnack(double width) {
   //   return Row(
   //     children: [
@@ -75,17 +74,20 @@ buildMinhaSnackBar(
 
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
+        showCloseIcon: true,
+        closeIconColor: Colors.white,
+        dismissDirection: DismissDirection.endToStart,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        action: SnackBarAction(
-            label: 'Entendi',
-            textColor: Colors.white,
-            onPressed: (() {
-              try {
-                ScaffoldMessenger.of(context).clearSnackBars();
-              } on FlutterError catch (e) {
-                print(e);
-              }
-            })),
+        // action: SnackBarAction(
+        //     label: 'Entendi',
+        //     textColor: Colors.white,
+        //     onPressed: (() {
+        //       try {
+        //         ScaffoldMessenger.of(context).clearSnackBars();
+        //       } on FlutterError catch (e) {
+        //         print(e);
+        //       }
+        //     })),
         elevation: 8,
         duration: Duration(seconds: 4),
         backgroundColor: Colors.blue,
@@ -102,8 +104,10 @@ buildMinhaSnackBar(
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ConstsWidget.buildTitleText(title),
-                ConstsWidget.buildSubTitleText(subTitle)
+                ConstsWidget.buildTitleText(context,
+                    title: title, color: Colors.white),
+                ConstsWidget.buildSubTitleText(context,
+                    subTitle: subTitle, color: Colors.white)
               ],
             ),
           ],

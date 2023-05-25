@@ -1,16 +1,16 @@
-import 'package:app_porteiro/items_bottom.dart';
 import 'package:app_porteiro/repositories/theme_modals/theme_modals.dart';
 import 'package:app_porteiro/repositories/theme_modals/themes_provider.dart';
-import 'package:app_porteiro/screens/login/login_screen.dart';
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/home/home_page.dart';
-
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  RendererBinding.instance.setSemanticsEnabled(true);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

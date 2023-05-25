@@ -52,7 +52,25 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   ),
                 ),
               ),
-              ChangeThemeButton(),
+              Column(
+                children: [
+                  ConstsWidget.buildTitleText(context,
+                      title: FuncionarioInfos.nome_funcionario!),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ConstsWidget.buildSubTitleText(context,
+                          subTitle: FuncionarioInfos.login!),
+                      ConstsWidget.buildAtivoInativo(
+                          context, FuncionarioInfos.ativo!)
+                    ],
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: size.height * 0.05),
+                child: ChangeThemeButton(),
+              ),
               Spacer(),
               Padding(
                 padding: EdgeInsets.all(size.height * 0.01),

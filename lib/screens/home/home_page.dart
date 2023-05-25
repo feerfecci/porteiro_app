@@ -1,12 +1,13 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, unused_local_variable, non_constant_identifier_names
 
 import 'dart:convert';
 
 import 'package:app_porteiro/consts/consts.dart';
-import 'package:app_porteiro/widgets/search_bar.dart';
+import 'package:app_porteiro/screens/home/search_page.dart';
+import 'package:app_porteiro/widgets/my_box_shadow.dart';
+import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../../widgets/custom_drawer/custom_drawer.dart';
 import 'list_tile_ap.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,22 +19,22 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  Future apiListarUnidades() async {
-    var url = Uri.parse(
-        'https://a.portariaapp.com/sindico/api/unidades/?fn=listarUnidades&idcond=${FuncionarioInfos.idcondominio}');
-    var resposta = await http.get(url);
-    if (resposta.statusCode == 200) {
-      return json.decode(resposta.body);
-    }
-    return resposta;
+Future apiListarUnidades() async {
+  var url = Uri.parse(
+      '${Consts.apiPortaria}unidades/?fn=listarUnidades&idcond=${FuncionarioInfos.idcondominio}');
+  var resposta = await http.get(url);
+  if (resposta.statusCode == 200) {
+    return json.decode(resposta.body);
   }
+  return false;
+}
 
+class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     apiListarUnidades();
+    SearchPage();
   }
 
   @override
@@ -47,18 +48,53 @@ class _HomePageState extends State<HomePage> {
       },
       child: ListView(
         children: [
-          SearchBar(),
+          // SearchBar(),
           FutureBuilder<dynamic>(
             future: apiListarUnidades(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return MyBoxShadow(
+                    child: Column(
+                  children: [
+                    ShimmerWidget(height: 16),
+                    ShimmerWidget(height: 16),
+                    ShimmerWidget(height: 16),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: size.height * 0.01),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ShimmerWidget(
+                            height: size.height * 0.1,
+                            width: size.height * 0.1,
+                          ),
+                          ShimmerWidget(
+                            height: size.height * 0.1,
+                            width: size.height * 0.1,
+                          ),
+                          ShimmerWidget(
+                            height: size.height * 0.1,
+                            width: size.height * 0.1,
+                          ),
+                          ShimmerWidget(
+                            height: size.height * 0.1,
+                            width: size.height * 0.1,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ));
               } else if (snapshot.hasError) {
                 return Container(
                   color: Colors.red,
                 );
               }
-              return ListView.builder(
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: size.width * 1,
+                    mainAxisExtent: size.height * 0.23),
                 shrinkWrap: true,
                 physics: ClampingScrollPhysics(),
                 itemCount: snapshot.data['unidades'].length,
@@ -78,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                     padding:
                         EdgeInsets.symmetric(vertical: size.height * 0.005),
                     child: ListTileAp(
-                      ap: nome_responsavel,
+                      nomeResponsavel: nome_responsavel,
                       bloco: '$dividido_por $nome_divisao - $numero',
                       idunidade: idunidade,
                     ),
