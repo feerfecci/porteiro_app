@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 import '../correspondencias/correspondencias_screen.dart';
 
-showCustomModalBottom(BuildContext context,
+showModalIncluiCorresp(BuildContext context,
     {required String title, required int idunidade, required int tipoAviso}) {
   var size = MediaQuery.of(context).size;
   showModalBottomSheet(
@@ -25,29 +25,28 @@ showCustomModalBottom(BuildContext context,
       height: size.height * 0.7,
       child: Padding(
         padding: EdgeInsets.all(size.height * 0.01),
-        child: WidgetCustomModalCorresp(
+        child: WidgetIncluiCorresp(
             title: title, idunidade: idunidade, tipoAviso: tipoAviso),
       ),
     ),
   );
 }
 
-class WidgetCustomModalCorresp extends StatefulWidget {
+class WidgetIncluiCorresp extends StatefulWidget {
   final String title;
   final int idunidade;
   final int? tipoAviso;
-  const WidgetCustomModalCorresp(
+  const WidgetIncluiCorresp(
       {required this.title,
       required this.idunidade,
       required this.tipoAviso,
       super.key});
 
   @override
-  State<WidgetCustomModalCorresp> createState() =>
-      _WidgetCustomModalCorrespState();
+  State<WidgetIncluiCorresp> createState() => _WidgetIncluiCorrespState();
 }
 
-class _WidgetCustomModalCorrespState extends State<WidgetCustomModalCorresp> {
+class _WidgetIncluiCorrespState extends State<WidgetIncluiCorresp> {
   final _formKey = GlobalKey<FormState>();
   lauchNotification(int idunidade) async {
     var url = Uri.parse(
@@ -90,16 +89,7 @@ class _WidgetCustomModalCorrespState extends State<WidgetCustomModalCorresp> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.close)),
-            ],
-          ),
+          ConstsWidget.buildClosePop(context),
           Padding(
             padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
             child: ConstsWidget.buildTitleText(context, title: widget.title),

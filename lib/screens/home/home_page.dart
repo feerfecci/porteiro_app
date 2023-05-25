@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:app_porteiro/consts/consts.dart';
-import 'package:app_porteiro/screens/home/search_page.dart';
+import 'package:app_porteiro/seach_pages/search_unidades.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     super.dispose();
     apiListarUnidades();
-    SearchPage();
   }
 
   @override

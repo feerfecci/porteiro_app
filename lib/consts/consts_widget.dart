@@ -162,4 +162,20 @@ class ConstsWidget {
       ),
     );
   }
+
+  static Widget buildClosePop(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.close,
+              color: Theme.of(context).iconTheme.color,
+            )),
+      ],
+    );
+  }
 }

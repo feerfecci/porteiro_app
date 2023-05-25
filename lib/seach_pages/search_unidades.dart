@@ -3,10 +3,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../../consts/consts.dart';
-import 'list_tile_ap.dart';
+import '../consts/consts.dart';
+import '../screens/home/list_tile_ap.dart';
 
-class SearchPage extends SearchDelegate<String> {
+class SearchUnidades extends SearchDelegate<String> {
   @override
   String get searchFieldLabel => 'ex: Bloco 2, AP23, João Silva';
   @override
@@ -32,46 +32,7 @@ class SearchPage extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return FutureBuilder<dynamic>(
-      future: resultadoUnidade(query),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Container(
-            color: Colors.red,
-          );
-        } else {
-          return ListView.builder(
-            itemCount: snapshot.data['unidades'].length,
-            itemBuilder: (context, index) {
-              var apiUnidade = snapshot.data['unidades'][index];
-              var idunidade = apiUnidade['idunidade'];
-              var ativo = apiUnidade['ativo'];
-              var idcondominio = apiUnidade['idcondominio'];
-              var nome_condominio = apiUnidade['nome_condominio'];
-              var iddivisao = apiUnidade['iddivisao'];
-              var nome_divisao = apiUnidade['nome_divisao'];
-              var dividido_por = apiUnidade['dividido_por'];
-              var numero = apiUnidade['numero'];
-              var nome_responsavel = apiUnidade['nome_responsavel'];
-              var login = apiUnidade['login'];
-              var nome_moradores = apiUnidade['nome_moradores'];
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: size.height * 0.005),
-                child: ListTileAp(
-                  nomeResponsavel: nome_responsavel,
-                  bloco: '$dividido_por $nome_divisao - $numero',
-                  idunidade: idunidade,
-                  nome_moradores: nome_moradores,
-                ),
-              );
-            },
-          );
-        }
-      },
-    );
+    return Container();
   }
 
   @override
@@ -91,10 +52,7 @@ class SearchPage extends SearchDelegate<String> {
               color: Colors.red,
             );
           } else {
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: size.width * 1,
-                  mainAxisExtent: size.height * 0.24),
+            return ListView.builder(
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
               itemCount: snapshot.data['unidades'] != null
@@ -213,7 +171,7 @@ class SearchPage extends SearchDelegate<String> {
 
   Future<dynamic> sugestoesUnidades() async {
     var url = Uri.parse(
-        '${Consts.apiPortaria}unidades/index.php?fn=pesquisarUnidades&idcond=13&palavra=$query');
+        '${Consts.apiPortaria}unidades/index.php?fn=pesquisarUnidades&idcond=${FuncionarioInfos.idcondominio}&palavra=$query');
     var resposta = await http.get(url);
     if (resposta.statusCode == 200) {
       return json.decode(resposta.body);
@@ -222,14 +180,14 @@ class SearchPage extends SearchDelegate<String> {
     }
   }
 
-  Future<dynamic> resultadoUnidade(idunidade) async {
-    var url = Uri.parse(
-        '${Consts.apiPortaria}unidades/index.php?fn=dadosUnidade&idunidade=$idunidade');
-    var resposta = await http.get(url);
-    if (resposta.statusCode == 200) {
-      return json.decode(resposta.body);
-    } else {
-      return ['Não foi!'];
-    }
-  }
+  // Future<dynamic> resultadoUnidade(idunidade) async {
+  //   var url = Uri.parse(
+  //       '${Consts.apiPortaria}unidades/index.php?fn=dadosUnidade&idunidade=$idunidade');
+  //   var resposta = await http.get(url);
+  //   if (resposta.statusCode == 200) {
+  //     return json.decode(resposta.body);
+  //   } else {
+  //     return ['Não foi!'];
+  //   }
+  // }
 }

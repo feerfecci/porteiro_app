@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/seach_pages/search_unidades.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,14 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../../consts/consts.dart';
-import '../moldals/custom_modal.dart';
+import '../../widgets/floatingActionButton.dart';
+import '../moldals/modal_inclui_corrresp.dart';
+import '../../seach_pages/search_protocolo.dart';
 
 class CorrespondenciasScreen extends StatefulWidget {
   final int? idunidade;
   final String? localizado;
+
   final String? nome_responsavel;
   final int? tipoAviso;
   const CorrespondenciasScreen(
@@ -38,6 +42,8 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return ScaffoldAll(
+      floatingActionButton: buildFloatingSearch(context,
+          searchPage: SearchProtocolos(idunidade: widget.idunidade)),
       title: widget.tipoAviso == 1 ? 'Correspondência ' : ' Encomendas',
       body: ListView(
         children: [
@@ -58,7 +64,7 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                 : 'Adicionar Encomenda',
             icon: Icons.add,
             onPressed: () {
-              showCustomModalBottom(context,
+              showModalIncluiCorresp(context,
                   title: 'Correspondência',
                   idunidade: widget.idunidade!,
                   tipoAviso: widget.tipoAviso!);
@@ -130,7 +136,7 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
 apiListarCorrespondencias(
     {required int? idunidade, required int tipoAviso}) async {
   var url = Uri.parse(
-      'https://a.portariaapp.com/portaria/api/correspondencias/?fn=listarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&tipo=$tipoAviso');
+      'https://a.portariaapp.com/portaria/api/correspondencias/?fn=listarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&tipo=$tipoAviso&statusentrega=0');
   var resposta = await http.get(url);
   if (resposta.statusCode == 200) {
     return json.decode(resposta.body);

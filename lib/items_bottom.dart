@@ -1,10 +1,11 @@
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/widgets/custom_drawer/custom_drawer.dart';
+import 'package:app_porteiro/widgets/floatingActionButton.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-import 'screens/home/search_page.dart';
+import 'seach_pages/search_unidades.dart';
 
 class ItemsBottom extends StatefulWidget {
   const ItemsBottom({super.key});
@@ -50,19 +51,8 @@ class _ItemsBottomState extends State<ItemsBottom> {
         ),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: SizedBox(
-        height: size.height * 0.1,
-        width: size.width * 0.15,
-        child: FloatingActionButton(
-          isExtended: true,
-          onPressed: () {
-            showSearch(context: context, delegate: SearchPage());
-          },
-          backgroundColor: Consts.kColorApp,
-          foregroundColor: Colors.white,
-          child: Icon(Icons.search),
-        ),
-      ),
+      floatingActionButton:
+          buildFloatingSearch(context, searchPage: SearchUnidades()),
       endDrawer: CustomDrawer(),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentTab,

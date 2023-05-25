@@ -76,7 +76,7 @@ buildMinhaSnackBar(
     SnackBar(
         showCloseIcon: true,
         closeIconColor: Colors.white,
-        dismissDirection: DismissDirection.endToStart,
+        dismissDirection: DismissDirection.startToEnd,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         // action: SnackBarAction(
         //     label: 'Entendi',

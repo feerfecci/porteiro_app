@@ -6,7 +6,12 @@ import 'custom_drawer/custom_drawer.dart';
 class ScaffoldAll extends StatefulWidget {
   final String? title;
   final Widget? body;
-  const ScaffoldAll({required this.title, required this.body, super.key});
+  final Widget? floatingActionButton;
+  const ScaffoldAll(
+      {required this.title,
+      required this.body,
+      this.floatingActionButton,
+      super.key});
 
   @override
   State<ScaffoldAll> createState() => _ScaffoldAllState();
@@ -16,6 +21,7 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: widget.floatingActionButton,
       appBar: AppBar(
         title: ConstsWidget.buildTitleText(context, title: widget.title),
         backgroundColor: Colors.transparent,
