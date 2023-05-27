@@ -1,19 +1,21 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/screens/moldals/modal_emite_entrega.dart';
+import 'package:app_porteiro/moldals/modal_emite_entrega.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../consts/consts.dart';
-import '../screens/moldals/modal_inclui_corrresp.dart';
+import '../moldals/modal_inclui_corrresp.dart';
 
 class SearchProtocolos extends SearchDelegate<String> {
   final int? idunidade;
   SearchProtocolos({required this.idunidade});
+
   @override
   String get searchFieldLabel => "Digite o Protocolo";
 
@@ -54,94 +56,113 @@ class SearchProtocolos extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     var size = MediaQuery.of(context).size;
     bool isChecked = false;
-    return FutureBuilder<dynamic>(
-        future: sugestoesUnidades(),
-        builder: (context, snapshot) {
-          if (query.isEmpty) {
-            return Text('Procure por um protocolo');
-          } else {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError || (snapshot.data['erro'] == true)) {
-              return Text('Erro no Servidor');
-            } else if (snapshot.hasData &&
-                snapshot.data['mensagem'] ==
-                    "Nenhuma correspondência registrada para essa unidade") {
-              return Text(snapshot.data['mensagem']);
-            }
-            return ListView(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  itemCount: snapshot.data['correspondencias'].length,
-                  itemBuilder: (context, index) {
-                    var infoRetirada = snapshot.data['correspondencias'][index];
-                    var idcorrespondencia = infoRetirada['idcorrespondencia'];
-                    var idunidade = infoRetirada['idunidade'];
-                    var unidade = infoRetirada['unidade'];
-                    var divisao = infoRetirada[';'];
-                    var idcondominio = infoRetirada['idcondominio'];
-                    var nome_condominio = infoRetirada[';'];
-                    var idfuncionario = infoRetirada['idfuncionario'];
-                    var nome_funcionario = infoRetirada['nome_funcionario'];
-                    var tipo = infoRetirada['tipo'];
-                    var remetente = infoRetirada['remetente'];
-                    var descricao = infoRetirada['descricao'];
-                    var protocolo = infoRetirada['protocolo'];
-                    var data_recebimento = DateFormat('dd/MM/yyyy').format(
-                        DateTime.parse(infoRetirada['data_recebimento']));
-                    return ListTile(
-                      title: ConstsWidget.buildTitleText(context,
-                          title: remetente),
-                      subtitle: ConstsWidget.buildSubTitleText(context,
-                          subTitle: '$descricao - $data_recebimento'),
-                      trailing: SizedBox(
-                          width: size.width * 0.38,
-                          child: StatefulBuilder(builder: (context, setState) {
-                            return CheckboxListTile(
-                              title: ConstsWidget.buildSubTitleText(context,
-                                  subTitle: 'Entregar'),
-                              activeColor: Consts.kColorApp,
-                              onChanged: (value) {
-                                setState(
-                                  () {
-                                    isChecked = value!;
-                                    value == true
-                                        ? listEntregar
-                                            .add(idcorrespondencia.toString())
-                                        : listEntregar.remove(
-                                            idcorrespondencia.toString());
+    return StatefulBuilder(builder: (context, setState) {
+      bool isLoadingCodigo = false;
+      return Scaffold(
+        body: FutureBuilder<dynamic>(
+            future: sugestoesUnidades(),
+            builder: (context, snapshot) {
+              if (query.isEmpty) {
+                return Text('Procure por um protocolo');
+              } else {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError ||
+                    (snapshot.data['erro'] == true)) {
+                  return Text('Erro no Servidor');
+                } else if (snapshot.hasData &&
+                    snapshot.data['mensagem'] ==
+                        "Nenhuma correspondência registrada para essa unidade") {
+                  return Text(snapshot.data['mensagem']);
+                }
+                return ListView(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: snapshot.data['correspondencias'].length,
+                      itemBuilder: (context, index) {
+                        var infoRetirada =
+                            snapshot.data['correspondencias'][index];
+                        var idcorrespondencia =
+                            infoRetirada['idcorrespondencia'];
+                        var idunidade = infoRetirada['idunidade'];
+                        var unidade = infoRetirada['unidade'];
+                        var divisao = infoRetirada[';'];
+                        var idcondominio = infoRetirada['idcondominio'];
+                        var nome_condominio = infoRetirada[';'];
+                        var idfuncionario = infoRetirada['idfuncionario'];
+                        var nome_funcionario = infoRetirada['nome_funcionario'];
+                        var tipo = infoRetirada['tipo'];
+                        var remetente = infoRetirada['remetente'];
+                        var descricao = infoRetirada['descricao'];
+                        var protocolo = infoRetirada['protocolo'];
+                        var data_recebimento = DateFormat('dd/MM/yyyy').format(
+                            DateTime.parse(infoRetirada['data_recebimento']));
+                        return ListTile(
+                          title: ConstsWidget.buildTitleText(context,
+                              title: remetente),
+                          subtitle: ConstsWidget.buildSubTitleText(context,
+                              subTitle: '$descricao - $data_recebimento'),
+                          trailing: SizedBox(
+                              width: size.width * 0.38,
+                              child:
+                                  StatefulBuilder(builder: (context, setState) {
+                                return CheckboxListTile(
+                                  title: ConstsWidget.buildSubTitleText(context,
+                                      subTitle: 'Entregar'),
+                                  activeColor: Consts.kColorApp,
+                                  onChanged: (value) {
+                                    setState(
+                                      () {
+                                        isChecked = value!;
+                                        value == true
+                                            ? listEntregar.add(
+                                                idcorrespondencia.toString())
+                                            : listEntregar.remove(
+                                                idcorrespondencia.toString());
+                                      },
+                                    );
                                   },
+                                  value: isChecked,
                                 );
-                              },
-                              value: isChecked,
-                            );
-                          })),
-                    );
-                  },
-                ),
-                ConstsWidget.buildCustomButton(
-                  context,
-                  'Código de Entrega',
-                  onPressed: listEntregar != []
-                      ? () {
-                          emiteEntrega(listEntregar.join(','));
+                              })),
+                        );
+                      },
+                    ),
+                    // ConstsWidget.buildLoadingButton(context, onPressed: () {
+                    //   setState(
+                    //     () {
+                    //       isLoadingCodigo = !isLoadingCodigo;
+                    //     },
+                    //   );
+                    //   // emiteEntrega(listEntregar.join(','));
+                    //   Timer(Duration(seconds: 2), () {
+                    //     setState(
+                    //       () {
+                    //         isLoadingCodigo = !isLoadingCodigo;
+                    //         showModalEmiteEntrega(context,
+                    //             idunidade: idunidade, protocoloRetirada: query);
+                    //         listEntregar.clear();
+                    //       },
+                    //     );
+                    //   });
+                    // }, isLoading: isLoadingCodigo, title: 'Código de Entrega'),
 
-                          showModalEmiteEntrega(context,
-                              idunidade: idunidade, protocoloRetirada: query);
-                          listEntregar.clear();
-                        }
-                      : () {
-                          buildMinhaSnackBar(context,
-                              title: 'Cuidado',
-                              subTitle: 'Você precisa selecionar alguma');
-                        },
-                )
-              ],
-            );
-          }
-        });
+                    ConstsWidget.buildCustomButton(context, 'Código de Entrega',
+                        onPressed: () {
+                      emiteEntrega(listEntregar.join(','));
+
+                      showModalEmiteEntrega(context,
+                          idunidade: idunidade, protocoloRetirada: query);
+                      listEntregar.clear();
+                    })
+                  ],
+                );
+              }
+            }),
+      );
+    });
   }
 
   Future<dynamic> sugestoesUnidades() async {
@@ -156,14 +177,14 @@ class SearchProtocolos extends SearchDelegate<String> {
   }
 
   Future<dynamic> emiteEntrega(listaEntregar) async {
-    //   var url = Uri.parse(
-    print(
+    var url = Uri.parse(
+        // print(
         '${Consts.apiPortaria}correspondencias/?fn=entregarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&listacorrespondencias=$listaEntregar');
-    //   var resposta = await http.get(url);
-    //   if (resposta.statusCode == 200) {
-    //     return json.decode(resposta.body);
-    //   } else {
-    //     return ['Não foi!'];
-    //   }
+    var resposta = await http.get(url);
+    if (resposta.statusCode == 200) {
+      return json.decode(resposta.body);
+    } else {
+      return ['Não foi!'];
+    }
   }
 }

@@ -22,6 +22,7 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: widget.floatingActionButton,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: ConstsWidget.buildTitleText(context, title: widget.title),
         backgroundColor: Colors.transparent,

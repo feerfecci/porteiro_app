@@ -18,11 +18,10 @@ class _ItemsBottomState extends State<ItemsBottom> {
   late final PageController _pageController = PageController();
   int currentTab = 0;
 
-  String oneSignalAppId = "56d855ee-f534-4c40-97b5-272bebcee2f1";
   Future oneSignalNotification() async {
-    OneSignal.shared.setAppId(oneSignalAppId);
+    OneSignal.shared.setAppId("cb886dc8-9dc9-4297-9730-7de404a89716");
     OneSignal.shared.promptUserForPushNotificationPermission().then((value) {
-      OneSignal.shared.setExternalUserId('26');
+      OneSignal.shared.setExternalUserId('34');
     });
   }
 

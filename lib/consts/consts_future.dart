@@ -49,7 +49,7 @@ class ConstsFuture {
       bool erro = apiBody['erro'];
       if (erro == false) {
         var loginInfos = apiBody['login'];
-        FuncionarioInfos.id = loginInfos['id'];
+        FuncionarioInfos.idFuncionario = loginInfos['id'];
         FuncionarioInfos.ativo = loginInfos['ativo'];
         FuncionarioInfos.idcondominio = loginInfos['idcondominio'];
         FuncionarioInfos.nome_condominio = loginInfos['nome_condominio'];

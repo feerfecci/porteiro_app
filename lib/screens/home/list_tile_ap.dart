@@ -2,6 +2,7 @@
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/moldals/modal_avisa_delivery.dart';
 import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
@@ -97,17 +98,27 @@ class _ListTileApState extends State<ListTileAp> {
                     localizado: widget.bloco,
                     tipoAviso: 1,
                   )),
-              buildActionIcon(
-                  icon: Icons.delivery_dining,
-                  titleModal: 'Delivery',
-                  labelModal: 'Restaurante',
-                  avisa: FuncionarioInfos.avisa_delivery,
-                  pageRoute: CorrespondenciasScreen(
-                    nome_responsavel: widget.nomeResponsavel,
-                    idunidade: widget.idunidade,
-                    localizado: widget.bloco,
-                    tipoAviso: 1,
-                  )),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
+                child: MyBoxShadow(
+                  color: FuncionarioInfos.avisa_delivery ? null : Colors.grey,
+                  paddingAll: 0.002,
+                  child: IconButton(
+                    onPressed: FuncionarioInfos.avisa_delivery
+                        ? () {
+                            showModalAvisaDelivery(context);
+                          }
+                        : () {
+                            buildMinhaSnackBar(context,
+                                title: 'Desculpe',
+                                subTitle: 'Você não tem acesso à essa ação');
+                          },
+                    icon: Icon(
+                      Icons.delivery_dining,
+                    ),
+                  ),
+                ),
+              ),
               buildActionIcon(
                   icon: Icons.shopping_bag_rounded,
                   titleModal: 'Encomenda',

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class FuncionarioInfos {
-  static int? id;
+  static int? idFuncionario;
   static bool? ativo;
   static int? idcondominio;
   static String? nome_condominio;
@@ -29,4 +29,7 @@ class Consts {
   static const String iconApi = 'https://escritorioapp.com/img/ico-';
 
   static const String apiPortaria = 'https://a.portariaapp.com/portaria/api/';
+
+  static final GlobalKey<ScaffoldState> modelScaffoldKey =
+      GlobalKey<ScaffoldState>();
 }
