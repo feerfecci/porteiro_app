@@ -54,10 +54,18 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return MyBoxShadow(
                     child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ShimmerWidget(height: 16),
-                    ShimmerWidget(height: 16),
-                    ShimmerWidget(height: 16),
+                    ShimmerWidget(height: 16, width: size.width * 0.5),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: size.height * 0.01),
+                      child: ShimmerWidget(
+                        height: 16,
+                        width: size.width * 0.5,
+                      ),
+                    ),
+                    ShimmerWidget(height: 16, width: size.width * 0.3),
                     Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: size.height * 0.01),
@@ -65,20 +73,20 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ShimmerWidget(
-                            height: size.height * 0.1,
-                            width: size.height * 0.1,
+                            height: size.height * 0.08,
+                            width: size.height * 0.08,
                           ),
                           ShimmerWidget(
-                            height: size.height * 0.1,
-                            width: size.height * 0.1,
+                            height: size.height * 0.08,
+                            width: size.height * 0.08,
                           ),
                           ShimmerWidget(
-                            height: size.height * 0.1,
-                            width: size.height * 0.1,
+                            height: size.height * 0.08,
+                            width: size.height * 0.08,
                           ),
                           ShimmerWidget(
-                            height: size.height * 0.1,
-                            width: size.height * 0.1,
+                            height: size.height * 0.08,
+                            width: size.height * 0.08,
                           )
                         ],
                       ),
@@ -90,10 +98,10 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.red,
                 );
               }
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: size.width * 1,
-                    mainAxisExtent: size.height * 0.23),
+              return ListView.builder(
+                // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                //     maxCrossAxisExtent: size.width * 1,
+                //     mainAxisExtent: size.height * 0.23),
                 shrinkWrap: true,
                 physics: ClampingScrollPhysics(),
                 itemCount: snapshot.data['unidades'].length,
@@ -115,6 +123,7 @@ class _HomePageState extends State<HomePage> {
                     child: ListTileAp(
                       nomeResponsavel: nome_responsavel,
                       bloco: '$dividido_por $nome_divisao - $numero',
+                      // nome_moradores: nome_moradores,
                       idunidade: idunidade,
                     ),
                   );

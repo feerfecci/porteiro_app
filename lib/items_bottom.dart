@@ -1,8 +1,12 @@
 import 'package:app_porteiro/consts/consts.dart';
+import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/home/home_page.dart';
+import 'package:app_porteiro/seach_pages/search_veiculo.dart';
 import 'package:app_porteiro/widgets/custom_drawer/custom_drawer.dart';
 import 'package:app_porteiro/widgets/floatingActionButton.dart';
+import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'seach_pages/search_unidades.dart';
@@ -19,16 +23,20 @@ class _ItemsBottomState extends State<ItemsBottom> {
   int currentTab = 0;
 
   Future oneSignalNotification() async {
-    OneSignal.shared.setAppId("cb886dc8-9dc9-4297-9730-7de404a89716");
+    OneSignal.shared.setAppId("5993cb79-853a-412e-94a1-f995c9797692");
     OneSignal.shared.promptUserForPushNotificationPermission().then((value) {
-      OneSignal.shared.setExternalUserId('34');
+      // OneSignal.shared.setExternalUserId('34');
+    });
+    OneSignal.shared.sendTags({
+      'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
+      'idcond': FuncionarioInfos.idcondominio.toString(),
     });
   }
 
   @override
   void initState() {
     super.initState();
-    // oneSignalNotification();
+    oneSignalNotification();
   }
 
   @override
@@ -50,8 +58,27 @@ class _ItemsBottomState extends State<ItemsBottom> {
         ),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton:
-          buildFloatingSearch(context, searchPage: SearchUnidades()),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        icon: Icons.search,
+        overlayColor: Theme.of(context).colorScheme.primary,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Consts.kColorApp,
+        children: [
+          SpeedDialChild(
+            label: 'Apartamentos',
+            child: Icon(Icons.business_outlined),
+            onTap: () =>
+                showSearch(context: context, delegate: SearchUnidades()),
+          ),
+          SpeedDialChild(
+            label: 'Carros',
+            child: Icon(Icons.car_crash_sharp),
+            onTap: () =>
+                showSearch(context: context, delegate: SearchVeiculo()),
+          ),
+        ],
+      ),
       endDrawer: CustomDrawer(),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentTab,

@@ -27,7 +27,8 @@ class SearchUnidades extends SearchDelegate<String> {
         onPressed: () {
           close(context, 'result');
         },
-        icon: Icon(Icons.arrow_back_ios_new_sharp));
+        icon: Icon(Icons.arrow_back_ios_new_sharp
+        ));
   }
 
   @override
@@ -71,95 +72,12 @@ class SearchUnidades extends SearchDelegate<String> {
                 var nome_responsavel = apiUnidade['nome_responsavel'];
                 var nome_moradores = apiUnidade['nome_moradores'];
                 var login = apiUnidade['login'];
-                // return Padding(
-                //   padding: EdgeInsets.symmetric(vertical: size.height * 0.005),
-                //   child: ListTileAp(
-                //     nomeResponsavel: nome_responsavel,
-                //     bloco: '$dividido_por $nome_divisao - $numero',
-                //     idunidade: idunidade,
-                //   ),
-                // );
-                // Widget buildActionIcon(
-                //     {required String titleModal,
-                //     required String labelModal,
-                //     required IconData icon}) {
-                //   return Padding(
-                //     padding:
-                //         EdgeInsets.symmetric(horizontal: size.width * 0.005),
-                //     child: MyBoxShadow(
-                //       paddingAll: 0.002,
-                //       child: IconButton(
-                //         onPressed: () {
-                //           showCustomModalBottom(context,
-                //               title: titleModal, idunidade: idunidade,tipoAviso:);
-                //         },
-                //         icon: Icon(
-                //           icon,
-                //         ),
-                //       ),
-                //     ),
-                //   );
-                // }
 
                 return ListTileAp(
                   nomeResponsavel: nome_responsavel,
                   bloco: '$dividido_por $nome_divisao - $numero',
                   idunidade: idunidade,
-                  nome_moradores: nome_moradores,
                 )
-
-                    /*   MyBoxShadow(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // ConstsWidget.buildTitleText(context,'$idunidade'),
-                      ConstsWidget.buildSubTitleText(
-                          '$numero- $dividido_por $nome_divisao'),
-                      ConstsWidget.buildTitleText(context,nome_responsavel),
-                      ConstsWidget.buildSubTitleText(nome_moradores),
-                      // Text(login),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: size.height * 0.005),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          // mainAxisSize: MainAxisSize.min,
-                          children: [
-                            FuncionarioInfos.avisa_corresp
-                                ? buildActionIcon(
-                                    titleModal: 'Correspondências',
-                                    labelModal: 'Remetente',
-                                    icon: Icons.email,
-                                  )
-                                : SizedBox(),
-                            FuncionarioInfos.avisa_delivery
-                                ? buildActionIcon(
-                                    icon: Icons.delivery_dining,
-                                    titleModal: 'Delivery',
-                                    labelModal: 'Restaurante',
-                                  )
-                                : SizedBox(),
-                            FuncionarioInfos.avisa_encomendas
-                                ? buildActionIcon(
-                                    icon: Icons.shopping_bag_rounded,
-                                    titleModal: 'Encomenda',
-                                    labelModal: 'Remetente',
-                                  )
-                                : SizedBox(),
-                            FuncionarioInfos.avisa_visita
-                                ? buildActionIcon(
-                                    icon: Icons.person_pin_sharp,
-                                    titleModal: 'Visitas',
-                                    labelModal: 'Nome',
-                                  )
-                                : SizedBox(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )*/
                     ;
               },
             );
@@ -179,15 +97,4 @@ class SearchUnidades extends SearchDelegate<String> {
       return ['Não foi!'];
     }
   }
-
-  // Future<dynamic> resultadoUnidade(idunidade) async {
-  //   var url = Uri.parse(
-  //       '${Consts.apiPortaria}unidades/index.php?fn=dadosUnidade&idunidade=$idunidade');
-  //   var resposta = await http.get(url);
-  //   if (resposta.statusCode == 200) {
-  //     return json.decode(resposta.body);
-  //   } else {
-  //     return ['Não foi!'];
-  //   }
-  // }
 }

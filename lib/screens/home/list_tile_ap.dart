@@ -10,12 +10,12 @@ import 'package:flutter/material.dart';
 
 class ListTileAp extends StatefulWidget {
   final String nomeResponsavel;
-  final String nome_moradores;
+  // final String nome_moradores;
   final String bloco;
   final int idunidade;
   const ListTileAp(
       {required this.nomeResponsavel,
-      this.nome_moradores = '',
+      // required  this.nome_moradores,
       required this.bloco,
       required this.idunidade,
       super.key});
@@ -29,27 +29,30 @@ class _ListTileApState extends State<ListTileAp> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Widget buildActionIcon({
-      required String titleModal,
-      required String labelModal,
+      String? titleModal,
+      String? labelModal,
       required IconData icon,
       required bool avisa,
-      required Widget pageRoute,
+      Widget? pageRoute,
+      void Function()? onPressed,
     }) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
         child: MyBoxShadow(
           color: avisa ? null : Colors.grey,
+          // border: Border.all(color: Theme.of(context).colorScheme.primary),
           paddingAll: 0.002,
           child: IconButton(
             onPressed: avisa
-                ? () {
-                    // Navigator.pop(context);
-                    ConstsFuture.navigatorPush(context, pageRoute);
-                    // showCustomModalBottom(context,
-                    //     label: labelModal,
-                    //     title: titleModal,
-                    //     idunidade: widget.idunidade);
-                  }
+                ? onPressed ??
+                    () {
+                      // Navigator.pop(context);
+                      ConstsFuture.navigatorPush(context, pageRoute!);
+                      // showCustomModalBottom(context,
+                      //     label: labelModal,
+                      //     title: titleModal,
+                      //     idunidade: widget.idunidade);
+                    }
                 : () {
                     buildMinhaSnackBar(context,
                         title: 'Desculpe',
@@ -57,6 +60,7 @@ class _ListTileApState extends State<ListTileAp> {
                   },
             icon: Icon(
               icon,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ),
@@ -71,34 +75,53 @@ class _ListTileApState extends State<ListTileAp> {
           ConstsWidget.buildTitleText(context, title: '${widget.idunidade}'),
           ConstsWidget.buildSubTitleText(context, subTitle: widget.bloco),
           ConstsWidget.buildTitleText(context, title: widget.nomeResponsavel),
-          Text(widget.nome_moradores),
+          // Text(widget.nome_moradores),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             // mainAxisSize: MainAxisSize.min,
             children: [
-              buildActionIcon(
-                  titleModal: 'Correspondências',
-                  labelModal: 'Remetente',
-                  icon: Icons.email,
-                  avisa: FuncionarioInfos.avisa_corresp,
-                  pageRoute: CorrespondenciasScreen(
-                    idunidade: widget.idunidade,
-                    localizado: widget.bloco,
-                    nome_responsavel: widget.nomeResponsavel,
-                    tipoAviso: 1,
-                  )),
-              buildActionIcon(
-                  icon: Icons.person_pin_sharp,
-                  titleModal: 'Visitas',
-                  labelModal: 'Nome',
-                  avisa: FuncionarioInfos.avisa_visita,
-                  pageRoute: CorrespondenciasScreen(
-                    nome_responsavel: widget.nomeResponsavel,
-                    idunidade: widget.idunidade,
-                    localizado: widget.bloco,
-                    tipoAviso: 1,
-                  )),
-              Padding(
+              if (FuncionarioInfos.avisa_corresp)
+                buildActionIcon(
+                    titleModal: 'Correspondências',
+                    labelModal: 'Remetente',
+                    icon: Icons.email,
+                    avisa: FuncionarioInfos.avisa_corresp,
+                    pageRoute: CorrespondenciasScreen(
+                      idunidade: widget.idunidade,
+                      localizado: widget.bloco,
+                      nome_responsavel: widget.nomeResponsavel,
+                      tipoAviso: 3,
+                    )),
+              if (FuncionarioInfos.avisa_visita)
+                buildActionIcon(
+                    avisa: FuncionarioInfos.avisa_visita,
+                    icon: Icons.person_add_alt_1_sharp,
+                    onPressed: () {
+                      showModalAvisaDelivery(context,
+                          idunidade: widget.idunidade,
+                          localizado: widget.bloco,
+                          nome_responsavel: widget.nomeResponsavel,
+                          tipoAviso: 2
+                          // nome_moradores: widget.nome_moradores,
+                          );
+                    }),
+              if (FuncionarioInfos.avisa_delivery)
+                buildActionIcon(
+                    avisa: FuncionarioInfos.avisa_delivery,
+                    icon: Icons.delivery_dining,
+                    onPressed: () {
+                      showModalAvisaDelivery(context,
+                          idunidade: widget.idunidade,
+                          localizado: widget.bloco,
+                          nome_responsavel: widget.nomeResponsavel,
+                          tipoAviso: 1
+                          // nome_moradores: widget.nome_moradores,
+                          );
+                    }),
+              /* Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
                 child: MyBoxShadow(
                   color: FuncionarioInfos.avisa_delivery ? null : Colors.grey,
@@ -106,7 +129,13 @@ class _ListTileApState extends State<ListTileAp> {
                   child: IconButton(
                     onPressed: FuncionarioInfos.avisa_delivery
                         ? () {
-                            showModalAvisaDelivery(context);
+                            showModalAvisaDelivery(
+                              context,
+                              idunidade: widget.idunidade,
+                              localizado: widget.bloco,
+                              nome_responsavel: widget.nomeResponsavel,
+                              // nome_moradores: widget.nome_moradores,
+                            );
                           }
                         : () {
                             buildMinhaSnackBar(context,
@@ -119,6 +148,7 @@ class _ListTileApState extends State<ListTileAp> {
                   ),
                 ),
               ),
+             */
               buildActionIcon(
                   icon: Icons.shopping_bag_rounded,
                   titleModal: 'Encomenda',
@@ -128,7 +158,7 @@ class _ListTileApState extends State<ListTileAp> {
                     nome_responsavel: widget.nomeResponsavel,
                     idunidade: widget.idunidade,
                     localizado: widget.bloco,
-                    tipoAviso: 2,
+                    tipoAviso: 4,
                   )),
             ],
           ),

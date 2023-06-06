@@ -16,6 +16,7 @@ import '../../consts/consts.dart';
 import '../../widgets/floatingActionButton.dart';
 import '../../moldals/modal_inclui_corrresp.dart';
 import '../../seach_pages/search_protocolo.dart';
+import '../page_vazia/page_vazia.dart';
 
 class CorrespondenciasScreen extends StatefulWidget {
   final int? idunidade;
@@ -48,8 +49,9 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
     var size = MediaQuery.of(context).size;
     return ScaffoldAll(
       floatingActionButton: buildFloatingSearch(context,
-          searchPage: SearchProtocolos(idunidade: widget.idunidade)),
-      title: widget.tipoAviso == 1 ? 'Correspondências' : ' Encomendas',
+          searchPage: SearchProtocolos(
+              idunidade: widget.idunidade, tipoAviso: widget.tipoAviso)),
+      title: widget.tipoAviso == 3 ? 'Correspondências' : ' Encomendas',
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {
@@ -109,61 +111,65 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                       )
                     ],
                   ));
-                } else if (snapshot.data['erro'] == false &&
-                    snapshot.data['mensagem'] ==
-                        "Nenhuma correspondência registrada para essa unidade") {
-                  return Center(
-                    child: Text(snapshot.data['mensagem']),
-                  );
                 } else if (snapshot.hasError) {
                   return Text('Algo não deu certo. Volte mais tarde!');
                 } else {
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      itemCount: snapshot.data['correspondencias'].length,
-                      itemBuilder: (context, index) {
-                        var apiCorresp =
-                            snapshot.data['correspondencias'][index];
-                        var idcorrespondencia = apiCorresp['idcorrespondencia'];
-                        var unidade = apiCorresp['unidade'];
-                        var divisao = apiCorresp['divisao'];
-                        var idcondominio = apiCorresp['idcondominio'];
-                        var nome_condominio = apiCorresp['nome_condominio'];
-                        var idfuncionario = apiCorresp['idfuncionario'];
-                        var nome_funcionario = apiCorresp['nome_funcionario'];
-                        var data_recebimento = DateFormat('dd/MM/yyyy')
-                            .format(
-                                DateTime.parse(apiCorresp['data_recebimento']))
-                            .toString();
-                        var tipo = apiCorresp['tipo'];
-                        var remetente = apiCorresp['remetente'];
-                        var descricao = apiCorresp['descricao'];
-                        var protocolo = apiCorresp['protocolo'];
-                        var datahora_cadastro = apiCorresp['datahora_cadastro'];
-                        var datahora_ultima_atualizacao =
-                            apiCorresp['datahora_ultima_atualizacao'];
+                  if (!snapshot.data['erro'] &&
+                      snapshot.data['mensagem'] ==
+                          "Nenhuma correspondência registrada para essa unidade") {
+                    return PageVazia(title: snapshot.data['mensagem']);
+                  } else {
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        itemCount: snapshot.data['correspondencias'].length,
+                        itemBuilder: (context, index) {
+                          var apiCorresp =
+                              snapshot.data['correspondencias'][index];
+                          var idcorrespondencia =
+                              apiCorresp['idcorrespondencia'];
+                          var unidade = apiCorresp['unidade'];
+                          var divisao = apiCorresp['divisao'];
+                          var idcondominio = apiCorresp['idcondominio'];
+                          var nome_condominio = apiCorresp['nome_condominio'];
+                          var idfuncionario = apiCorresp['idfuncionario'];
+                          var nome_funcionario = apiCorresp['nome_funcionario'];
+                          var data_recebimento = DateFormat('dd/MM/yyyy')
+                              .format(DateTime.parse(
+                                  apiCorresp['data_recebimento']))
+                              .toString();
+                          var tipo = apiCorresp['tipo'];
+                          var remetente = apiCorresp['remetente'];
+                          var descricao = apiCorresp['descricao'];
+                          var protocolo = apiCorresp['protocolo'];
+                          var protocolo_entrega =
+                              apiCorresp['protocolo_entrega'];
+                          var datahora_cadastro =
+                              apiCorresp['datahora_cadastro'];
+                          var datahora_ultima_atualizacao =
+                              apiCorresp['datahora_ultima_atualizacao'];
 
-                        return MyBoxShadow(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ConstsWidget.buildTitleText(context,
-                                title: remetente),
-                            SizedBox(
-                              height: size.height * 0.015,
-                            ),
-                            Row(
-                              children: [
-                                ConstsWidget.buildSubTitleText(context,
-                                    subTitle: '$descricao - '),
-                                ConstsWidget.buildTitleText(context,
-                                    title: data_recebimento),
-                              ],
-                            ),
-                          ],
-                        ));
-                      });
+                          return MyBoxShadow(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ConstsWidget.buildTitleText(context,
+                                  title: remetente),
+                              SizedBox(
+                                height: size.height * 0.015,
+                              ),
+                              Row(
+                                children: [
+                                  ConstsWidget.buildSubTitleText(context,
+                                      subTitle: '$descricao - '),
+                                  ConstsWidget.buildTitleText(context,
+                                      title: data_recebimento),
+                                ],
+                              ),
+                            ],
+                          ));
+                        });
+                  }
                 }
               },
             ),

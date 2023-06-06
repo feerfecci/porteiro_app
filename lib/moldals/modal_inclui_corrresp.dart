@@ -2,7 +2,9 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -64,63 +66,63 @@ class WidgetModalCorresp extends StatefulWidget {
 
 class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
   final _formKey = GlobalKey<FormState>();
+  List listaRementes = [];
+  Object? dropRemetente;
   bool loadingRetirada = false;
+  @override
+  void initState() {
+    apiListarRemetente();
+    super.initState();
+  }
+
+  bool preencheMao = false;
+
   void carregandoRetirada() {
     setState(() {
       loadingRetirada = !loadingRetirada;
     });
+    var idmsg = remetenteText == null ? dropRemetente : null;
 
-    launchIncluiCorresp(
-        idunidade: widget.idunidade,
-        dataInclusao: dataInclusaoText!,
-        descricao: descricaoText!,
-        remetente: remetenteText!,
-        tipoAviso: widget.tipoAviso!);
     Timer(Duration(seconds: 2), () {
-      setState(() {
-        loadingRetirada = !loadingRetirada;
-        Navigator.pop(context);
-
-        buildMinhaSnackBar(context,
-            title: 'Tudo certo!', subTitle: 'Correspondencia adicionada');
-        CorrespondenciasScreen(
-          tipoAviso: widget.tipoAviso,
-          idunidade: widget.idunidade,
-          localizado: widget.localizado,
-          nome_responsavel: widget.nome_responsavel,
-        );
+      ConstsFuture.launchGetApi(
+              'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$idmsg')
+          .then((value) {
+        if (!value['erro']) {
+          setState(() {
+            loadingRetirada = !loadingRetirada;
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CorrespondenciasScreen(
+                          tipoAviso: widget.tipoAviso,
+                          idunidade: widget.idunidade,
+                          localizado: widget.localizado,
+                          nome_responsavel: widget.nome_responsavel,
+                        )));
+            buildMinhaSnackBar(context,
+                title: 'Tudo certo!', subTitle: value['mensagem']);
+          });
+        } else {
+          buildMinhaSnackBar(context,
+              title: 'Algo Saiu Mau!', subTitle: value['mensagem']);
+        }
       });
     });
   }
 
-  lauchNotification(int idunidade) async {
+  Future apiListarRemetente() async {
     var url = Uri.parse(
-        '${Consts.apiPortaria}notificacao/?fn=enviarNotificacoes&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade');
+        '${Consts.apiPortaria}msgsprontas/index.php?fn=listarMensagens&tipo=${widget.tipoAviso}&idcond=${FuncionarioInfos.idcondominio}');
     var resposta = await http.get(url);
-
     if (resposta.statusCode == 200) {
-      return json.encode(resposta.body);
+      final jsonResponse = json.decode(resposta.body);
+      setState(() {
+        listaRementes = jsonResponse['msgsprontas'];
+      });
     } else {
-      return false;
-    }
-  }
-
-  launchIncluiCorresp(
-      {required int idunidade,
-      required String dataInclusao,
-      required String remetente,
-      required String descricao,
-      required int tipoAviso}) async {
-    var url = Uri.parse(
-
-        // print(
-        '${Consts.apiPortaria}correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusao&tipo=$tipoAviso&remetente=$remetente&descricao=$descricao');
-    var resposta = await http.get(url);
-
-    if (resposta.statusCode == 200) {
-      return json.encode(resposta.body);
-    } else {
-      return false;
+      return {'erro': true, 'mensagem': 'Erro no Servidor'};
     }
   }
 
@@ -131,14 +133,72 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    Widget builDropButtonRemetentes() {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+        child: Container(
+          width: double.infinity,
+          height: size.height * 0.07,
+          decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            border: Border.all(color: Colors.black26),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+            child: DropdownButtonHideUnderline(
+              child: ButtonTheme(
+                alignedDropdown: true,
+                child: DropdownButton(
+                  value: dropRemetente,
+                  items: listaRementes.map((e) {
+                    return DropdownMenuItem(
+                        value: e['idmsg'],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ConstsWidget.buildTitleText(context,
+                                title: e['titulo']),
+                            ConstsWidget.buildSubTitleText(context,
+                                subTitle: e['texto']),
+                          ],
+                        ));
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      dropRemetente = value;
+                    });
+                  },
+                  elevation: 24,
+                  isExpanded: true,
+                  icon: Icon(
+                    Icons.arrow_downward,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  hint: Text('Selecione Um Aviso'),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Form(
       key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Spacer(),
+              ConstsWidget.buildTitleText(context, title: widget.title),
+              Spacer(),
               IconButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -146,21 +206,34 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
                   icon: Icon(Icons.close)),
             ],
           ),
-          ConstsWidget.buildTitleText(context, title: widget.title),
-          ConstsWidget.buildMyTextFormObrigatorio(
-            context,
-            'Remetente',
-            onSaved: (text) {
-              remetenteText = text;
-            },
-          ),
-          ConstsWidget.buildMyTextFormObrigatorio(
-            context,
-            'Descrição',
-            onSaved: (text) {
-              descricaoText = text;
-            },
-          ),
+          if (!preencheMao) builDropButtonRemetentes(),
+          // if (!preencheMao)
+          ConstsWidget.buildCustomButton(
+              context, preencheMao ? 'Usar Padrão' : 'Personalizar',
+              onPressed: () {
+            setState(() {
+              preencheMao = !preencheMao;
+            });
+          }),
+          if (preencheMao)
+            Column(
+              children: [
+                ConstsWidget.buildMyTextFormObrigatorio(
+                  context,
+                  'Remetente',
+                  onSaved: (text) {
+                    remetenteText = text;
+                  },
+                ),
+                ConstsWidget.buildMyTextFormObrigatorio(
+                  context,
+                  'Descrição',
+                  onSaved: (text) {
+                    descricaoText = text;
+                  },
+                ),
+              ],
+            ),
           ConstsWidget.buildMyTextFormObrigatorio(
             context,
             'Data',
@@ -187,7 +260,10 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
+
                 carregandoRetirada();
+                // print(
+                //     'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$dropRemetente');
               } else {
                 buildMinhaSnackBar(
                   context,

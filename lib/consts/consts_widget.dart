@@ -225,4 +225,70 @@ class ConstsWidget {
                 ],
               ));
   }
+
+  static Widget buildDropButtonAvisos(BuildContext context,
+      {required List categoryItem, required Object? dropdownValue}) {
+    var size = MediaQuery.of(context).size;
+    return StatefulBuilder(builder: (context, setState) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+        child: Container(
+          width: double.infinity,
+          height: size.height * 0.07,
+          decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            border: Border.all(color: Colors.black26),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+            child: DropdownButtonHideUnderline(
+              child: ButtonTheme(
+                alignedDropdown: true,
+                // shape: Border.all(color: Colors.black),
+                child: DropdownButton(
+                  value: dropdownValue,
+                  items: categoryItem.map((e) {
+                    return DropdownMenuItem(
+                        value: e['idmsg'],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ConstsWidget.buildTitleText(context,
+                                title: e['titulo']),
+                            ConstsWidget.buildSubTitleText(context,
+                                subTitle: e['texto'])
+                            // ListTile(
+                            //   textColor: Theme.of(context).colorScheme.primary,
+                            //   title: Text(e['titulo']),
+                            //   subtitle: Text(e['texto']),
+                            // ),
+                          ],
+                        ));
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      dropdownValue = value;
+                    });
+                  },
+                  elevation: 24,
+                  isExpanded: true,
+                  icon: Icon(
+                    Icons.arrow_downward,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  hint: Text('Selecione Um Aviso'),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
 }

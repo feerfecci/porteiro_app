@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/moldals/modal_emite_entrega.dart';
+import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +15,8 @@ import '../moldals/modal_inclui_corrresp.dart';
 
 class SearchProtocolos extends SearchDelegate<String> {
   final int? idunidade;
-  SearchProtocolos({required this.idunidade});
+  final int? tipoAviso;
+  SearchProtocolos({required this.idunidade, required this.tipoAviso});
 
   @override
   String get searchFieldLabel => "Digite o Protocolo";
@@ -99,34 +101,37 @@ class SearchProtocolos extends SearchDelegate<String> {
                         var protocolo = infoRetirada['protocolo'];
                         var data_recebimento = DateFormat('dd/MM/yyyy').format(
                             DateTime.parse(infoRetirada['data_recebimento']));
-                        return ListTile(
-                          title: ConstsWidget.buildTitleText(context,
-                              title: remetente),
-                          subtitle: ConstsWidget.buildSubTitleText(context,
-                              subTitle: '$descricao - $data_recebimento'),
-                          trailing: SizedBox(
-                              width: size.width * 0.38,
-                              child:
-                                  StatefulBuilder(builder: (context, setState) {
-                                return CheckboxListTile(
-                                  title: ConstsWidget.buildSubTitleText(context,
-                                      subTitle: 'Entregar'),
-                                  activeColor: Consts.kColorApp,
-                                  onChanged: (value) {
-                                    setState(
-                                      () {
-                                        isChecked = value!;
-                                        value == true
-                                            ? listEntregar.add(
-                                                idcorrespondencia.toString())
-                                            : listEntregar.remove(
-                                                idcorrespondencia.toString());
-                                      },
-                                    );
-                                  },
-                                  value: isChecked,
-                                );
-                              })),
+                        return MyBoxShadow(
+                          child: ListTile(
+                            title: ConstsWidget.buildTitleText(context,
+                                title: remetente),
+                            subtitle: ConstsWidget.buildSubTitleText(context,
+                                subTitle: '$descricao - $data_recebimento'),
+                            trailing: SizedBox(
+                                width: size.width * 0.38,
+                                child: StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return CheckboxListTile(
+                                    title: ConstsWidget.buildSubTitleText(
+                                        context,
+                                        subTitle: 'Entregar'),
+                                    activeColor: Consts.kColorApp,
+                                    onChanged: (value) {
+                                      setState(
+                                        () {
+                                          isChecked = value!;
+                                          value == true
+                                              ? listEntregar.add(
+                                                  idcorrespondencia.toString())
+                                              : listEntregar.remove(
+                                                  idcorrespondencia.toString());
+                                        },
+                                      );
+                                    },
+                                    value: isChecked,
+                                  );
+                                })),
+                          ),
                         );
                       },
                     ),
@@ -151,7 +156,7 @@ class SearchProtocolos extends SearchDelegate<String> {
 
                     ConstsWidget.buildCustomButton(context, 'Código de Entrega',
                         onPressed: () {
-                      emiteEntrega(listEntregar.join(','));
+                      // emiteEntrega(listEntregar.join(','));
 
                       showModalEmiteEntrega(context,
                           idunidade: idunidade, protocoloRetirada: query);
@@ -167,7 +172,7 @@ class SearchProtocolos extends SearchDelegate<String> {
 
   Future<dynamic> sugestoesUnidades() async {
     var url = Uri.parse(
-        '${Consts.apiPortaria}correspondencias/?fn=listarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&statusentrega=0&protocolo=$query');
+        '${Consts.apiPortaria}correspondencias/?fn=listarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&statusentrega=0&tipo=$tipoAviso&protocolo=$query');
     var resposta = await http.get(url);
     if (resposta.statusCode == 200) {
       return json.decode(resposta.body);
@@ -176,15 +181,15 @@ class SearchProtocolos extends SearchDelegate<String> {
     }
   }
 
-  Future<dynamic> emiteEntrega(listaEntregar) async {
-    var url = Uri.parse(
-        // print(
-        '${Consts.apiPortaria}correspondencias/?fn=entregarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&listacorrespondencias=$listaEntregar');
-    var resposta = await http.get(url);
-    if (resposta.statusCode == 200) {
-      return json.decode(resposta.body);
-    } else {
-      return ['Não foi!'];
-    }
-  }
+  // Future<dynamic> emiteEntrega(listaEntregar) async {
+  //   var url = Uri.parse(
+  //       // print(
+  //       '${Consts.apiPortaria}correspondencias/?fn=entregarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&listacorrespondencias=$listaEntregar');
+  //   var resposta = await http.get(url);
+  //   if (resposta.statusCode == 200) {
+  //     return json.decode(resposta.body);
+  //   } else {
+  //     return ['Não foi!'];
+  //   }
+  // }
 }

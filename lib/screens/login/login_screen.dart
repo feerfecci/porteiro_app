@@ -1,4 +1,5 @@
 import 'package:app_porteiro/consts/consts_future.dart';
+import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:validatorless/validatorless.dart';
@@ -16,7 +17,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKeyLogin = GlobalKey<FormState>();
   final TextEditingController userController =
-      TextEditingController(text: 'feeh_fecci');
+      TextEditingController(text: 'porteirodocondominio');
   final TextEditingController senhaController =
       TextEditingController(text: '123456');
   bool obscure = true;
@@ -107,15 +108,21 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     return Scaffold(
-      body: Center(
-        child: Form(
-          key: _formKeyLogin,
+      body: Form(
+        key: _formKeyLogin,
+        child: Center(
           child: Wrap(
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
                 child: Column(
                   children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: size.height * 0.05),
+                      child: ConstsWidget.buildTitleText(context,
+                          title: 'App Porteiro'),
+                    ),
                     buildTextFormEmail(),
                     SizedBox(
                       height: size.height * 0.01,

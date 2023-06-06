@@ -16,6 +16,7 @@ showModalEmiteEntrega(BuildContext context,
   var size = MediaQuery.of(context).size;
   showModalBottomSheet(
     context: context,
+    isDismissible: false,
     builder: (context) => SizedBox(
       height: size.height * 0.8,
       child: SafeArea(
@@ -85,12 +86,18 @@ class _WidgetEmiteEntregaState extends State<WidgetEmiteEntrega> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          ConstsWidget.buildClosePop(context),
-          ConstsWidget.buildTitleText(context, title: 'Confirmar entrega'),
+          Row(
+            children: [
+              ConstsWidget.buildTitleText(context, title: 'Confirmar entrega'),
+              Spacer(),
+              ConstsWidget.buildClosePop(context),
+            ],
+          ),
           ConstsWidget.buildMyTextFormObrigatorio(
             context,
             'Código de confirmação',
@@ -99,8 +106,11 @@ class _WidgetEmiteEntregaState extends State<WidgetEmiteEntrega> {
               confirmacao = text;
             },
           ),
-          Text('Peça o código de entrega',
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+            child: ConstsWidget.buildTitleText(context,
+                title: 'Peça o código de entrega', color: Colors.red),
+          ),
           ConstsWidget.buildLoadingButton(context, onPressed: () {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
