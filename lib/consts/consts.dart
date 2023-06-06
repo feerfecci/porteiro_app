@@ -6,6 +6,8 @@ class FuncionarioInfos {
   static int? idFuncionario;
   static bool? ativo;
   static int? idcondominio;
+  static int? idfuncao;
+  static String? nome_funcao;
   static String? nome_condominio;
   static String? nome_funcionario;
   static String? login;

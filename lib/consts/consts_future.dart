@@ -12,6 +12,23 @@ import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 
 class ConstsFuture {
+  static Future<dynamic> launchGetApi(apiPortaria) async {
+    var url = Uri.parse('${Consts.apiPortaria}$apiPortaria');
+    var resposta = await http.get(url);
+
+    if (resposta.statusCode == 200) {
+      return json.decode(resposta.body);
+    } else {
+      Map asd = {'erro': true, 'mensagem': 'Algo saiu mal'};
+      return asd;
+    }
+  }
+
+  static navigatorPopPush(BuildContext context, String namedroute) {
+    Navigator.pop(context);
+    Navigator.popAndPushNamed(context, namedroute);
+  }
+
   static navigatorPushRemoveUntil(
       BuildContext context, Widget pageRoute) async {
     return Navigator.pushAndRemoveUntil(
@@ -32,7 +49,7 @@ class ConstsFuture {
 
   static navigatorPopAndPush(BuildContext context, Widget pageRoute) {
     Navigator.pop(context);
-    return Navigator.push(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => pageRoute,
@@ -54,6 +71,8 @@ class ConstsFuture {
         FuncionarioInfos.idcondominio = loginInfos['idcondominio'];
         FuncionarioInfos.nome_condominio = loginInfos['nome_condominio'];
         FuncionarioInfos.nome_funcionario = loginInfos['nome_funcionario'];
+        FuncionarioInfos.idfuncao = loginInfos['idfuncao'];
+        FuncionarioInfos.nome_funcao = loginInfos['nome_funcao'];
         FuncionarioInfos.login = loginInfos['login'];
         FuncionarioInfos.avisa_corresp = loginInfos['avisa_corresp'];
         FuncionarioInfos.avisa_visita = loginInfos['avisa_visita'];
