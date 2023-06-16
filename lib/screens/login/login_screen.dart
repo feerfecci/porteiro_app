@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
             borderSide: BorderSide(color: Colors.black26),
           ),
         ),
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
       );
     }
 
@@ -60,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
           TextFormField(
             textInputAction: TextInputAction.done,
             controller: senhaController,
+
             // autofillHints: [AutofillHints.password],
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: Validatorless.multiple([
@@ -90,10 +92,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     : Icon(Icons.visibility_outlined),
               ),
             ),
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
           StatefulBuilder(builder: (context, setState) {
             return CheckboxListTile(
-              title: Text('Mantenha-me conectado'),
+              title: ConstsWidget.buildTitleText(context,
+                  title: 'Mantenha-me conectado'),
               value: isChecked,
               activeColor: Consts.kButtonColor,
               onChanged: (bool? value) {

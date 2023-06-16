@@ -1,6 +1,5 @@
 import 'package:app_porteiro/repositories/theme_modals/theme_modals.dart';
 import 'package:app_porteiro/repositories/theme_modals/themes_provider.dart';
-import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

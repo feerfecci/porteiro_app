@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -13,6 +12,7 @@ import '../consts/consts_widget.dart';
 import 'package:http/http.dart' as http;
 
 import '../screens/correspondencias/correspondencias_screen.dart';
+import 'modal_all.dart';
 
 showModalIncluiCorresp(BuildContext context,
     {required String title,
@@ -21,28 +21,15 @@ showModalIncluiCorresp(BuildContext context,
     required String? nome_responsavel,
     required String? localizado}) {
   var size = MediaQuery.of(context).size;
-  showModalBottomSheet(
-    enableDrag: false,
-    isScrollControlled: true,
-    isDismissible: false,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(20),
-      ),
-    ),
-    context: context,
-    builder: (context) => SizedBox(
-      height: size.height * 0.85,
-      child: Padding(
-        padding: EdgeInsets.all(size.height * 0.01),
-        child: WidgetModalCorresp(
-            title: title,
-            idunidade: idunidade,
-            tipoAviso: tipoAviso,
-            localizado: localizado,
-            nome_responsavel: nome_responsavel),
-      ),
-    ),
+
+  buildModalAll(
+    context,
+    child: WidgetModalCorresp(
+        title: title,
+        idunidade: idunidade,
+        tipoAviso: tipoAviso,
+        localizado: localizado,
+        nome_responsavel: nome_responsavel),
   );
 }
 
@@ -81,11 +68,11 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
     setState(() {
       loadingRetirada = !loadingRetirada;
     });
-    var idmsg = remetenteText == null ? dropRemetente : null;
 
     Timer(Duration(seconds: 2), () {
-      ConstsFuture.launchGetApi(
-              'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$idmsg')
+      var idmsgs = remetenteText == null ? dropRemetente : null;
+      ConstsFuture.launchGetApi(context,
+              'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$idmsgs')
           .then((value) {
         if (!value['erro']) {
           setState(() {
@@ -105,8 +92,11 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
                 title: 'Tudo certo!', subTitle: value['mensagem']);
           });
         } else {
-          buildMinhaSnackBar(context,
-              title: 'Algo Saiu Mau!', subTitle: value['mensagem']);
+          setState(() {
+            loadingRetirada = !loadingRetirada;
+            buildMinhaSnackBar(context,
+                title: 'Algo Saiu Mau!', subTitle: value['mensagem']);
+          });
         }
       });
     });
@@ -194,18 +184,7 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              Spacer(),
-              ConstsWidget.buildTitleText(context, title: widget.title),
-              Spacer(),
-              IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.close)),
-            ],
-          ),
+          ConstsWidget.buildClosePop(context, title: widget.title),
           if (!preencheMao) builDropButtonRemetentes(),
           // if (!preencheMao)
           ConstsWidget.buildCustomButton(

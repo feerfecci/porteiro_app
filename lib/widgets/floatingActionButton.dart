@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: file_names
 
+import 'package:flutter/material.dart';
 import '../consts/consts.dart';
-import '../seach_pages/search_unidades.dart';
 
 Widget buildFloatingSearch(BuildContext context,
     {required SearchDelegate<String> searchPage}) {

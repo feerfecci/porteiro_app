@@ -3,6 +3,8 @@
 import 'dart:convert';
 
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/moldals/modal_all.dart';
+import 'package:app_porteiro/widgets/my_textform_field.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -17,26 +19,14 @@ showModalAvisaDelivery(
   required int? tipoAviso,
   // required String nome_moradores
 }) {
-  var size = MediaQuery.of(context).size;
-  return showModalBottomSheet(
-    enableDrag: false,
-    isScrollControlled: true,
-    isDismissible: false,
-    context: context,
-    builder: (context) => SizedBox(
-      height: size.height * 0.8,
-      child: Scaffold(
-        key: Consts.modelScaffoldKey,
-        body: WidgetAvisaDelivery(
-          idunidade: idunidade,
-          localizado: localizado,
-          nome_responsavel: nome_responsavel,
-          tipoAviso: tipoAviso,
-          // nome_moradores: nome_moradores
-        ),
-      ),
-    ),
-  );
+  return buildModalAll(context,
+      child: WidgetAvisaDelivery(
+        idunidade: idunidade,
+        localizado: localizado,
+        nome_responsavel: nome_responsavel,
+        tipoAviso: tipoAviso,
+        // nome_moradores: nome_moradores
+      ));
 }
 
 class WidgetAvisaDelivery extends StatefulWidget {
@@ -59,6 +49,8 @@ class WidgetAvisaDelivery extends StatefulWidget {
 }
 
 class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
+  var keyFormField = GlobalKey<FormState>();
+  String? nomeVisitante;
   List categoryItemListAvisos = [];
   Object? dropdownValue;
   @override
@@ -144,58 +136,72 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
       );
     }
 
-    return Column(
-      // crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Spacer(),
-            ConstsWidget.buildTitleText(context,
-                title: widget.tipoAviso == 1 ? 'Delivery' : 'Vistita'),
-            Spacer(),
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.close)),
-          ],
-        ),
-        ConstsWidget.buildTitleText(context, title: widget.nome_responsavel),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-          child: ConstsWidget.buildTitleText(context, title: widget.localizado),
-        ),
-        // SizedBox(
-        //     height: size.height * 0.1,
-        //     width: size.width * 0.9,
-        //     child: ConstsWidget.buildTitleText(context,
-        //         title: widget.nome_moradores)),
-        buildDropButtonAvisos(),
-        ConstsWidget.buildCustomButton(
-          context,
-          'Avisar Apartamento',
-          onPressed: dropdownValue != null
-              ? () {
-                  ConstsFuture.launchGetApi(
-                          'msgsprontas/index.php?fn=enviarMensagem&idcond=${FuncionarioInfos.idcondominio}&idmsg=$dropdownValue&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}')
-                      .then((value) {
-                    if (!value['erro']) {
-                      Navigator.pop(context);
-                      return buildMinhaSnackBar(context,
-                          title: 'Aviso Enviado', subTitle: value['mensagem']);
-                    } else {
-                      return buildMinhaSnackBar(context,
-                          title: 'Que pena!', subTitle: value['mensagem']);
+    return Form(
+      key: keyFormField,
+      child: Column(
+        // crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ConstsWidget.buildClosePop(context,
+              title: widget.tipoAviso == 1 ? 'Delivery' : 'Vistita'),
+          ConstsWidget.buildTitleText(context, title: widget.nome_responsavel),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+            child:
+                ConstsWidget.buildTitleText(context, title: widget.localizado),
+          ),
+          // SizedBox(
+          //     height: size.height * 0.1,
+          //     width: size.width * 0.9,
+          //     child: ConstsWidget.buildTitleText(context,
+          //         title: widget.nome_moradores)),
+          buildDropButtonAvisos(),
+          buildMyTextFormObrigatorio(
+            context,
+            widget.tipoAviso == 1 ? 'Nome Restaurante' : 'Nome Visitante:',
+            onSaved: (text) => nomeVisitante = text,
+          ),
+          ConstsWidget.buildCustomButton(
+            context,
+            'Avisar Apartamento',
+            onPressed: dropdownValue != null
+                ? () {
+                    var validForm = keyFormField.currentState!.validate();
+                    if (validForm) {
+                      keyFormField.currentState!.save();
+
+                      int respostaTipo;
+
+                      if (widget.tipoAviso == 1) {
+                        respostaTipo = 5;
+                      } else if (widget.tipoAviso == 2) {
+                        respostaTipo = 6;
+                      } else if (widget.tipoAviso == 3) {
+                        respostaTipo = 7;
+                      } else {
+                        respostaTipo = 8;
+                      }
+                      ConstsFuture.launchGetApi(context,
+                              'msgsprontas/index.php?fn=enviarMensagem&idcond=${FuncionarioInfos.idcondominio}&idmsg=$dropdownValue&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&nome_visitante=$nomeVisitante&tipo=$respostaTipo')
+                          .then((value) {
+                        if (!value['erro']) {
+                          Navigator.pop(context);
+                          return buildMinhaSnackBar(context,
+                              title: 'Aviso Enviado',
+                              subTitle: value['mensagem']);
+                        } else {
+                          return buildMinhaSnackBar(context,
+                              title: 'Que pena!', subTitle: value['mensagem']);
+                        }
+                      });
                     }
-                  });
-                }
-              : () {
-                  buildMinhaSnackBar(context,
-                      subTitle: 'Escolha um aviso para seguir');
-                },
-        )
-      ],
+                  }
+                : () {
+                    buildMinhaSnackBar(context,
+                        subTitle: 'Escolha um aviso para seguir');
+                  },
+          )
+        ],
+      ),
     );
   }
 }

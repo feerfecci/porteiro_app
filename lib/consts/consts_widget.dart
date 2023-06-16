@@ -165,19 +165,25 @@ class ConstsWidget {
     );
   }
 
-  static Widget buildClosePop(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.close,
-              color: Theme.of(context).iconTheme.color,
-            )),
-      ],
+  static Widget buildClosePop(BuildContext context,
+      {required title, double paddingX = 0.02}) {
+    var size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: size.width * paddingX),
+      child: Row(
+        children: [
+          ConstsWidget.buildTitleText(context, title: title),
+          Spacer(),
+          IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.close,
+                color: Theme.of(context).iconTheme.color,
+              )),
+        ],
+      ),
     );
   }
 

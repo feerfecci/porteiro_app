@@ -12,6 +12,7 @@ class FuncionarioInfos {
   static String? nome_funcionario;
   static String? login;
   static bool avisa_corresp = false;
+  
   static bool avisa_visita = false;
   static bool avisa_delivery = false;
   static bool avisa_encomendas = false;

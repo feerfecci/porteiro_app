@@ -1,17 +1,13 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names
-
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/moldals/modal_emite_entrega.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
-import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../consts/consts.dart';
-import '../moldals/modal_inclui_corrresp.dart';
 
 class SearchProtocolos extends SearchDelegate<String> {
   final int? idunidade;
@@ -159,7 +155,9 @@ class SearchProtocolos extends SearchDelegate<String> {
                       // emiteEntrega(listEntregar.join(','));
 
                       showModalEmiteEntrega(context,
-                          idunidade: idunidade, protocoloRetirada: query);
+                          idunidade: idunidade,
+                          protocoloRetirada: query,
+                          tipoCompara: 1);
                       listEntregar.clear();
                     })
                   ],

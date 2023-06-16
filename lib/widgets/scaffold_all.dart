@@ -20,6 +20,7 @@ class ScaffoldAll extends StatefulWidget {
 class _ScaffoldAllState extends State<ScaffoldAll> {
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       floatingActionButton: widget.floatingActionButton,
       resizeToAvoidBottomInset: false,
@@ -30,7 +31,10 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
         elevation: 0,
       ),
       endDrawer: CustomDrawer(),
-      body: widget.body,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: size.height * 0.01),
+        child: widget.body,
+      ),
     );
   }
 }

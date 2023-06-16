@@ -19,6 +19,8 @@ dependencies:
   shimmer: ^2.0.0
   intl: ^0.18.1
   flutter_speed_dial: ^7.0.0
+  crypto: ^3.0.3
+  local_auth: ^2.1.6
 
 flutter_icons:  
   

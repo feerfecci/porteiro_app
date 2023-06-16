@@ -2,10 +2,10 @@
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/moldals/modal_avisa_delivery.dart';
 import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
+import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
 import 'package:flutter/material.dart';
 
 class ListTileAp extends StatefulWidget {
@@ -72,7 +72,7 @@ class _ListTileApState extends State<ListTileAp> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ConstsWidget.buildTitleText(context, title: '${widget.idunidade}'),
+          // ConstsWidget.buildTitleText(context, title: '${widget.idunidade}'),
           ConstsWidget.buildSubTitleText(context, subTitle: widget.bloco),
           ConstsWidget.buildTitleText(context, title: widget.nomeResponsavel),
           // Text(widget.nome_moradores),

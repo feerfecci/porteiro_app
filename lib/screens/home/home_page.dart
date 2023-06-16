@@ -1,13 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, unused_local_variable, non_constant_identifier_names
-
 import 'dart:convert';
-
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/seach_pages/search_unidades.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import '../../seach_pages/search_veiculo.dart';
+import '../../widgets/custom_drawer/custom_drawer.dart';
 import 'list_tile_ap.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,6 +32,16 @@ Future apiListarUnidades() async {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future oneSignalNotification() async {
+    OneSignal.shared.setAppId("5993cb79-853a-412e-94a1-f995c9797692");
+    OneSignal.shared.promptUserForPushNotificationPermission();
+    OneSignal.shared.sendTags({
+      'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
+      'idcond': FuncionarioInfos.idcondominio.toString(),
+      'idfuncao': FuncionarioInfos.idfuncao.toString(),
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -37,101 +49,157 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    apiListarUnidades();
+    oneSignalNotification();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return RefreshIndicator(
-      onRefresh: () async {
-        setState(() {
-          apiListarUnidades();
-        });
-      },
-      child: ListView(
+    return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leadingWidth: 40,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: Image.network(
+            'http://www.portariaapp.com/wp-content/uploads/2023/03/portria.png',
+          ),
+        ),
+      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        icon: Icons.add,
+        overlayColor: Theme.of(context).colorScheme.primary,
+        iconTheme: IconThemeData(color: Colors.white),
+        activeBackgroundColor: Colors.red,
+        backgroundColor: Consts.kColorApp,
         children: [
-          // SearchBar(),
-          FutureBuilder<dynamic>(
-            future: apiListarUnidades(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return MyBoxShadow(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ShimmerWidget(height: 16, width: size.width * 0.5),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: size.height * 0.01),
-                      child: ShimmerWidget(
-                        height: 16,
-                        width: size.width * 0.5,
-                      ),
-                    ),
-                    ShimmerWidget(height: 16, width: size.width * 0.3),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: size.height * 0.01),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ShimmerWidget(
-                            height: size.height * 0.08,
-                            width: size.height * 0.08,
-                          ),
-                          ShimmerWidget(
-                            height: size.height * 0.08,
-                            width: size.height * 0.08,
-                          ),
-                          ShimmerWidget(
-                            height: size.height * 0.08,
-                            width: size.height * 0.08,
-                          ),
-                          ShimmerWidget(
-                            height: size.height * 0.08,
-                            width: size.height * 0.08,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ));
-              } else if (snapshot.hasError) {
-                return Container(
-                  color: Colors.red,
-                );
-              }
-              return ListView.builder(
-                // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                //     maxCrossAxisExtent: size.width * 1,
-                //     mainAxisExtent: size.height * 0.23),
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                itemCount: snapshot.data['unidades'].length,
-                itemBuilder: (context, index) {
-                  var apiUnidade = snapshot.data['unidades'][index];
-                  var idunidade = apiUnidade['idunidade'];
-                  var ativo = apiUnidade['ativo'];
-                  var idcondominio = apiUnidade['idcondominio'];
-                  var nome_condominio = apiUnidade['nome_condominio'];
-                  var iddivisao = apiUnidade['iddivisao'];
-                  var nome_divisao = apiUnidade['nome_divisao'];
-                  var dividido_por = apiUnidade['dividido_por'];
-                  var numero = apiUnidade['numero'];
-                  var nome_responsavel = apiUnidade['nome_responsavel'];
-                  var login = apiUnidade['login'];
-                  return Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: size.height * 0.005),
-                    child: ListTileAp(
-                      nomeResponsavel: nome_responsavel,
-                      bloco: '$dividido_por $nome_divisao - $numero',
-                      // nome_moradores: nome_moradores,
-                      idunidade: idunidade,
-                    ),
-                  );
-                },
-              );
-            },
+          SpeedDialChild(
+            label: 'Apartamentos',
+            child: Icon(Icons.business_outlined),
+            onTap: () =>
+                showSearch(context: context, delegate: SearchUnidades()),
+          ),
+          SpeedDialChild(
+            label: 'Carros',
+            child: Icon(Icons.car_crash_sharp),
+            onTap: () =>
+                showSearch(context: context, delegate: SearchVeiculo()),
           ),
         ],
+      ),
+      endDrawer: CustomDrawer(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            apiListarUnidades();
+          });
+        },
+        child: ListView(
+          children: [
+            // SearchBar(),
+            FutureBuilder<dynamic>(
+              future: apiListarUnidades(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return MyBoxShadow(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ShimmerWidget(height: 16, width: size.width * 0.5),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: size.height * 0.01),
+                        child: ShimmerWidget(
+                          height: 16,
+                          width: size.width * 0.5,
+                        ),
+                      ),
+                      ShimmerWidget(height: 16, width: size.width * 0.3),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: size.height * 0.01),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ShimmerWidget(
+                              height: size.height * 0.08,
+                              width: size.height * 0.08,
+                            ),
+                            ShimmerWidget(
+                              height: size.height * 0.08,
+                              width: size.height * 0.08,
+                            ),
+                            ShimmerWidget(
+                              height: size.height * 0.08,
+                              width: size.height * 0.08,
+                            ),
+                            ShimmerWidget(
+                              height: size.height * 0.08,
+                              width: size.height * 0.08,
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ));
+                } else if (snapshot.hasError) {
+                  return Container(
+                    color: Colors.red,
+                  );
+                }
+                return ListView.builder(
+                  // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  //     maxCrossAxisExtent: size.width * 1,
+                  //     mainAxisExtent: size.height * 0.23),
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemCount: snapshot.data['unidades'].length,
+                  itemBuilder: (context, index) {
+                    var apiUnidade = snapshot.data['unidades'][index];
+                    var idunidade = apiUnidade['idunidade'];
+                    var ativo = apiUnidade['ativo'];
+                    var idcondominio = apiUnidade['idcondominio'];
+                    var nome_condominio = apiUnidade['nome_condominio'];
+                    var iddivisao = apiUnidade['iddivisao'];
+                    var nome_divisao = apiUnidade['nome_divisao'];
+                    var dividido_por = apiUnidade['dividido_por'];
+                    var numero = apiUnidade['numero'];
+                    String nome_responsavel = apiUnidade['nome_responsavel'];
+                    var login = apiUnidade['login'];
+                    List nomeEmLista = nome_responsavel.split(' ');
+                    List<String> listNomeAbreviado = [];
+                    for (var i = 1; i <= (nomeEmLista.length - 1); i++) {
+                      listNomeAbreviado.add(nomeEmLista[i].substring(0, 1));
+                    }
+                    var segundoNome = listNomeAbreviado.join('. ');
+                    // var segundoNome = nomeEmLista.forEach((element) {
+                    //   return element.substring(0, 1);
+                    // });
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: size.height * 0.005),
+                      child: ListTileAp(
+                        nomeResponsavel: '${nomeEmLista.first} $segundoNome.',
+                        bloco: '$dividido_por $nome_divisao - $numero',
+                        // nome_moradores: nome_moradores,
+                        idunidade: idunidade,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

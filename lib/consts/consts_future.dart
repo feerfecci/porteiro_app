@@ -1,9 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
-
 import 'package:app_porteiro/consts/consts.dart';
-import 'package:app_porteiro/items_bottom.dart';
 import 'package:app_porteiro/screens/login/login_screen.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -11,16 +8,21 @@ import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
 
+import '../screens/home/home_page.dart';
+
 class ConstsFuture {
-  static Future<dynamic> launchGetApi(apiPortaria) async {
+  static Future<dynamic> launchGetApi(BuildContext context, apiPortaria) async {
     var url = Uri.parse('${Consts.apiPortaria}$apiPortaria');
     var resposta = await http.get(url);
 
     if (resposta.statusCode == 200) {
-      return json.decode(resposta.body);
+      try {
+        return json.decode(resposta.body);
+      } on Exception {
+        return {'erro': true, 'mensagem': 'Tente Novamente'};
+      }
     } else {
-      Map asd = {'erro': true, 'mensagem': 'Algo saiu mal'};
-      return asd;
+      return {'erro': true, 'mensagem': 'Algo saiu mal'};
     }
   }
 
@@ -81,7 +83,7 @@ class ConstsFuture {
         // Navigator.pop(context);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => ItemsBottom(),
+              builder: (context) => HomePage(),
             ),
             (route) => true);
       } else {
