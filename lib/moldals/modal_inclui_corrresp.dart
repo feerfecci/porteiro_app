@@ -24,6 +24,8 @@ showModalIncluiCorresp(BuildContext context,
 
   buildModalAll(
     context,
+    title: title,
+    isDrawer: false,
     child: WidgetModalCorresp(
         title: title,
         idunidade: idunidade,
@@ -125,7 +127,7 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
     var size = MediaQuery.of(context).size;
     Widget builDropButtonRemetentes() {
       return Padding(
-        padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+        padding: EdgeInsets.symmetric(vertical: size.height * 0.005),
         child: Container(
           width: double.infinity,
           height: size.height * 0.07,
@@ -184,16 +186,19 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ConstsWidget.buildClosePop(context, title: widget.title),
+          // ConstsWidget.buildClosePop(context, title: widget.title),
           if (!preencheMao) builDropButtonRemetentes(),
           // if (!preencheMao)
-          ConstsWidget.buildCustomButton(
-              context, preencheMao ? 'Usar Padrão' : 'Personalizar',
-              onPressed: () {
-            setState(() {
-              preencheMao = !preencheMao;
-            });
-          }),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
+            child: ConstsWidget.buildCustomButton(
+                context, preencheMao ? 'Usar Padrão' : 'Personalizar',
+                onPressed: () {
+              setState(() {
+                preencheMao = !preencheMao;
+              });
+            }),
+          ),
           if (preencheMao)
             Column(
               children: [
@@ -230,11 +235,13 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
             ),
           ),
           SizedBox(
-            height: size.height * 0.01,
+            height: size.height * 0.015,
           ),
           ConstsWidget.buildLoadingButton(
             context,
+            fontSize: 16,
             isLoading: loadingRetirada,
+            color: Consts.kColorRed,
             title: 'Salvar e avisar',
             onPressed: () {
               if (_formKey.currentState!.validate()) {

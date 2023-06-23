@@ -30,7 +30,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: size.height * 0.1,
+                height: size.height * 0.08,
                 width: size.width * 0.85,
                 child: DrawerHeader(
                   padding: EdgeInsets.symmetric(
@@ -39,44 +39,84 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   ),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(30),
                         topLeft: Radius.circular(30),
                       ),
                       color: Consts.kColorApp),
                   child: Text(
                     'Menu',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 24,
                       color: Colors.white,
                     ),
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  ConstsWidget.buildTitleText(context,
-                      title: FuncionarioInfos.nome_funcionario!),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ConstsWidget.buildSubTitleText(context,
-                          subTitle: FuncionarioInfos.login!),
-                      ConstsWidget.buildAtivoInativo(
-                          context, FuncionarioInfos.ativo!)
-                    ],
-                  ),
-                ],
+              // Column(
+              //   children: [
+              //     ConstsWidget.buildTitleText(context,
+              //         title: FuncionarioInfos.nome_funcionario!),
+              //     Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //       children: [
+              //         ConstsWidget.buildSubTitleText(context,
+              //             subTitle: FuncionarioInfos.login!),
+              //         ConstsWidget.buildAtivoInativo(
+              //             context, FuncionarioInfos.ativo!)
+              //       ],
+              //     ),
+              //   ],
+              // ),
+              ListTile(
+                leading: Icon(
+                  Icons.business_center_outlined,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                title: ConstsWidget.buildTitleText(
+                  context,
+                  title: 'Seja um Representante',
+                ),
+                onTap: () {},
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: size.height * 0.05),
-                child: ChangeThemeButton(),
+              ListTile(
+                leading: Icon(
+                  Icons.privacy_tip_outlined,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                title: ConstsWidget.buildTitleText(
+                  context,
+                  title: 'Política de privacidade',
+                ),
+                onTap: () {},
+                trailing: Icon(
+                  Icons.arrow_forward_ios_outlined,
+                ),
               ),
+              ListTile(
+                leading: Icon(
+                  Icons.phone_forwarded_outlined,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                title: ConstsWidget.buildTitleText(
+                  context,
+                  title: 'Suporte',
+                ),
+                onTap: () {},
+                trailing: Icon(
+                  Icons.arrow_forward_ios_outlined,
+                ),
+              ),
+              ChangeThemeButton(),
               Spacer(),
               Padding(
                 padding: EdgeInsets.all(size.height * 0.01),
                 child: ConstsWidget.buildCustomButton(
                   context,
                   'Sair',
+                  color: Color.fromARGB(255, 251, 80, 93),
                   onPressed: () {
                     LocalInfos.removeCache();
                     ConstsFuture.navigatorPushRemoveUntil(

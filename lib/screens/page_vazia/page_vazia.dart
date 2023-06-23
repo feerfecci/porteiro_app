@@ -12,10 +12,15 @@ class PageVazia extends StatefulWidget {
 class _PageVaziaState extends State<PageVazia> {
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Column(
       children: [
         Image.network('https://a.portariaapp.com/img/img.png'),
-        ConstsWidget.buildTitleText(context, title: widget.title)
+        SizedBox(
+          height: size.height * 0.01,
+        ),
+        ConstsWidget.buildTitleText(context,
+            title: widget.title, textAlign: TextAlign.center, fontSize: 20)
       ],
     );
   }

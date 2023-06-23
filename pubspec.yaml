@@ -21,20 +21,20 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   crypto: ^3.0.3
   local_auth: ^2.1.6
+  flutter_launcher_icons: ^0.13.1
 
 flutter_icons:  
   
-  image_path: "assets/portaria.png"
+  image_path: "assets/portaria_porteiro.png"
   ios: true
   remove_alpha_ios: true
   android: "launch_icon"
-  adaptive_icon_foreground: "assets/portaria.png"
+  adaptive_icon_foreground: "assets/portaria_porteiro.png"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true

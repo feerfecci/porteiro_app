@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
 
+import '../items_bottom.dart';
 import '../screens/home/home_page.dart';
 
 class ConstsFuture {
@@ -83,7 +84,7 @@ class ConstsFuture {
         // Navigator.pop(context);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => HomePage(),
+              builder: (context) => ItemsBottom(),
             ),
             (route) => true);
       } else {
@@ -91,5 +92,16 @@ class ConstsFuture {
         return buildMinhaSnackBar(context);
       }
     }
+  }
+
+  static Future<Widget> apiImage(String iconApi) async {
+    var url = Uri.parse(iconApi);
+    var resposta = await http.get(url);
+
+    return resposta.statusCode == 200
+        ? Image.network(
+            iconApi,
+          )
+        : Image.asset('assets/erro_png.png');
   }
 }

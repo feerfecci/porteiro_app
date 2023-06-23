@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/items_bottom.dart';
 import 'package:app_porteiro/moldals/modal_all.dart';
 import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
@@ -22,6 +23,8 @@ showModalEmiteEntrega(
 }) {
   buildModalAll(
     context,
+    title: 'Emitir Entrega',
+    isDrawer: false,
     child: WidgetEmiteEntrega(
         idMorador: idMorador,
         idunidade: idunidade,
@@ -105,7 +108,7 @@ class _WidgetEmiteEntregaState extends State<WidgetEmiteEntrega> {
         if (!codigoConfirmadoApi) {
           buildMinhaSnackBar(context,
               title: 'Tudo Certo', subTitle: mensagemApi);
-          ConstsFuture.navigatorPushRemoveUntil(context, HomePage());
+          ConstsFuture.navigatorPushRemoveUntil(context, ItemsBottom());
         } else if (codigoConfirmadoApi) {
           buildMinhaSnackBar(context,
               title: 'Algo Errado', subTitle: mensagemApi);
@@ -178,13 +181,14 @@ class _WidgetEmiteEntregaState extends State<WidgetEmiteEntrega> {
       key: _formKey,
       child: Column(
         children: [
-          ConstsWidget.buildClosePop(context, title: 'Confirmar entrega'),
+          // ConstsWidget.buildClosePop(context, title: 'Confirmar entrega'),
           // if (widget.tipoCompara == 2)
           // buildFuture(),
           ConstsWidget.buildMyTextFormObrigatorio(
             context,
             'Código de confirmação',
             mensagem: 'Peça o código de entrega',
+            obscureText: true,
             onSaved: (text) {
               confirmacao = text;
             },

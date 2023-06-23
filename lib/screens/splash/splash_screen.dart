@@ -23,10 +23,11 @@ class _SplashScreenState extends State<SplashScreen> {
         final auth = await LocalBiometrics.authenticate();
         final hasBiometrics = await LocalBiometrics.hasBiometric();
         if (auth && hasBiometrics) {
-          ConstsFuture.fazerLogin(context, cacheInfos.first, cacheInfos.last);
+          return ConstsFuture.fazerLogin(
+              context, cacheInfos.first, cacheInfos.last);
         }
       } else {
-        ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
+        return ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
       }
     });
   }
@@ -50,7 +51,9 @@ class _SplashScreenState extends State<SplashScreen> {
           SizedBox(
             height: size.height * 0.2,
             width: size.width * 0.6,
-            child: Image.asset('assets/portaria.png'),
+            child: Image.network(
+              'https://a.portariaapp.com/img/logo_vermelho.png',
+            ),
           ),
           Spacer(),
           Padding(

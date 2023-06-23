@@ -3,13 +3,16 @@ import 'dart:convert';
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/seach_pages/search_unidades.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
+import 'package:app_porteiro/widgets/seachBar.dart';
 import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import '../../seach_pages/search_protocolo.dart';
 import '../../seach_pages/search_veiculo.dart';
 import '../../widgets/custom_drawer/custom_drawer.dart';
+import '../../widgets/floatingActionButton.dart';
 import 'list_tile_ap.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,80 +35,47 @@ Future apiListarUnidades() async {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future oneSignalNotification() async {
-    OneSignal.shared.setAppId("5993cb79-853a-412e-94a1-f995c9797692");
-    OneSignal.shared.promptUserForPushNotificationPermission();
-    OneSignal.shared.sendTags({
-      'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
-      'idcond': FuncionarioInfos.idcondominio.toString(),
-      'idfuncao': FuncionarioInfos.idfuncao.toString(),
-    });
-  }
+  // Future oneSignalNotification() async {
+  //   OneSignal.shared.setAppId("5993cb79-853a-412e-94a1-f995c9797692");
+  //   OneSignal.shared.promptUserForPushNotificationPermission();
+  //   OneSignal.shared.sendTags({
+  //     'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
+  //     'idcond': FuncionarioInfos.idcondominio.toString(),
+  //     'idfuncao': FuncionarioInfos.idfuncao.toString(),
+  //   });
+  // }
 
-  @override
-  void dispose() {
-    super.dispose();
-    apiListarUnidades();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   apiListarUnidades();
+  // }
 
-  @override
-  void initState() {
-    apiListarUnidades();
-    oneSignalNotification();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   apiListarUnidades();
+  //   oneSignalNotification();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leadingWidth: 40,
-        leading: Padding(
-          padding: EdgeInsets.only(left: 8),
-          child: Image.network(
-            'http://www.portariaapp.com/wp-content/uploads/2023/03/portria.png',
-          ),
-        ),
-      ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        icon: Icons.add,
-        overlayColor: Theme.of(context).colorScheme.primary,
-        iconTheme: IconThemeData(color: Colors.white),
-        activeBackgroundColor: Colors.red,
-        backgroundColor: Consts.kColorApp,
-        children: [
-          SpeedDialChild(
-            label: 'Apartamentos',
-            child: Icon(Icons.business_outlined),
-            onTap: () =>
-                showSearch(context: context, delegate: SearchUnidades()),
-          ),
-          SpeedDialChild(
-            label: 'Carros',
-            child: Icon(Icons.car_crash_sharp),
-            onTap: () =>
-                showSearch(context: context, delegate: SearchVeiculo()),
-          ),
-        ],
-      ),
-      endDrawer: CustomDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          setState(() {
-            apiListarUnidades();
-          });
-        },
+    return RefreshIndicator(
+      onRefresh: () async {
+        setState(() {
+          apiListarUnidades();
+        });
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
         child: ListView(
           children: [
-            // SearchBar(),
+            SeachBar(
+              label: 'Pesquise',
+              hintText: 'ap01',
+              delegate: SearchUnidades(),
+            ),
             FutureBuilder<dynamic>(
               future: apiListarUnidades(),
               builder: (context, snapshot) {

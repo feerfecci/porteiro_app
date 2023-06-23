@@ -113,11 +113,11 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Color.fromARGB(0, 220, 19, 19),
                     ),
                     child: Text(
                       "Cancelar",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
                 ),
@@ -136,7 +136,7 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Consts.kColorApp,
                   ),
                   child: Text(
                     "Continuar",

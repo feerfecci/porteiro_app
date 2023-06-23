@@ -9,13 +9,16 @@ class ConstsWidget {
   static Widget buildTitleText(
     BuildContext context, {
     Color? color,
+    double fontSize = 16,
+    TextAlign? textAlign,
     required String? title,
   }) {
     return Text(
       title ?? '',
+      textAlign: textAlign,
       style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 18,
+          fontSize: fontSize,
           color: color ?? Theme.of(context).colorScheme.primary),
     );
   }
@@ -23,12 +26,14 @@ class ConstsWidget {
   static Widget buildSubTitleText(
     BuildContext context, {
     Color? color,
+    double? fontSize = 14,
     required String subTitle,
   }) {
     return Text(
       subTitle,
       style: TextStyle(
-          fontSize: 14, color: color ?? Theme.of(context).colorScheme.primary),
+          fontSize: fontSize,
+          color: color ?? Theme.of(context).colorScheme.primary),
     );
   }
 
@@ -78,6 +83,7 @@ class ConstsWidget {
       String? hintText,
       String? initialValue,
       String? Function(String?)? validator,
+      bool obscureText = false,
       final void Function(String? text)? onSaved}) {
     var size = MediaQuery.of(context).size;
     return Padding(
@@ -87,15 +93,15 @@ class ConstsWidget {
         initialValue: initialValue,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         textAlign: TextAlign.start,
+        obscureText: obscureText,
         textInputAction: TextInputAction.next,
         onSaved: onSaved,
-        maxLines: 5,
-        minLines: 1,
         inputFormatters: inputFormatters,
         validator: validator ??
             Validatorless.multiple([Validatorless.required(mensagem)]),
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: size.width * 0.02),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.045, vertical: size.height * 0.025),
           filled: true,
           fillColor: Theme.of(context).canvasColor,
           label: Text(title),
@@ -129,11 +135,16 @@ class ConstsWidget {
       ),
       onPressed: onPressed,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
+        padding: EdgeInsets.symmetric(vertical: size.height * 0.023),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
+            if (icon != null) Icon(size: 18, icon, color: iconColor),
+            if (icon != null)
+              SizedBox(
+                width: size.width * 0.015,
+              ),
             Text(
               title,
               style: TextStyle(
@@ -143,10 +154,6 @@ class ConstsWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(
-              width: size.width * 0.015,
-            ),
-            icon != null ? Icon(size: 18, icon, color: iconColor) : SizedBox(),
           ],
         ),
       ),
@@ -190,13 +197,15 @@ class ConstsWidget {
   static Widget buildLoadingButton(BuildContext context,
       {required void Function()? onPressed,
       required bool isLoading,
-      required String title}) {
+      required String title,
+      color = Consts.kColorApp,
+      double fontSize = 14}) {
     var size = MediaQuery.of(context).size;
 
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-            backgroundColor: Consts.kColorApp,
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.023),
+            backgroundColor: color,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Consts.borderButton))),
         onPressed: onPressed,
@@ -210,7 +219,7 @@ class ConstsWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14,
+                      fontSize: fontSize,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -296,5 +305,31 @@ class ConstsWidget {
         ),
       );
     });
+  }
+
+  static Widget buildCheckBox(BuildContext context,
+      {required bool isChecked,
+      required void Function(bool?)? onChanged,
+      required String title,
+      MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center}) {
+    var size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: size.height * 0.005),
+      child: Row(
+        mainAxisAlignment: mainAxisAlignment,
+        children: [
+          buildTitleText(context, title: title),
+          Transform.scale(
+            scale: 1.3,
+            child: Checkbox(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              value: isChecked,
+              onChanged: onChanged,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

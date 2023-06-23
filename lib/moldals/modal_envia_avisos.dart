@@ -11,15 +11,17 @@ import 'package:http/http.dart' as http;
 import '../consts/consts.dart';
 import '../consts/consts_future.dart';
 
-showModalAvisaDelivery(
-  BuildContext context, {
-  required int? idunidade,
-  required String? localizado,
-  required String? nome_responsavel,
-  required int? tipoAviso,
-  // required String nome_moradores
-}) {
+showModalAvisaDelivery(BuildContext context,
+    {required int? idunidade,
+    required String? localizado,
+    required String? nome_responsavel,
+    required int? tipoAviso,
+    required String title
+    // required String nome_moradores
+    }) {
   return buildModalAll(context,
+      title: title,
+      isDrawer: false,
       child: WidgetAvisaDelivery(
         idunidade: idunidade,
         localizado: localizado,
@@ -141,13 +143,14 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ConstsWidget.buildClosePop(context,
-              title: widget.tipoAviso == 1 ? 'Delivery' : 'Vistita'),
-          ConstsWidget.buildTitleText(context, title: widget.nome_responsavel),
+          // ConstsWidget.buildClosePop(context,
+          //     title: widget.tipoAviso == 1 ? 'Delivery' : 'Vistita'),
+          ConstsWidget.buildTitleText(context,
+              title: widget.nome_responsavel, fontSize: 20),
           Padding(
             padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-            child:
-                ConstsWidget.buildTitleText(context, title: widget.localizado),
+            child: ConstsWidget.buildTitleText(context,
+                title: widget.localizado, fontSize: 22),
           ),
           // SizedBox(
           //     height: size.height * 0.1,
@@ -157,12 +160,17 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
           buildDropButtonAvisos(),
           buildMyTextFormObrigatorio(
             context,
-            widget.tipoAviso == 1 ? 'Nome Restaurante' : 'Nome Visitante:',
+            widget.tipoAviso == 1 ? 'Nome Restaurante' : 'Nome Visitante',
+            hintText: 'Exemplo: Gustavo da Silva Sousa',
             onSaved: (text) => nomeVisitante = text,
+          ),
+          SizedBox(
+            height: size.height * 0.01,
           ),
           ConstsWidget.buildCustomButton(
             context,
             'Avisar Apartamento',
+            color: Consts.kColorRed,
             onPressed: dropdownValue != null
                 ? () {
                     var validForm = keyFormField.currentState!.validate();

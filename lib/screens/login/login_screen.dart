@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
       TextEditingController(text: '123456');
   bool obscure = true;
   bool isChecked = false;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -36,7 +37,10 @@ class _LoginScreenState extends State<LoginScreen> {
         ]),
         // autofillHints: [AutofillHints.email],
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: size.width * 0.04),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: size.width * 0.03,
+            vertical: size.height * 0.020,
+          ),
           filled: true,
           fillColor: Theme.of(context).canvasColor,
           hintText: 'Digite seu usuário',
@@ -71,7 +75,10 @@ class _LoginScreenState extends State<LoginScreen> {
             onEditingComplete: () => TextInput.finishAutofillContext(),
             obscureText: obscure,
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(left: size.width * 0.04),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.03,
+                vertical: size.height * 0.020,
+              ),
               filled: true,
               fillColor: Theme.of(context).canvasColor,
               border:
@@ -95,20 +102,43 @@ class _LoginScreenState extends State<LoginScreen> {
             style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
           StatefulBuilder(builder: (context, setState) {
-            return CheckboxListTile(
-              title: ConstsWidget.buildTitleText(context,
-                  title: 'Mantenha-me conectado'),
-              value: isChecked,
-              activeColor: Consts.kButtonColor,
-              onChanged: (bool? value) {
-                setState(() {
-                  isChecked = value!;
-                });
-              },
-            );
+            return ConstsWidget.buildCheckBox(context, isChecked: isChecked,
+                onChanged: (bool? value) {
+              setState(() {
+                isChecked = value!;
+              });
+            }, title: 'Mantenha-me conectado');
           })
         ],
       );
+    }
+
+    starLogin() {
+      setState(() {
+        isLoading = !isLoading;
+        var formValid = _formKeyLogin.currentState?.validate() ?? false;
+        if (formValid && isChecked) {
+          LocalInfos.createCache(userController.text, senhaController.text)
+              .whenComplete(() {
+            setState(() {
+              isLoading = !isLoading;
+            });
+            ConstsFuture.fazerLogin(
+                context, userController.text, senhaController.text);
+          });
+
+          ConstsFuture.fazerLogin(
+              context, userController.text, senhaController.text);
+        } else if (formValid && !isChecked) {
+          setState(() {
+            isLoading = !isLoading;
+          });
+          ConstsFuture.fazerLogin(
+              context, userController.text, senhaController.text);
+        } else {
+          buildMinhaSnackBar(context);
+        }
+      });
     }
 
     return Scaffold(
@@ -118,63 +148,41 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Wrap(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                padding: EdgeInsets.only(
+                    left: size.width * 0.05,
+                    right: size.width * 0.05,
+                    bottom: size.height * 0.15),
                 child: Column(
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: size.height * 0.05),
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: FutureBuilder(
+                          future: ConstsFuture.apiImage(
+                              'https://a.portariaapp.com/img/logo_vermelho.png'),
+                          builder: (context, snapshot) {
+                            return SizedBox(
+                              height: size.height * 0.2,
+                              width: size.width * 0.5,
+                              child: snapshot.data,
+                            );
+                          },
+                        )),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: size.height * 0.035,
+                          top: size.height * 0.025),
                       child: ConstsWidget.buildTitleText(context,
-                          title: 'App Porteiro'),
+                          title: 'Portaria App | Portaria', fontSize: 19),
                     ),
                     buildTextFormEmail(),
                     SizedBox(
-                      height: size.height * 0.01,
+                      height: size.height * 0.03,
                     ),
                     buildTextFormSenha(),
-                    ElevatedButton(
-                      onPressed: () async {
-                        var formValid =
-                            _formKeyLogin.currentState?.validate() ?? false;
-                        if (formValid && isChecked) {
-                          LocalInfos.createCache(
-                                  userController.text, senhaController.text)
-                              .whenComplete(() => ConstsFuture.fazerLogin(
-                                  context,
-                                  userController.text,
-                                  senhaController.text));
-
-                          ConstsFuture.fazerLogin(context, userController.text,
-                              senhaController.text);
-                        } else if (formValid && !isChecked) {
-                          return ConstsFuture.fazerLogin(context,
-                              userController.text, senhaController.text);
-                        } else {
-                          buildMinhaSnackBar(context);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Consts.kButtonColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(60),
-                        ),
-                      ),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: size.height * 0.023),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              'Entrar',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    ConstsWidget.buildLoadingButton(context, fontSize: 18,
+                        onPressed: () async {
+                      starLogin();
+                    }, isLoading: isLoading, title: 'Entrar'),
                   ],
                 ),
               ),

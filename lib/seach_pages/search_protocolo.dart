@@ -61,7 +61,18 @@ class SearchProtocolos extends SearchDelegate<String> {
             future: sugestoesUnidades(),
             builder: (context, snapshot) {
               if (query.isEmpty) {
-                return Text('Procure por um protocolo');
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ConstsWidget.buildTitleText(
+                        context,
+                        title: 'Aqui mostrará um item quando procurar na barra',
+                      ),
+                    ],
+                  ),
+                );
               } else {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();

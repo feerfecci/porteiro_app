@@ -14,6 +14,7 @@ import '../../consts/consts.dart';
 import '../../widgets/floatingActionButton.dart';
 import '../../moldals/modal_inclui_corrresp.dart';
 import '../../seach_pages/search_protocolo.dart';
+import '../../widgets/listview_all.dart';
 import '../page_vazia/page_vazia.dart';
 
 class CorrespondenciasScreen extends StatefulWidget {
@@ -48,189 +49,241 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return ScaffoldAll(
-      floatingActionButton: buildFloatingSearch(context,
-          searchPage: SearchProtocolos(
-              idunidade: widget.idunidade, tipoAviso: widget.tipoAviso)),
-      title: widget.tipoAviso == 3 ? 'Correspondências' : ' Encomendas',
-      body: RefreshIndicator(
-        onRefresh: () async {
-          setState(() {
-            apiListarCorrespondencias(
-                idunidade: widget.idunidade, tipoAviso: widget.tipoAviso!);
-            isChecked = false;
-            correspEntregar = [];
-          });
-        },
-        child: ListView(
+    return
+        // ScaffoldAll(
+        //   floatingActionButton: buildFloatingSearch(context,
+        //       searchPage: SearchProtocolos(
+        //           idunidade: widget.idunidade, tipoAviso: widget.tipoAviso)),
+        //   title: widget.tipoAviso == 3 ? 'Correspondências' : ' Encomendas',
+        //   body:
+        RefreshIndicator(
+      onRefresh: () async {
+        setState(() {
+          apiListarCorrespondencias(
+              idunidade: widget.idunidade, tipoAviso: widget.tipoAviso!);
+          isChecked = false;
+          correspEntregar = [];
+        });
+      },
+      child: buildListViewAll([
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ConstsWidget.buildTitleText(context,
-                    title: widget.nome_responsavel),
-                ConstsWidget.buildSubTitleText(context,
-                    subTitle: widget.localizado!),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-              child: ConstsWidget.buildCustomButton(
-                context,
-                widget.tipoAviso == 1
-                    ? 'Adicionar Correspondências'
-                    : 'Adicionar Encomendas',
-                icon: Icons.add,
-                onPressed: () {
-                  showModalIncluiCorresp(context,
-                      title: 'Correspondência',
-                      idunidade: widget.idunidade!,
-                      tipoAviso: widget.tipoAviso!,
-                      nome_responsavel: widget.nome_responsavel,
-                      localizado: widget.nome_responsavel);
-                },
-              ),
-            ),
-            FutureBuilder<dynamic>(
-              future: apiListarCorrespondencias(
-                  idunidade: widget.idunidade, tipoAviso: widget.tipoAviso!),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return MyBoxShadow(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ShimmerWidget(
-                        height: size.height * 0.03,
-                        width: size.width * 0.3,
-                      ),
-                      SizedBox(
-                        height: size.height * 0.015,
-                      ),
-                      ShimmerWidget(
-                        height: size.height * 0.03,
-                        width: size.width * 0.6,
-                      )
-                    ],
-                  ));
-                } else if (snapshot.hasError) {
-                  return Text('Algo não deu certo. Volte mais tarde!');
-                } else {
-                  if (!snapshot.data['erro'] &&
-                      snapshot.data['mensagem'] ==
-                          "Nenhuma correspondência registrada para essa unidade") {
-                    return PageVazia(title: snapshot.data['mensagem']);
-                  } else {
-                    return Column(
-                      children: [
-                        ListView.builder(
-                            shrinkWrap: true,
-                            physics: ClampingScrollPhysics(),
-                            itemCount: snapshot.data['correspondencias'].length,
-                            itemBuilder: (context, index) {
-                              var apiCorresp =
-                                  snapshot.data['correspondencias'][index];
-                              var idcorrespondencia =
-                                  apiCorresp['idcorrespondencia'];
-                              var unidade = apiCorresp['unidade'];
-                              var divisao = apiCorresp['divisao'];
-                              var idcondominio = apiCorresp['idcondominio'];
-                              idUnidade = apiCorresp['idunidade'];
-                              var nome_condominio =
-                                  apiCorresp['nome_condominio'];
-                              var idfuncionario = apiCorresp['idfuncionario'];
-                              var nome_funcionario =
-                                  apiCorresp['nome_funcionario'];
-                              var data_recebimento = DateFormat('dd/MM/yyyy')
-                                  .format(DateTime.parse(
-                                      apiCorresp['data_recebimento']))
-                                  .toString();
-                              var tipo = apiCorresp['tipo'];
-                              var remetente = apiCorresp['remetente'];
-                              var descricao = apiCorresp['descricao'];
-                              var protocolo = apiCorresp['protocolo'];
-                              protocolo_entrega = protocolo_entrega =
-                                  apiCorresp['protocolo_entrega'];
-                              var datahora_cadastro =
-                                  apiCorresp['datahora_cadastro'];
-                              var datahora_ultima_atualizacao =
-                                  apiCorresp['datahora_ultima_atualizacao'];
-
-                              return StatefulBuilder(
-                                  builder: (context, setState) {
-                                return MyBoxShadow(
-                                  child: CheckboxListTile(
-                                    contentPadding: EdgeInsets.all(0),
-                                    title: ConstsWidget.buildTitleText(context,
-                                        title: remetente),
-                                    subtitle: ConstsWidget.buildSubTitleText(
-                                        context,
-                                        subTitle:
-                                            '$descricao - $data_recebimento'),
-                                    value: isChecked,
-                                    activeColor: Consts.kColorApp,
-                                    onChanged: (value) {
-                                      setState(
-                                        () {
-                                          isChecked = value!;
-                                          value
-                                              ? correspEntregar.add(
-                                                  idcorrespondencia.toString())
-                                              : correspEntregar.remove(
-                                                  idcorrespondencia.toString());
-                                        },
-                                      );
-                                    },
-                                  ),
-                                );
-                              });
-                            }),
-                        if (snapshot.data['correspondencias'].length >= 1)
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: size.height * 0.01),
-                            child: ConstsWidget.buildCustomButton(
-                              context,
-                              'Emitir Entrega',
-                              onPressed: () {
-                                correspEntregar.isEmpty
-                                    ? buildMinhaSnackBar(context,
-                                        title: 'Cuidado!',
-                                        subTitle:
-                                            'Selecione pelo menos um item')
-                                    : showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertListMoradores(
-                                              idunidade: idUnidade,
-                                              listEntregar:
-                                                  correspEntregar.join(','));
-                                        },
-                                      );
-
-                                // alertDialogMoradores(context,
-                                //     idunidade: idUnidade,
-                                //     listEntregar: correspEntregar.join(','));
-
-                                // showModalEmiteEntrega(context,
-                                //     idunidade: idUnidade,
-                                //     protocoloRetirada: protocolo_entrega,
-                                //     tipoCompara: 2,
-                                //     listEntregar: correspEntregar.join(','));
-                              },
-                            ),
-                          )
-                      ],
-                    );
-                  }
-                }
-              },
-            ),
+            ConstsWidget.buildTitleText(context,
+                title: widget.localizado, fontSize: 20),
+            SizedBox(height: size.height * 0.01),
+            ConstsWidget.buildSubTitleText(context,
+                subTitle: widget.nome_responsavel!, fontSize: 18),
           ],
         ),
-      ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
+          child: ConstsWidget.buildCustomButton(
+            context,
+            widget.tipoAviso == 1 ? 'Correspondências' : 'Encomendas',
+            icon: Icons.add,
+            onPressed: () {
+              showModalIncluiCorresp(context,
+                  title:
+                      widget.tipoAviso == 3 ? 'Correspondências' : 'Encomendas',
+                  idunidade: widget.idunidade!,
+                  tipoAviso: widget.tipoAviso!,
+                  nome_responsavel: widget.nome_responsavel,
+                  localizado: widget.nome_responsavel);
+            },
+          ),
+        ),
+        FutureBuilder<dynamic>(
+          future: apiListarCorrespondencias(
+              idunidade: widget.idunidade, tipoAviso: widget.tipoAviso!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return MyBoxShadow(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShimmerWidget(
+                    height: size.height * 0.03,
+                    width: size.width * 0.3,
+                  ),
+                  SizedBox(
+                    height: size.height * 0.015,
+                  ),
+                  ShimmerWidget(
+                    height: size.height * 0.03,
+                    width: size.width * 0.6,
+                  )
+                ],
+              ));
+            } else if (snapshot.hasError) {
+              return Text('Algo não deu certo. Volte mais tarde!');
+            } else {
+              if (!snapshot.data['erro'] &&
+                  snapshot.data['mensagem'] ==
+                      "Nenhuma correspondência registrada para essa unidade") {
+                return PageVazia(title: snapshot.data['mensagem']);
+              } else {
+                return Column(
+                  children: [
+                    if (snapshot.data['correspondencias'].length >= 1)
+                      ConstsWidget.buildCustomButton(
+                        context,
+                        'Emitir Entrega',
+                        color: Consts.kColorRed,
+                        onPressed: () {
+                          correspEntregar.isEmpty
+                              ? buildMinhaSnackBar(context,
+                                  title: 'Cuidado!',
+                                  subTitle: 'Selecione pelo menos um item')
+                              : showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertListMoradores(
+                                        idunidade: idUnidade,
+                                        listEntregar:
+                                            correspEntregar.join(','));
+                                  },
+                                );
+
+                          // alertDialogMoradores(context,
+                          //     idunidade: idUnidade,
+                          //     listEntregar: correspEntregar.join(','));
+
+                          // showModalEmiteEntrega(context,
+                          //     idunidade: idUnidade,
+                          //     protocoloRetirada: protocolo_entrega,
+                          //     tipoCompara: 2,
+                          //     listEntregar: correspEntregar.join(','));
+                        },
+                      ),
+                    SizedBox(
+                      height: size.height * 0.015,
+                    ),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: snapshot.data['correspondencias'].length,
+                        itemBuilder: (context, index) {
+                          var apiCorresp =
+                              snapshot.data['correspondencias'][index];
+                          var idcorrespondencia =
+                              apiCorresp['idcorrespondencia'];
+                          var unidade = apiCorresp['unidade'];
+                          var divisao = apiCorresp['divisao'];
+                          var idcondominio = apiCorresp['idcondominio'];
+                          idUnidade = apiCorresp['idunidade'];
+                          var nome_condominio = apiCorresp['nome_condominio'];
+                          var idfuncionario = apiCorresp['idfuncionario'];
+                          var nome_funcionario = apiCorresp['nome_funcionario'];
+                          var data_recebimento = DateFormat('dd/MM/yyyy')
+                              .format(DateTime.parse(
+                                  apiCorresp['data_recebimento']))
+                              .toString();
+                          var tipo = apiCorresp['tipo'];
+                          var remetente = apiCorresp['remetente'];
+                          var descricao = apiCorresp['descricao'];
+                          var protocolo = apiCorresp['protocolo'];
+                          protocolo_entrega = protocolo_entrega =
+                              apiCorresp['protocolo_entrega'];
+                          var datahora_cadastro =
+                              apiCorresp['datahora_cadastro'];
+                          var datahora_ultima_atualizacao =
+                              apiCorresp['datahora_ultima_atualizacao'];
+
+                          return StatefulBuilder(builder: (context, setState) {
+                            return MyBoxShadow(
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(left: size.width * 0.02),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.7,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ConstsWidget.buildTitleText(context,
+                                              title: remetente, fontSize: 18),
+                                          SizedBox(
+                                            height: size.height * 0.005,
+                                          ),
+                                          ConstsWidget.buildSubTitleText(
+                                              context,
+                                              fontSize: 16,
+                                              subTitle:
+                                                  '$descricao - $data_recebimento'),
+                                        ],
+                                      ),
+                                    ),
+                                    Transform.scale(
+                                      scale: 1.3,
+                                      child: Checkbox(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        value: isChecked,
+                                        onChanged: (value) {
+                                          setState(
+                                            () {
+                                              isChecked = value!;
+                                              value
+                                                  ? correspEntregar.add(
+                                                      idcorrespondencia
+                                                          .toString())
+                                                  : correspEntregar.remove(
+                                                      idcorrespondencia
+                                                          .toString());
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // CheckboxListTile(
+                              //   checkboxShape: RoundedRectangleBorder(
+                              //       borderRadius: BorderRadius.circular(15)),
+                              //   contentPadding:
+                              //       EdgeInsets.only(left: size.width * 0.02),
+                              //   title: ConstsWidget.buildTitleText(context,
+                              //       title: remetente),
+                              //   subtitle: ConstsWidget.buildSubTitleText(
+                              //       context,
+                              //       subTitle:
+                              //           '$descricao - $data_recebimento'),
+                              // //   value: isChecked,
+                              //   activeColor: Consts.kColorApp,
+                              //   onChanged: (value) {
+                              //     setState(
+                              //       () {
+                              //         isChecked = value!;
+                              //         value
+                              //             ? correspEntregar.add(
+                              //                 idcorrespondencia.toString())
+                              //             : correspEntregar.remove(
+                              //                 idcorrespondencia.toString());
+                              //       },
+                              //     );
+                              //   },
+                              // ),
+                            );
+                          });
+                        }),
+                  ],
+                );
+              }
+            }
+          },
+        ),
+      ]),
     );
+    // );
   }
 }
 

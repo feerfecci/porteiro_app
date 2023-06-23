@@ -8,6 +8,8 @@ import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
 import 'package:flutter/material.dart';
 
+import '../correspondencias/scafffoldItem.dart';
+
 class ListTileAp extends StatefulWidget {
   final String nomeResponsavel;
   // final String nome_moradores;
@@ -37,11 +39,11 @@ class _ListTileApState extends State<ListTileAp> {
       void Function()? onPressed,
     }) {
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.0005),
         child: MyBoxShadow(
           color: avisa ? null : Colors.grey,
           // border: Border.all(color: Theme.of(context).colorScheme.primary),
-          paddingAll: 0.002,
+          paddingAll: 0.015,
           child: IconButton(
             onPressed: avisa
                 ? onPressed ??
@@ -68,101 +70,111 @@ class _ListTileApState extends State<ListTileAp> {
     }
 
     return MyBoxShadow(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // ConstsWidget.buildTitleText(context, title: '${widget.idunidade}'),
-          ConstsWidget.buildSubTitleText(context, subTitle: widget.bloco),
-          ConstsWidget.buildTitleText(context, title: widget.nomeResponsavel),
-          // Text(widget.nome_moradores),
-          SizedBox(
-            height: size.height * 0.01,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              if (FuncionarioInfos.avisa_corresp)
-                buildActionIcon(
-                    titleModal: 'Correspondências',
-                    labelModal: 'Remetente',
-                    icon: Icons.email,
-                    avisa: FuncionarioInfos.avisa_corresp,
-                    pageRoute: CorrespondenciasScreen(
-                      idunidade: widget.idunidade,
-                      localizado: widget.bloco,
-                      nome_responsavel: widget.nomeResponsavel,
-                      tipoAviso: 3,
-                    )),
-              if (FuncionarioInfos.avisa_visita)
-                buildActionIcon(
-                    avisa: FuncionarioInfos.avisa_visita,
-                    icon: Icons.person_add_alt_1_sharp,
-                    onPressed: () {
-                      showModalAvisaDelivery(context,
-                          idunidade: widget.idunidade,
-                          localizado: widget.bloco,
-                          nome_responsavel: widget.nomeResponsavel,
-                          tipoAviso: 2
-                          // nome_moradores: widget.nome_moradores,
-                          );
-                    }),
-              if (FuncionarioInfos.avisa_delivery)
-                buildActionIcon(
-                    avisa: FuncionarioInfos.avisa_delivery,
-                    icon: Icons.delivery_dining,
-                    onPressed: () {
-                      showModalAvisaDelivery(context,
-                          idunidade: widget.idunidade,
-                          localizado: widget.bloco,
-                          nome_responsavel: widget.nomeResponsavel,
-                          tipoAviso: 1
-                          // nome_moradores: widget.nome_moradores,
-                          );
-                    }),
-              /* Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
-                child: MyBoxShadow(
-                  color: FuncionarioInfos.avisa_delivery ? null : Colors.grey,
-                  paddingAll: 0.002,
-                  child: IconButton(
-                    onPressed: FuncionarioInfos.avisa_delivery
-                        ? () {
-                            showModalAvisaDelivery(
-                              context,
-                              idunidade: widget.idunidade,
-                              localizado: widget.bloco,
-                              nome_responsavel: widget.nomeResponsavel,
-                              // nome_moradores: widget.nome_moradores,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // ConstsWidget.buildTitleText(context, title: '${widget.idunidade}'),
+            ConstsWidget.buildTitleText(context,
+                title: widget.bloco, fontSize: 22),
+            SizedBox(
+              height: size.height * 0.005,
+            ),
+            ConstsWidget.buildSubTitleText(context,
+                subTitle: widget.nomeResponsavel, fontSize: 18),
+            // Text(widget.nome_moradores),
+            SizedBox(
+              height: size.height * 0.01,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // mainAxisSize: MainAxisSize.min,
+              children: [
+                if (FuncionarioInfos.avisa_corresp)
+                  buildActionIcon(
+                      titleModal: 'Correspondências',
+                      labelModal: 'Remetente',
+                      icon: Icons.email,
+                      avisa: FuncionarioInfos.avisa_corresp,
+                      pageRoute: ScaffoldBottom(
+                        idunidade: widget.idunidade,
+                        localizado: widget.bloco,
+                        nome_responsavel: widget.nomeResponsavel,
+                        tipoAviso: 3,
+                      )),
+                if (FuncionarioInfos.avisa_visita)
+                  buildActionIcon(
+                      avisa: FuncionarioInfos.avisa_visita,
+                      icon: Icons.person_add_alt_1_sharp,
+                      onPressed: () {
+                        showModalAvisaDelivery(context,
+                            title: 'Visitas',
+                            idunidade: widget.idunidade,
+                            localizado: widget.bloco,
+                            nome_responsavel: widget.nomeResponsavel,
+                            tipoAviso: 2
+                            // nome_moradores: widget.nome_moradores,
                             );
-                          }
-                        : () {
-                            buildMinhaSnackBar(context,
-                                title: 'Desculpe',
-                                subTitle: 'Você não tem acesso à essa ação');
-                          },
-                    icon: Icon(
-                      Icons.delivery_dining,
+                      }),
+                if (FuncionarioInfos.avisa_delivery)
+                  buildActionIcon(
+                      avisa: FuncionarioInfos.avisa_delivery,
+                      icon: Icons.delivery_dining,
+                      onPressed: () {
+                        showModalAvisaDelivery(context,
+                            title: 'Delivery',
+                            idunidade: widget.idunidade,
+                            localizado: widget.bloco,
+                            nome_responsavel: widget.nomeResponsavel,
+                            tipoAviso: 1
+                            // nome_moradores: widget.nome_moradores,
+                            );
+                      }),
+                /* Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
+                  child: MyBoxShadow(
+                    color: FuncionarioInfos.avisa_delivery ? null : Colors.grey,
+                    paddingAll: 0.002,
+                    child: IconButton(
+                      onPressed: FuncionarioInfos.avisa_delivery
+                          ? () {
+                              showModalAvisaDelivery(
+                                context,
+                                idunidade: widget.idunidade,
+                                localizado: widget.bloco,
+                                nome_responsavel: widget.nomeResponsavel,
+                                // nome_moradores: widget.nome_moradores,
+                              );
+                            }
+                          : () {
+                              buildMinhaSnackBar(context,
+                                  title: 'Desculpe',
+                                  subTitle: 'Você não tem acesso à essa ação');
+                            },
+                      icon: Icon(
+                        Icons.delivery_dining,
+                      ),
                     ),
                   ),
                 ),
-              ),
-             */
-              buildActionIcon(
-                  icon: Icons.shopping_bag_rounded,
-                  titleModal: 'Encomenda',
-                  labelModal: 'Remetente',
-                  avisa: FuncionarioInfos.avisa_encomendas,
-                  pageRoute: CorrespondenciasScreen(
-                    nome_responsavel: widget.nomeResponsavel,
-                    idunidade: widget.idunidade,
-                    localizado: widget.bloco,
-                    tipoAviso: 4,
-                  )),
-            ],
-          ),
-        ],
+               */
+                buildActionIcon(
+                    icon: Icons.shopping_bag_rounded,
+                    titleModal: 'Encomenda',
+                    labelModal: 'Remetente',
+                    avisa: FuncionarioInfos.avisa_encomendas,
+                    pageRoute: ScaffoldBottom(
+                      nome_responsavel: widget.nomeResponsavel,
+                      idunidade: widget.idunidade,
+                      localizado: widget.bloco,
+                      tipoAviso: 4,
+                    )),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

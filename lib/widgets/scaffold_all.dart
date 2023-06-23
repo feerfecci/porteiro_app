@@ -7,10 +7,12 @@ class ScaffoldAll extends StatefulWidget {
   final String? title;
   final Widget? body;
   final Widget? floatingActionButton;
-  const ScaffoldAll(
+  bool isDrawer;
+  ScaffoldAll(
       {required this.title,
       required this.body,
       this.floatingActionButton,
+      this.isDrawer = false,
       super.key});
 
   @override
@@ -22,15 +24,17 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: widget.floatingActionButton,
+      // floatingActionButton: widget.floatingActionButton,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: ConstsWidget.buildTitleText(context, title: widget.title),
+        centerTitle: true,
+        title: ConstsWidget.buildTitleText(context,
+            title: widget.title, fontSize: 30),
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
         elevation: 0,
       ),
-      endDrawer: CustomDrawer(),
+      endDrawer: widget.isDrawer ? CustomDrawer() : null,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: size.height * 0.01),
         child: widget.body,
