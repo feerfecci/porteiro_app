@@ -1,11 +1,12 @@
-import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:flutter/material.dart';
-
 import '../consts/consts.dart';
 
 Future buildModalAll(BuildContext context,
-    {required Widget child, required String title, bool? isDrawer}) {
+    {required Widget child,
+    required String title,
+    bool? isDrawer,
+    double fontSize = 30}) {
   var size = MediaQuery.of(context).size;
   return showModalBottomSheet(
       enableDrag: false,
@@ -16,6 +17,7 @@ Future buildModalAll(BuildContext context,
             height: size.height * 0.85,
             child: ScaffoldAll(
               title: title,
+              fontSize: fontSize,
               isDrawer: isDrawer ?? true,
               key: Consts.modelScaffoldKey,
               body: Padding(

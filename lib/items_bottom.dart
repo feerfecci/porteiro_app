@@ -2,16 +2,10 @@ import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/carros/carros.dart';
 import 'package:app_porteiro/screens/home/home_page.dart';
-import 'package:app_porteiro/seach_pages/search_veiculo.dart';
 import 'package:app_porteiro/widgets/custom_drawer/custom_drawer.dart';
-import 'package:app_porteiro/widgets/floatingActionButton.dart';
-import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
 import 'consts/consts_future.dart';
-import 'seach_pages/search_unidades.dart';
 
 class ItemsBottom extends StatefulWidget {
   const ItemsBottom({super.key});
@@ -26,9 +20,9 @@ class _ItemsBottomState extends State<ItemsBottom> {
 
   Future oneSignalNotification() async {
     OneSignal.shared.setAppId("5993cb79-853a-412e-94a1-f995c9797692");
-    OneSignal.shared.promptUserForPushNotificationPermission().then((value) {
-      // OneSignal.shared.setExternalUserId('34');
-    });
+    // OneSignal.shared.promptUserForPushNotificationPermission().then((value) {
+    //   // OneSignal.shared.setExternalUserId('34');
+    // });
     OneSignal.shared.sendTags({
       'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
       'idcond': FuncionarioInfos.idcondominio.toString(),
@@ -53,15 +47,15 @@ class _ItemsBottomState extends State<ItemsBottom> {
         title: ConstsWidget.buildTitleText(context,
             title: FuncionarioInfos.nome_condominio, fontSize: 20),
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leadingWidth: size.height * 0.06,
         leading: Padding(
           padding: EdgeInsets.only(left: size.width * 0.025),
-          child: 
-          FutureBuilder(
+          child: FutureBuilder(
             future: ConstsFuture.apiImage(
-            'https://a.portariaapp.com/img/logo_vermelho.png',),
+              'https://a.portariaapp.com/img/logo_vermelho.png',
+            ),
             builder: (context, snapshot) {
               return SizedBox(child: snapshot.data);
             },
@@ -92,6 +86,9 @@ class _ItemsBottomState extends State<ItemsBottom> {
       // ),
       endDrawer: CustomDrawer(),
       bottomNavigationBar: BottomNavigationBar(
+          unselectedIconTheme: IconThemeData(
+            size: size.height * 0.045,
+          ),
           currentIndex: currentTab,
           iconSize: size.height * 0.04,
           selectedFontSize: 16,
@@ -101,20 +98,23 @@ class _ItemsBottomState extends State<ItemsBottom> {
               _pageController.jumpToPage(value);
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
               label: 'Apartamentos',
+              backgroundColor: Colors.white,
+              activeIcon: Icon(Icons.business),
               icon: Icon(
-                currentTab == 0 ? Icons.business : Icons.business_outlined,
+                Icons.business_outlined,
+                fill: 1,
               ),
             ),
             BottomNavigationBarItem(
               // icon: badge.Badge(
               //   showBadge: logado.bolinha == 0 ? false : true,
               // toAnimate: false,
+              activeIcon: Icon(Icons.car_crash),
               icon: Icon(
-                currentTab == 1 ? Icons.car_crash : Icons.car_crash_outlined,
-                // ),
+                Icons.car_crash_outlined,
               ),
               label: 'Carros',
             ),
@@ -127,7 +127,7 @@ class _ItemsBottomState extends State<ItemsBottom> {
             currentTab = value;
           });
         },
-        children: [
+        children: const [
           HomePage(),
           CarrosPage(),
         ],

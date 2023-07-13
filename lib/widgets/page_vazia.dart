@@ -15,7 +15,7 @@ class _PageVaziaState extends State<PageVazia> {
     var size = MediaQuery.of(context).size;
     return Column(
       children: [
-        Image.network('https://a.portariaapp.com/img/img.png'),
+        Image.asset('assets/vazio.png'),
         SizedBox(
           height: size.height * 0.01,
         ),

@@ -1,21 +1,18 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable, prefer_typing_uninitialized_variables
 import 'dart:convert';
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/moldals/modal_emite_entrega.dart';
 import 'package:app_porteiro/screens/correspondencias/alert_dialog_moradores.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
-import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../../consts/consts.dart';
-import '../../widgets/floatingActionButton.dart';
 import '../../moldals/modal_inclui_corrresp.dart';
-import '../../seach_pages/search_protocolo.dart';
 import '../../widgets/listview_all.dart';
-import '../page_vazia/page_vazia.dart';
+import '../../widgets/page_erro.dart';
+import '../../widgets/page_vazia.dart';
 
 class CorrespondenciasScreen extends StatefulWidget {
   final int? idunidade;
@@ -72,21 +69,18 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
           children: [
             ConstsWidget.buildTitleText(context,
                 title: widget.localizado, fontSize: 20),
-            SizedBox(height: size.height * 0.01),
-            ConstsWidget.buildSubTitleText(context,
-                subTitle: widget.nome_responsavel!, fontSize: 18),
           ],
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
+        ConstsWidget.buildPadding001(
+          context,
+          vertical: 0.015,
           child: ConstsWidget.buildCustomButton(
             context,
-            widget.tipoAviso == 1 ? 'Correspondências' : 'Encomendas',
+            widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
             icon: Icons.add,
             onPressed: () {
               showModalIncluiCorresp(context,
-                  title:
-                      widget.tipoAviso == 3 ? 'Correspondências' : 'Encomendas',
+                  title: widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
                   idunidade: widget.idunidade!,
                   tipoAviso: widget.tipoAviso!,
                   nome_responsavel: widget.nome_responsavel,
@@ -116,14 +110,10 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                   )
                 ],
               ));
-            } else if (snapshot.hasError) {
-              return Text('Algo não deu certo. Volte mais tarde!');
-            } else {
-              if (!snapshot.data['erro'] &&
-                  snapshot.data['mensagem'] ==
-                      "Nenhuma correspondência registrada para essa unidade") {
-                return PageVazia(title: snapshot.data['mensagem']);
-              } else {
+            } else if (!snapshot.hasError &&
+                snapshot.data['mensagem'] !=
+                    "Nenhuma correspondência registrada para essa unidade") {
+              if (!snapshot.data['erro']) {
                 return Column(
                   children: [
                     if (snapshot.data['correspondencias'].length >= 1)
@@ -277,7 +267,15 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                         }),
                   ],
                 );
+              } else {
+                return PageVazia(title: snapshot.data['mensagem']);
               }
+            } else if (!snapshot.hasError &&
+                snapshot.data['mensagem'] ==
+                    "Nenhuma correspondência registrada para essa unidade") {
+              return PageVazia(title: snapshot.data['mensagem']);
+            } else {
+              return PageErro();
             }
           },
         ),

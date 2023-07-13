@@ -1,11 +1,13 @@
 // ignore_for_file: unused_local_variable
 
 import 'dart:convert';
+import 'package:app_porteiro/widgets/page_vazia.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:flutter/material.dart';
 import '../consts/consts.dart';
+import '../widgets/page_erro.dart';
 
 class SearchVeiculo extends SearchDelegate<String> {
   @override
@@ -55,8 +57,8 @@ class SearchVeiculo extends SearchDelegate<String> {
         required String subTitle1,
         required String title2,
         required String subTitle2}) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      return ConstsWidget.buildPadding001(
+        context,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -87,50 +89,52 @@ class SearchVeiculo extends SearchDelegate<String> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
-          } else if (snapshot.hasError || snapshot.data == null) {
-            return Container(
-              color: Colors.red,
-            );
+          } else if (snapshot.hasData) {
+            if (!snapshot.data['erro']) {
+              return ListView.builder(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshot.data['ListaVeiculos'] != null
+                    ? snapshot.data['ListaVeiculos'].length
+                    : 0,
+                itemBuilder: (context, index) {
+                  var apiVeiculos = snapshot.data['ListaVeiculos'][index];
+                  int idveiculo = apiVeiculos['idveiculo'];
+                  int idcond = apiVeiculos['idcond'];
+                  int idunidade = apiVeiculos['idunidade'];
+                  String tipo = apiVeiculos['tipo'];
+                  String marca = apiVeiculos['marca'];
+                  String modelo = apiVeiculos['modelo'];
+                  String cor = apiVeiculos['cor'];
+                  String placa = apiVeiculos['placa'];
+                  String vaga = apiVeiculos['vaga'];
+                  return MyBoxShadow(
+                      child: Column(
+                    children: [
+                      buildDescricaoCarro(
+                          title1: 'Tipo',
+                          subTitle1: tipo,
+                          title2: 'Vaga',
+                          subTitle2: vaga),
+                      buildDescricaoCarro(
+                          title1: 'Marca',
+                          subTitle1: marca,
+                          title2: 'Modelo',
+                          subTitle2: modelo),
+                      buildDescricaoCarro(
+                          title1: 'Cor',
+                          subTitle1: cor,
+                          title2: 'Placa',
+                          subTitle2: placa),
+                    ],
+                  ));
+                },
+              );
+            } else {
+              return PageVazia(title: snapshot.data['mensagem']);
+            }
           } else {
-            return ListView.builder(
-              physics: ClampingScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: snapshot.data['ListaVeiculos'] != null
-                  ? snapshot.data['ListaVeiculos'].length
-                  : 0,
-              itemBuilder: (context, index) {
-                var apiVeiculos = snapshot.data['ListaVeiculos'][index];
-                int idveiculo = apiVeiculos['idveiculo'];
-                int idcond = apiVeiculos['idcond'];
-                int idunidade = apiVeiculos['idunidade'];
-                String tipo = apiVeiculos['tipo'];
-                String marca = apiVeiculos['marca'];
-                String modelo = apiVeiculos['modelo'];
-                String cor = apiVeiculos['cor'];
-                String placa = apiVeiculos['placa'];
-                String vaga = apiVeiculos['vaga'];
-                return MyBoxShadow(
-                    child: Column(
-                  children: [
-                    buildDescricaoCarro(
-                        title1: 'Tipo',
-                        subTitle1: tipo,
-                        title2: 'Vaga',
-                        subTitle2: vaga),
-                    buildDescricaoCarro(
-                        title1: 'Marca',
-                        subTitle1: marca,
-                        title2: 'Modelo',
-                        subTitle2: modelo),
-                    buildDescricaoCarro(
-                        title1: 'Cor',
-                        subTitle1: cor,
-                        title2: 'Placa',
-                        subTitle2: placa),
-                  ],
-                ));
-              },
-            );
+            return PageErro();
           }
         },
       );

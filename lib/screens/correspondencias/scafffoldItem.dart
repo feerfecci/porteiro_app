@@ -1,10 +1,8 @@
+// ignore_for_file: non_constant_identifier_names
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
 import 'package:app_porteiro/screens/correspondencias/procura_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-
 import '../../widgets/custom_drawer/custom_drawer.dart';
 
 class ScaffoldBottom extends StatefulWidget {
@@ -38,8 +36,7 @@ class _ScaffoldBottomState extends State<ScaffoldBottom> {
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
         backgroundColor: Colors.transparent,
         title: ConstsWidget.buildTitleText(context,
-            title: widget.tipoAviso == 3 ? 'Correspondências' : ' Encomendas',
-            fontSize: 24),
+            title: widget.tipoAviso == 3 ? 'Cartas' : ' Caixas', fontSize: 24),
         elevation: 0,
         leadingWidth: 40,
         // leading: Padding(
@@ -62,7 +59,7 @@ class _ScaffoldBottomState extends State<ScaffoldBottom> {
           },
           items: [
             BottomNavigationBarItem(
-              label: widget.tipoAviso == 3 ? 'Correspondências' : ' Encomendas',
+              label: widget.tipoAviso == 3 ? 'Cartas' : ' Encomendas',
               icon: Icon(
                 currentTab == 0
                     ? widget.tipoAviso == 3

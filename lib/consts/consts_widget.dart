@@ -6,6 +6,18 @@ import 'package:validatorless/validatorless.dart';
 import 'consts.dart';
 
 class ConstsWidget {
+  static Widget buildPadding001(BuildContext context,
+      {double horizontal = 0, double vertical = 0.01, required Widget? child}) {
+    var size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: size.height * vertical,
+        horizontal: size.width * horizontal,
+      ),
+      child: child,
+    );
+  }
+
   static Widget buildTitleText(
     BuildContext context, {
     Color? color,
@@ -46,8 +58,8 @@ class ConstsWidget {
       String? initialValue,
       final void Function(String? text)? onSaved}) {
     var size = MediaQuery.of(context).size;
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+    return ConstsWidget.buildPadding001(
+      context,
       child: TextFormField(
         style: TextStyle(color: Theme.of(context).colorScheme.primary),
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -86,8 +98,8 @@ class ConstsWidget {
       bool obscureText = false,
       final void Function(String? text)? onSaved}) {
     var size = MediaQuery.of(context).size;
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+    return ConstsWidget.buildPadding001(
+      context,
       child: TextFormField(
         style: TextStyle(color: Theme.of(context).colorScheme.primary),
         initialValue: initialValue,
@@ -121,6 +133,7 @@ class ConstsWidget {
   static Widget buildCustomButton(BuildContext context, String title,
       {IconData? icon,
       double? altura,
+      double fontSize = 16,
       Color? color = Consts.kButtonColor,
       Color? textColor = Colors.white,
       Color? iconColor = Colors.white,
@@ -129,13 +142,12 @@ class ConstsWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Consts.borderButton),
-        ),
+        shape: StadiumBorder(),
       ),
       onPressed: onPressed,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: size.height * 0.023),
+      child: ConstsWidget.buildPadding001(
+        context,
+        vertical: 0.023,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
@@ -150,7 +162,7 @@ class ConstsWidget {
               style: TextStyle(
                 overflow: TextOverflow.ellipsis,
                 color: textColor,
-                fontSize: 16,
+                fontSize: fontSize,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -204,7 +216,7 @@ class ConstsWidget {
 
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.023),
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.025),
             backgroundColor: color,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Consts.borderButton))),
@@ -230,7 +242,7 @@ class ConstsWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   SizedBox(
-                    height: size.height * 0.020,
+                    height: size.height * 0.025,
                     width: size.width * 0.05,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
@@ -331,5 +343,61 @@ class ConstsWidget {
         ],
       ),
     );
+  }
+
+  static Widget buildOutlinedButton(
+    BuildContext context, {
+    required String title,
+    required void Function()? onPressed,
+    double fontSize = 16,
+    IconData? icon,
+    double? altura,
+    Color? color = Consts.kButtonColor,
+  }) {
+    var size = MediaQuery.of(context).size;
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        alignment: Alignment.center,
+        side: BorderSide(width: size.width * 0.005, color: Colors.blue),
+        shape: StadiumBorder(),
+      ),
+      onPressed: onPressed,
+      child: buildPadding001(
+        context,
+        vertical: 0.023,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            if (icon != null) Icon(size: 18, icon, color: Consts.kButtonColor),
+            if (icon != null)
+              SizedBox(
+                width: size.width * 0.015,
+              ),
+            Text(
+              title,
+              style: TextStyle(
+                overflow: TextOverflow.ellipsis,
+                color: Consts.kButtonColor,
+                fontSize: fontSize,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget buildRefreshIndicadtor(BuildContext context,
+      {required Widget child, required Future<void> Function() onRefresh}) {
+    var size = MediaQuery.of(context).size;
+    return RefreshIndicator(
+        strokeWidth: 2,
+        backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
+        color: Theme.of(context).canvasColor,
+        displacement: size.height * 0.1,
+        onRefresh: onRefresh,
+        child: child);
   }
 }

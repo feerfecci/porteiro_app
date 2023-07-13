@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/items_bottom.dart';
 import 'package:app_porteiro/moldals/modal_all.dart';
-import 'package:app_porteiro/screens/home/home_page.dart';
-import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
@@ -23,7 +20,8 @@ showModalEmiteEntrega(
 }) {
   buildModalAll(
     context,
-    title: 'Emitir Entrega',
+    title: 'Código de Confirmação',
+    fontSize: 14,
     isDrawer: false,
     child: WidgetEmiteEntrega(
         idMorador: idMorador,
@@ -193,8 +191,9 @@ class _WidgetEmiteEntregaState extends State<WidgetEmiteEntrega> {
               confirmacao = text;
             },
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+          ConstsWidget.buildPadding001(
+            context,
+            vertical: 0.02,
             child: ConstsWidget.buildTitleText(
               context,
               title: 'Peça o código de entrega',

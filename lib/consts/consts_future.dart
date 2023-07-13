@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
-
 import '../items_bottom.dart';
-import '../screens/home/home_page.dart';
 
 class ConstsFuture {
   static Future<dynamic> launchGetApi(BuildContext context, apiPortaria) async {
@@ -69,24 +67,31 @@ class ConstsFuture {
       bool erro = apiBody['erro'];
       if (erro == false) {
         var loginInfos = apiBody['login'];
-        FuncionarioInfos.idFuncionario = loginInfos['id'];
-        FuncionarioInfos.ativo = loginInfos['ativo'];
-        FuncionarioInfos.idcondominio = loginInfos['idcondominio'];
-        FuncionarioInfos.nome_condominio = loginInfos['nome_condominio'];
-        FuncionarioInfos.nome_funcionario = loginInfos['nome_funcionario'];
-        FuncionarioInfos.idfuncao = loginInfos['idfuncao'];
-        FuncionarioInfos.nome_funcao = loginInfos['nome_funcao'];
-        FuncionarioInfos.login = loginInfos['login'];
-        FuncionarioInfos.avisa_corresp = loginInfos['avisa_corresp'];
-        FuncionarioInfos.avisa_visita = loginInfos['avisa_visita'];
-        FuncionarioInfos.avisa_delivery = loginInfos['avisa_delivery'];
-        FuncionarioInfos.avisa_encomendas = loginInfos['avisa_encomendas'];
-        // Navigator.pop(context);
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => ItemsBottom(),
-            ),
-            (route) => true);
+        if (loginInfos['ativo']) {
+          FuncionarioInfos.idFuncionario = loginInfos['id'];
+          FuncionarioInfos.ativo = loginInfos['ativo'];
+          FuncionarioInfos.idcondominio = loginInfos['idcondominio'];
+          FuncionarioInfos.nome_condominio = loginInfos['nome_condominio'];
+          FuncionarioInfos.nome_funcionario = loginInfos['nome_funcionario'];
+          FuncionarioInfos.idfuncao = loginInfos['idfuncao'];
+          FuncionarioInfos.nome_funcao = loginInfos['nome_funcao'];
+          FuncionarioInfos.login = loginInfos['login'];
+          FuncionarioInfos.avisa_corresp = loginInfos['avisa_corresp'];
+          FuncionarioInfos.avisa_visita = loginInfos['avisa_visita'];
+          FuncionarioInfos.avisa_delivery = loginInfos['avisa_delivery'];
+          FuncionarioInfos.avisa_encomendas = loginInfos['avisa_encomendas'];
+          // Navigator.pop(context);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => ItemsBottom(),
+              ),
+              (route) => true);
+        } else {
+          ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
+          return buildMinhaSnackBar(
+            context,
+          );
+        }
       } else {
         ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
         return buildMinhaSnackBar(context);
@@ -102,6 +107,6 @@ class ConstsFuture {
         ? Image.network(
             iconApi,
           )
-        : Image.asset('assets/erro_png.png');
+        : Image.asset('assets/ico-error.png');
   }
 }

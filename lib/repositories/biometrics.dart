@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -26,6 +24,7 @@ class LocalBiometrics {
             useErrorDialogs: true,
           ),
         );
+      // ignore: unused_catch_clause
       } on PlatformException catch (e) {
         return false;
       }

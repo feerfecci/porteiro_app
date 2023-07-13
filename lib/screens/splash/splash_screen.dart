@@ -4,7 +4,6 @@ import 'package:app_porteiro/repositories/biometrics.dart';
 import 'package:app_porteiro/repositories/shared_preferences.dart';
 import 'package:app_porteiro/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
-import '../../consts/consts.dart';
 import '../../consts/consts_future.dart';
 import '../../consts/consts_widget.dart';
 
@@ -56,9 +55,10 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
           Spacer(),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: size.height * 0.03, horizontal: size.width * 0.03),
+          ConstsWidget.buildPadding001(
+            context,
+            vertical: 0.03,
+            horizontal: 0.03,
             child: ConstsWidget.buildCustomButton(
               context,
               'Autenticar Biometria',

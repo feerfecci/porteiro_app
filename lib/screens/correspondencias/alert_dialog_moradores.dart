@@ -1,14 +1,12 @@
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-
 import '../../consts/consts.dart';
 import '../../consts/consts_future.dart';
 import '../../consts/consts_widget.dart';
 import '../../moldals/modal_emite_entrega.dart';
 import '../../widgets/my_box_shadow.dart';
-import '../page_vazia/page_vazia.dart';
+import '../../widgets/page_erro.dart';
+import '../../widgets/page_vazia.dart';
 
 class AlertListMoradores extends StatefulWidget {
   final int idunidade;
@@ -78,26 +76,22 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
                       itemBuilder: (context, index) {
                         return StatefulBuilder(builder: (context, setState) {
                           return MyBoxShadow(
-                            child: CheckboxListTile(
-                              title: ConstsWidget.buildTitleText(context,
-                                  title: snapshot.data['morador'][index]
-                                      ['nome_morador']),
-                              value: isChecked,
-                              activeColor: Consts.kColorApp,
-                              onChanged: (value) {
-                                setState(
-                                  () {
-                                    isChecked = value!;
-                                    if (value) {
-                                      idMorador = snapshot.data['morador']
-                                          [index]['idmorador'];
-                                    } else {
-                                      idMorador = 0;
-                                    }
-                                  },
-                                );
-                              },
-                            ),
+                            child: ConstsWidget.buildCheckBox(context,
+                                isChecked: isChecked, onChanged: (value) {
+                              setState(
+                                () {
+                                  isChecked = value!;
+                                  if (value) {
+                                    idMorador = snapshot.data['morador'][index]
+                                        ['idmorador'];
+                                  } else {
+                                    idMorador = 0;
+                                  }
+                                },
+                              );
+                            },
+                                title: snapshot.data['morador'][index]
+                                    ['nome_morador']),
                           );
                         });
                       },
@@ -146,12 +140,29 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
               ],
             );
           } else {
-            return PageVazia(
-              title: snapshot.data['mensagem'],
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(size.width * 0.02),
+              insetPadding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.02, vertical: size.height * 0.05),
+              content: PageVazia(
+                title: snapshot.data['mensagem'],
+              ),
+              actions: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
+                  child: ConstsWidget.buildOutlinedButton(
+                    context,
+                    title: "Cancelar",
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
             );
           }
         } else {
-          return Text('Algo Deu errado');
+          return PageErro();
         }
       },
       // ),

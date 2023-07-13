@@ -22,6 +22,7 @@ class Consts {
   static double fontTitulo = 18;
   static double fontSubTitulo = 16;
   static double borderButton = 60;
+  static const String iconApiPort = 'https://a.portariaapp.com/img/ico-';
 
   static const kBackPageColor = Color.fromARGB(255, 245, 245, 255);
   // static const kButtonColor = Color.fromARGB(255, 0, 134, 252);

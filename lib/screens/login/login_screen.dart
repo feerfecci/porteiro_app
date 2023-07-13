@@ -3,7 +3,6 @@ import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:validatorless/validatorless.dart';
-import '../../consts/consts.dart';
 import '../../repositories/shared_preferences.dart';
 import '../../widgets/snack_bar.dart';
 
@@ -17,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKeyLogin = GlobalKey<FormState>();
   final TextEditingController userController =
-      TextEditingController(text: 'porteirodocondominio');
+      TextEditingController(text: 'cesarsilva0102');
   final TextEditingController senhaController =
       TextEditingController(text: '123456');
   bool obscure = true;

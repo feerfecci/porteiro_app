@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:app_porteiro/consts/consts_future.dart';
@@ -10,8 +9,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../consts/consts.dart';
 import '../consts/consts_widget.dart';
 import 'package:http/http.dart' as http;
-
-import '../screens/correspondencias/correspondencias_screen.dart';
+import '../screens/correspondencias/scafffoldItem.dart';
 import 'modal_all.dart';
 
 showModalIncluiCorresp(BuildContext context,
@@ -84,7 +82,7 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => CorrespondenciasScreen(
+                    builder: (context) => ScaffoldBottom(
                           tipoAviso: widget.tipoAviso,
                           idunidade: widget.idunidade,
                           localizado: widget.localizado,
@@ -126,8 +124,9 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Widget builDropButtonRemetentes() {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: size.height * 0.005),
+      return ConstsWidget.buildPadding001(
+        context,
+        vertical: 0.005,
         child: Container(
           width: double.infinity,
           height: size.height * 0.07,
@@ -136,8 +135,8 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
             border: Border.all(color: Colors.black26),
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+          child: ConstsWidget.buildPadding001(
+            context,
             child: DropdownButtonHideUnderline(
               child: ButtonTheme(
                 alignedDropdown: true,
@@ -189,8 +188,9 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
           // ConstsWidget.buildClosePop(context, title: widget.title),
           if (!preencheMao) builDropButtonRemetentes(),
           // if (!preencheMao)
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
+          ConstsWidget.buildPadding001(
+            context,
+            vertical: 0.015,
             child: ConstsWidget.buildCustomButton(
                 context, preencheMao ? 'Usar Padrão' : 'Personalizar',
                 onPressed: () {

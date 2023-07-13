@@ -25,11 +25,11 @@ dependencies:
 
 flutter_icons:  
   
-  image_path: "assets/portaria_porteiro.png"
+  image_path: "assets/logo-vermelho.png"
   ios: true
   remove_alpha_ios: true
   android: "launch_icon"
-  adaptive_icon_foreground: "assets/portaria_porteiro.png"
+  adaptive_icon_foreground: "assets/logo-vermelho.png"
 
 dev_dependencies:
   flutter_test:

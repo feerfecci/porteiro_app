@@ -3,7 +3,6 @@
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:flutter/material.dart';
-import '../consts/consts.dart';
 
 Widget buildFloatingSearch(BuildContext context,
     {required SearchDelegate<String> searchPage}) {

@@ -77,8 +77,8 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Widget buildDropButtonAvisos() {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      return ConstsWidget.buildPadding001(
+        context,
         child: Container(
           width: double.infinity,
           height: size.height * 0.07,
@@ -87,8 +87,8 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
             border: Border.all(color: Colors.black26),
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+          child: ConstsWidget.buildPadding001(
+            context,
             child: DropdownButtonHideUnderline(
               child: ButtonTheme(
                 alignedDropdown: true,
@@ -101,10 +101,14 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ConstsWidget.buildTitleText(context,
-                                title: e['titulo']),
-                            ConstsWidget.buildSubTitleText(context,
-                                subTitle: e['texto'])
+                            ConstsWidget.buildTitleText(
+                              context,
+                              title: e['titulo'],
+                            ),
+                            Expanded(
+                              child: ConstsWidget.buildSubTitleText(context,
+                                  subTitle: e['texto'], fontSize: 16),
+                            )
                             // ListTile(
                             //   textColor: Theme.of(context).colorScheme.primary,
                             //   title: Text(e['titulo']),
@@ -147,8 +151,9 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
           //     title: widget.tipoAviso == 1 ? 'Delivery' : 'Vistita'),
           ConstsWidget.buildTitleText(context,
               title: widget.nome_responsavel, fontSize: 20),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+          ConstsWidget.buildPadding001(
+            context,
+            vertical: 0.02,
             child: ConstsWidget.buildTitleText(context,
                 title: widget.localizado, fontSize: 22),
           ),

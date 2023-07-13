@@ -18,6 +18,32 @@ class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
+    Widget buidListTile(
+        {required String title,
+        required IconData leading,
+        IconData trailing = Icons.keyboard_arrow_right_outlined,
+        void Function()? onPressed}) {
+      return ConstsWidget.buildPadding001(
+        context,
+        child: ListTile(
+          iconColor: Theme.of(context).iconTheme.color,
+          leading: Icon(
+            leading,
+            size: 25,
+          ),
+          title: ConstsWidget.buildTitleText(context, title: title),
+          trailing: IconButton(
+            onPressed: onPressed,
+            icon: Icon(
+              size: 30,
+              trailing,
+            ),
+          ),
+        ),
+      );
+    }
+
     return SafeArea(
       child: SizedBox(
         height: size.height * 0.9,
@@ -67,47 +93,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
               //     ),
               //   ],
               // ),
-              ListTile(
-                leading: Icon(
-                  Icons.business_center_outlined,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                title: ConstsWidget.buildTitleText(
-                  context,
-                  title: 'Seja um Representante',
-                ),
-                onTap: () {},
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                ),
+              buidListTile(
+                title: 'Seja um Representante',
+                leading: Icons.business_center_outlined,
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.privacy_tip_outlined,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                title: ConstsWidget.buildTitleText(
-                  context,
-                  title: 'Política de privacidade',
-                ),
-                onTap: () {},
-                trailing: Icon(
-                  Icons.arrow_forward_ios_outlined,
-                ),
+              buidListTile(
+                title: 'Política de privacidade',
+                leading: Icons.privacy_tip_outlined,
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.phone_forwarded_outlined,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                title: ConstsWidget.buildTitleText(
-                  context,
-                  title: 'Suporte',
-                ),
-                onTap: () {},
-                trailing: Icon(
-                  Icons.arrow_forward_ios_outlined,
-                ),
+              buidListTile(
+                title: 'Central de Ajuda',
+                leading: Icons.support,
+              ),
+              buidListTile(
+                title: 'Indicar para amigos',
+                leading: Icons.add_reaction_outlined,
               ),
               ChangeThemeButton(),
               Spacer(),

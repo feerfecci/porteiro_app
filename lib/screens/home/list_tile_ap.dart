@@ -15,6 +15,7 @@ class ListTileAp extends StatefulWidget {
   // final String nome_moradores;
   final String bloco;
   final int idunidade;
+
   const ListTileAp(
       {required this.nomeResponsavel,
       // required  this.nome_moradores,
@@ -33,45 +34,60 @@ class _ListTileApState extends State<ListTileAp> {
     Widget buildActionIcon({
       String? titleModal,
       String? labelModal,
-      required IconData icon,
+      required String iconApi,
       required bool avisa,
       Widget? pageRoute,
       void Function()? onPressed,
     }) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: size.width * 0.0005),
-        child: MyBoxShadow(
-          color: avisa ? null : Colors.grey,
-          // border: Border.all(color: Theme.of(context).colorScheme.primary),
-          paddingAll: 0.015,
-          child: IconButton(
-            onPressed: avisa
-                ? onPressed ??
-                    () {
-                      // Navigator.pop(context);
-                      ConstsFuture.navigatorPush(context, pageRoute!);
-                      // showCustomModalBottom(context,
-                      //     label: labelModal,
-                      //     title: titleModal,
-                      //     idunidade: widget.idunidade);
-                    }
-                : () {
-                    buildMinhaSnackBar(context,
-                        title: 'Desculpe',
-                        subTitle: 'Você não tem acesso à essa ação');
-                  },
-            icon: Icon(
-              icon,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+        child: GestureDetector(
+          onTap: avisa
+              ? onPressed ??
+                  () {
+                    // Navigator.pop(context);
+                    ConstsFuture.navigatorPush(context, pageRoute!);
+                    // showCustomModalBottom(context,
+                    //     label: labelModal,
+                    //     title: titleModal,
+                    //     idunidade: widget.idunidade);
+                  }
+              : () {
+                  buildMinhaSnackBar(context,
+                      title: 'Desculpe',
+                      subTitle: 'Você não tem acesso à essa ação');
+                },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              FutureBuilder(
+                  future: ConstsFuture.apiImage(iconApi),
+                  builder: (context, snapshot) => SizedBox(
+                      width: size.width * 0.15,
+                      height: size.height * 0.07,
+                      child: Image.network(
+                        iconApi,
+                        fit: BoxFit.cover,
+                      ))),
+              SizedBox(
+                height: size.height * 0.01,
+              ),
+              SizedBox(
+                  width: size.width * 0.21,
+                  child: ConstsWidget.buildTitleText(
+                    context,
+                    textAlign: TextAlign.center,
+                    title: titleModal,
+                  ))
+            ],
           ),
         ),
       );
     }
 
     return MyBoxShadow(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      child: ConstsWidget.buildPadding001(
+        context,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,7 +102,7 @@ class _ListTileApState extends State<ListTileAp> {
                 subTitle: widget.nomeResponsavel, fontSize: 18),
             // Text(widget.nome_moradores),
             SizedBox(
-              height: size.height * 0.01,
+              height: size.height * 0.02,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -94,9 +110,9 @@ class _ListTileApState extends State<ListTileAp> {
               children: [
                 if (FuncionarioInfos.avisa_corresp)
                   buildActionIcon(
-                      titleModal: 'Correspondências',
+                      titleModal: 'Cartas',
                       labelModal: 'Remetente',
-                      icon: Icons.email,
+                      iconApi: '${Consts.iconApiPort}correspondencias60px.png',
                       avisa: FuncionarioInfos.avisa_corresp,
                       pageRoute: ScaffoldBottom(
                         idunidade: widget.idunidade,
@@ -104,10 +120,23 @@ class _ListTileApState extends State<ListTileAp> {
                         nome_responsavel: widget.nomeResponsavel,
                         tipoAviso: 3,
                       )),
+                if (FuncionarioInfos.avisa_delivery)
+                  buildActionIcon(
+                      iconApi: '${Consts.iconApiPort}mercadorias60px.png',
+                      titleModal: 'Caixas',
+                      labelModal: 'Remetente',
+                      avisa: FuncionarioInfos.avisa_encomendas,
+                      pageRoute: ScaffoldBottom(
+                        nome_responsavel: widget.nomeResponsavel,
+                        idunidade: widget.idunidade,
+                        localizado: widget.bloco,
+                        tipoAviso: 4,
+                      )),
                 if (FuncionarioInfos.avisa_visita)
                   buildActionIcon(
                       avisa: FuncionarioInfos.avisa_visita,
-                      icon: Icons.person_add_alt_1_sharp,
+                      iconApi: '${Consts.iconApiPort}visitas60px.png',
+                      titleModal: 'Visitas',
                       onPressed: () {
                         showModalAvisaDelivery(context,
                             title: 'Visitas',
@@ -120,8 +149,9 @@ class _ListTileApState extends State<ListTileAp> {
                       }),
                 if (FuncionarioInfos.avisa_delivery)
                   buildActionIcon(
+                      titleModal: 'Delivery',
                       avisa: FuncionarioInfos.avisa_delivery,
-                      icon: Icons.delivery_dining,
+                      iconApi: '${Consts.iconApiPort}delivery60px.png',
                       onPressed: () {
                         showModalAvisaDelivery(context,
                             title: 'Delivery',
@@ -132,45 +162,6 @@ class _ListTileApState extends State<ListTileAp> {
                             // nome_moradores: widget.nome_moradores,
                             );
                       }),
-                /* Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
-                  child: MyBoxShadow(
-                    color: FuncionarioInfos.avisa_delivery ? null : Colors.grey,
-                    paddingAll: 0.002,
-                    child: IconButton(
-                      onPressed: FuncionarioInfos.avisa_delivery
-                          ? () {
-                              showModalAvisaDelivery(
-                                context,
-                                idunidade: widget.idunidade,
-                                localizado: widget.bloco,
-                                nome_responsavel: widget.nomeResponsavel,
-                                // nome_moradores: widget.nome_moradores,
-                              );
-                            }
-                          : () {
-                              buildMinhaSnackBar(context,
-                                  title: 'Desculpe',
-                                  subTitle: 'Você não tem acesso à essa ação');
-                            },
-                      icon: Icon(
-                        Icons.delivery_dining,
-                      ),
-                    ),
-                  ),
-                ),
-               */
-                buildActionIcon(
-                    icon: Icons.shopping_bag_rounded,
-                    titleModal: 'Encomenda',
-                    labelModal: 'Remetente',
-                    avisa: FuncionarioInfos.avisa_encomendas,
-                    pageRoute: ScaffoldBottom(
-                      nome_responsavel: widget.nomeResponsavel,
-                      idunidade: widget.idunidade,
-                      localizado: widget.bloco,
-                      tipoAviso: 4,
-                    )),
               ],
             ),
           ],
