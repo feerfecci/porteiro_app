@@ -15,10 +15,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKeyLogin = GlobalKey<FormState>();
-  final TextEditingController userController =
-      TextEditingController(text: 'cesarsilva0102');
-  final TextEditingController senhaController =
-      TextEditingController(text: '123456');
+  final TextEditingController userController = TextEditingController();
+  final TextEditingController senhaController = TextEditingController();
   bool obscure = true;
   bool isChecked = false;
   bool isLoading = false;
@@ -29,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return TextFormField(
         keyboardType: TextInputType.emailAddress,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        controller: userController,
+        controller: userController, autofillHints: const [AutofillHints.email],
         validator: Validatorless.multiple([
           Validatorless.required('Usuário é obrigatório'),
           // Validatorless.email('Preencha com um email Válido')
@@ -72,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Validatorless.min(3, 'Mínimo de 6 caracteres')
             ]),
             onEditingComplete: () => TextInput.finishAutofillContext(),
+            autofillHints: const [AutofillHints.password],
             obscureText: obscure,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
@@ -141,51 +140,53 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     return Scaffold(
-      body: Form(
-        key: _formKeyLogin,
-        child: Center(
-          child: Wrap(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    left: size.width * 0.05,
-                    right: size.width * 0.05,
-                    bottom: size.height * 0.15),
-                child: Column(
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: FutureBuilder(
-                          future: ConstsFuture.apiImage(
-                              'https://a.portariaapp.com/img/logo_vermelho.png'),
-                          builder: (context, snapshot) {
-                            return SizedBox(
-                              height: size.height * 0.2,
-                              width: size.width * 0.5,
-                              child: snapshot.data,
-                            );
-                          },
-                        )),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: size.height * 0.035,
-                          top: size.height * 0.025),
-                      child: ConstsWidget.buildTitleText(context,
-                          title: 'Portaria App | Portaria', fontSize: 19),
-                    ),
-                    buildTextFormEmail(),
-                    SizedBox(
-                      height: size.height * 0.03,
-                    ),
-                    buildTextFormSenha(),
-                    ConstsWidget.buildLoadingButton(context, fontSize: 18,
-                        onPressed: () async {
-                      starLogin();
-                    }, isLoading: isLoading, title: 'Entrar'),
-                  ],
+      body: AutofillGroup(
+        child: Form(
+          key: _formKeyLogin,
+          child: Center(
+            child: Wrap(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: size.width * 0.05,
+                      right: size.width * 0.05,
+                      bottom: size.height * 0.15),
+                  child: Column(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: FutureBuilder(
+                            future: ConstsFuture.apiImage(
+                                'https://a.portariaapp.com/img/logo_vermelho.png'),
+                            builder: (context, snapshot) {
+                              return SizedBox(
+                                height: size.height * 0.2,
+                                width: size.width * 0.5,
+                                child: snapshot.data,
+                              );
+                            },
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: size.height * 0.035,
+                            top: size.height * 0.025),
+                        child: ConstsWidget.buildTitleText(context,
+                            title: 'Portaria App | Portaria', fontSize: 19),
+                      ),
+                      buildTextFormEmail(),
+                      SizedBox(
+                        height: size.height * 0.03,
+                      ),
+                      buildTextFormSenha(),
+                      ConstsWidget.buildLoadingButton(context, fontSize: 18,
+                          onPressed: () async {
+                        starLogin();
+                      }, isLoading: isLoading, title: 'Entrar'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -164,7 +164,12 @@ class _HomePageState extends State<HomePage> {
                         List nomeEmLista = nome_responsavel.split(' ');
                         List<String> listNomeAbreviado = [];
                         for (var i = 1; i <= (nomeEmLista.length - 1); i++) {
-                          if (nomeEmLista[i] != '') {
+                          if (nomeEmLista[i] != '' &&
+                              (nomeEmLista[i] != 'de' &&
+                                  nomeEmLista[i] != 'do' &&
+                                  nomeEmLista[i] != 'dos' &&
+                                  nomeEmLista[i] != 'das' &&
+                                  nomeEmLista[i] != 'da')) {
                             listNomeAbreviado
                                 .add(nomeEmLista[i].substring(0, 1));
                           }

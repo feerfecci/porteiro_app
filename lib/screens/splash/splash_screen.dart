@@ -15,12 +15,16 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool load = false;
   Future startLogin() async {
     await LocalInfos.readCache().then((value) async {
       List cacheInfos = value;
       if (cacheInfos.first != null && cacheInfos.last != null) {
         final auth = await LocalBiometrics.authenticate();
         final hasBiometrics = await LocalBiometrics.hasBiometric();
+        setState(() {
+          load = true;
+        });
         if (auth && hasBiometrics) {
           return ConstsFuture.fazerLogin(
               context, cacheInfos.first, cacheInfos.last);
@@ -55,19 +59,21 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
           Spacer(),
-          ConstsWidget.buildPadding001(
-            context,
-            vertical: 0.03,
-            horizontal: 0.03,
-            child: ConstsWidget.buildCustomButton(
+          Row(),
+          if (load)
+            ConstsWidget.buildPadding001(
               context,
-              'Autenticar Biometria',
-              icon: Icons.lock_open_outlined,
-              onPressed: () {
-                startLogin();
-              },
-            ),
-          )
+              vertical: 0.03,
+              horizontal: 0.03,
+              child: ConstsWidget.buildCustomButton(
+                context,
+                'Autenticar Biometria',
+                icon: Icons.lock_open_outlined,
+                onPressed: () {
+                  startLogin();
+                },
+              ),
+            )
         ],
       ),
     );
