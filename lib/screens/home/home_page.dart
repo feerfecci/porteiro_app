@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../consts/consts_widget.dart';
 import '../../widgets/page_erro.dart';
+import '../correspondencias/multi_corresp.dart';
 import 'list_tile_ap.dart';
 
 class HomePage extends StatefulWidget {
@@ -69,20 +70,28 @@ class _HomePageState extends State<HomePage> {
       },
       child: ConstsWidget.buildPadding001(
         context,
+        horizontal: 0.01,
         child: ListView(
           children: [
-            GestureDetector(
-              onTap: () {
-                ConstsFuture.navigatorPush(context, AvisosScreen());
+            ConstsWidget.buildCustomButton(
+              context,
+              'Adicionar Items',
+              onPressed: () {
+                ConstsFuture.navigatorPush(context, MultiCorrespScreen());
               },
-              child: MyBoxShadow(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ConstsWidget.buildTitleText(context,
-                      title: 'Histórico Avisos')
-                ],
-              )),
+            ),
+            SizedBox(
+              height: size.height * 0.01,
+            ),
+            ConstsWidget.buildPadding001(
+              context,
+              child: ConstsWidget.buildCustomButton(
+                context,
+                'Histórico Avisos',
+                onPressed: () {
+                  ConstsFuture.navigatorPush(context, AvisosScreen());
+                },
+              ),
             ),
             ConstsWidget.buildPadding001(
               context,

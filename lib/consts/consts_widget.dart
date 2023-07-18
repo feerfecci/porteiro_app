@@ -28,6 +28,7 @@ class ConstsWidget {
     return Text(
       title ?? '',
       textAlign: textAlign,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: fontSize,

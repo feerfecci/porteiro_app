@@ -9,12 +9,14 @@ class ScaffoldAll extends StatefulWidget {
   final Widget? body;
   final Widget? floatingActionButton;
   final double fontSize;
+  bool resizeToAvoidBottomInset;
   bool isDrawer;
   ScaffoldAll(
       {required this.title,
       required this.body,
       this.floatingActionButton,
       this.isDrawer = false,
+      this.resizeToAvoidBottomInset = false,
       this.fontSize = 30,
       super.key});
 
@@ -28,7 +30,7 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       // floatingActionButton: widget.floatingActionButton,
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
       appBar: AppBar(
         centerTitle: true,
         title: ConstsWidget.buildTitleText(context,
