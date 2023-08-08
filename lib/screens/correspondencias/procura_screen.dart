@@ -1,4 +1,4 @@
-import 'package:app_porteiro/seach_pages/search_protocolo.dart';
+import 'package:app_porteiro/screens/seach_pages/search_protocolo.dart';
 import 'package:app_porteiro/widgets/seachBar.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,8 @@ class ProcuraProtocolo extends StatelessWidget {
       child: SeachBar(
         label: 'Pesquise',
         hintText: 'a0x1',
-        delegate: SearchProtocolos(idunidade: idunidade, tipoAviso: tipoAviso),
+        delegate:
+            SearchProtocolos(/*idunidade: idunidade, tipoAviso: tipoAviso*/),
       ),
     );
   }

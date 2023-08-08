@@ -2,6 +2,7 @@
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
 import 'package:app_porteiro/screens/correspondencias/procura_screen.dart';
+import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/custom_drawer/custom_drawer.dart';
 
@@ -9,11 +10,9 @@ class ScaffoldBottom extends StatefulWidget {
   final int? idunidade;
   final String? localizado;
 
-  final String? nome_responsavel;
   final int? tipoAviso;
   const ScaffoldBottom(
       {required this.localizado,
-      required this.nome_responsavel,
       required this.idunidade,
       required this.tipoAviso,
       super.key});
@@ -34,7 +33,7 @@ class _ScaffoldBottomState extends State<ScaffoldBottom> {
       appBar: AppBar(
         centerTitle: true,
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: ConstsWidget.buildTitleText(context,
             title: widget.tipoAviso == 3 ? 'Cartas' : ' Caixas', fontSize: 24),
         elevation: 0,
@@ -81,26 +80,22 @@ class _ScaffoldBottomState extends State<ScaffoldBottom> {
               label: 'Buscar Protocolos',
             ),
           ]),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.height * 0.01),
-        child: PageView(
-          physics: ClampingScrollPhysics(),
-          controller: _pageController,
-          onPageChanged: (value) {
-            setState(() {
-              currentTab = value;
-            });
-          },
-          children: [
-            CorrespondenciasScreen(
-                idunidade: widget.idunidade,
-                localizado: widget.localizado,
-                nome_responsavel: widget.nome_responsavel,
-                tipoAviso: widget.tipoAviso),
-            ProcuraProtocolo(
-                idunidade: widget.idunidade, tipoAviso: widget.tipoAviso),
-          ],
-        ),
+      body: PageView(
+        physics: ClampingScrollPhysics(),
+        controller: _pageController,
+        onPageChanged: (value) {
+          setState(() {
+            currentTab = value;
+          });
+        },
+        children: [
+          CorrespondenciasScreen(
+              idunidade: widget.idunidade,
+              localizado: widget.localizado,
+              tipoAviso: widget.tipoAviso),
+          ProcuraProtocolo(
+              idunidade: widget.idunidade, tipoAviso: widget.tipoAviso),
+        ],
       ),
     );
   }

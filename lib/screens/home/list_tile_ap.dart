@@ -3,6 +3,7 @@ import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
+import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
@@ -11,13 +12,12 @@ import 'package:flutter/material.dart';
 import '../correspondencias/scafffoldItem.dart';
 
 class ListTileAp extends StatefulWidget {
-  final String nomeResponsavel;
   // final String nome_moradores;
   final String bloco;
   final int idunidade;
 
   const ListTileAp(
-      {required this.nomeResponsavel,
+      {
       // required  this.nome_moradores,
       required this.bloco,
       required this.idunidade,
@@ -98,9 +98,6 @@ class _ListTileApState extends State<ListTileAp> {
             SizedBox(
               height: size.height * 0.005,
             ),
-            ConstsWidget.buildSubTitleText(context,
-                subTitle: widget.nomeResponsavel, fontSize: 18),
-            // Text(widget.nome_moradores),
             SizedBox(
               height: size.height * 0.02,
             ),
@@ -117,7 +114,6 @@ class _ListTileApState extends State<ListTileAp> {
                       pageRoute: ScaffoldBottom(
                         idunidade: widget.idunidade,
                         localizado: widget.bloco,
-                        nome_responsavel: widget.nomeResponsavel,
                         tipoAviso: 3,
                       )),
                 if (FuncionarioInfos.avisa_delivery)
@@ -127,7 +123,7 @@ class _ListTileApState extends State<ListTileAp> {
                       labelModal: 'Remetente',
                       avisa: FuncionarioInfos.avisa_encomendas,
                       pageRoute: ScaffoldBottom(
-                        nome_responsavel: widget.nomeResponsavel,
+                        // nome_responsavel: widget.nomeResponsavel,
                         idunidade: widget.idunidade,
                         localizado: widget.bloco,
                         tipoAviso: 4,
@@ -138,14 +134,14 @@ class _ListTileApState extends State<ListTileAp> {
                       iconApi: '${Consts.iconApiPort}visitas60px.png',
                       titleModal: 'Visitas',
                       onPressed: () {
-                        showModalAvisaDelivery(context,
-                            title: 'Visitas',
-                            idunidade: widget.idunidade,
-                            localizado: widget.bloco,
-                            nome_responsavel: widget.nomeResponsavel,
-                            tipoAviso: 2
-                            // nome_moradores: widget.nome_moradores,
-                            );
+                        showModalAvisaDelivery(
+                          context,
+                          title: 'Visitas',
+                          idunidade: widget.idunidade,
+                          localizado: widget.bloco,
+                          tipoAviso: 2,
+                          // nome_moradores: widget.nome_moradores,
+                        );
                       }),
                 if (FuncionarioInfos.avisa_delivery)
                   buildActionIcon(
@@ -157,7 +153,6 @@ class _ListTileApState extends State<ListTileAp> {
                             title: 'Delivery',
                             idunidade: widget.idunidade,
                             localizado: widget.bloco,
-                            nome_responsavel: widget.nomeResponsavel,
                             tipoAviso: 1
                             // nome_moradores: widget.nome_moradores,
                             );

@@ -13,8 +13,10 @@ class _PageVaziaErro extends State<PageErro> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset('assets/vazio.png'),
+        Image.asset('assets/erro.png'),
         SizedBox(
           height: size.height * 0.01,
         ),

@@ -1,12 +1,13 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names
 
 import 'dart:convert';
+import 'package:app_porteiro/screens/seach_pages/search_empty.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../consts/consts.dart';
-import '../screens/home/list_tile_ap.dart';
-import '../widgets/page_erro.dart';
+import '../../consts/consts.dart';
+import '../home/list_tile_ap.dart';
+import '../../widgets/page_erro.dart';
 
 class SearchUnidades extends SearchDelegate<String> {
   @override
@@ -42,7 +43,8 @@ class SearchUnidades extends SearchDelegate<String> {
     var size = MediaQuery.of(context).size;
 
     if (query.isEmpty) {
-      return Text('Procure um apartamento ou nome');
+      return buildNoQuerySearch(context,
+          mesagem: 'Procure um apartamento ou nome');
     } else {
       return FutureBuilder<dynamic>(
         future: sugestoesUnidades(),
@@ -72,7 +74,6 @@ class SearchUnidades extends SearchDelegate<String> {
                   var login = apiUnidade['login'];
 
                   return ListTileAp(
-                    nomeResponsavel: nome_responsavel,
                     bloco: '$dividido_por $nome_divisao - $numero',
                     idunidade: idunidade,
                   );
@@ -96,7 +97,7 @@ class SearchUnidades extends SearchDelegate<String> {
     if (resposta.statusCode == 200) {
       return json.decode(resposta.body);
     } else {
-      return ['Não foi!'];
+      return {'erro': true, 'mesagem': 'Algo Saiu Mal!'};
     }
   }
 }

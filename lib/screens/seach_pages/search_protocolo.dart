@@ -3,17 +3,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/moldals/modal_emite_entrega.dart';
+import 'package:app_porteiro/screens/seach_pages/search_empty.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
+import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import '../consts/consts.dart';
-import '../widgets/page_erro.dart';
+import '../../consts/consts.dart';
+import '../../widgets/page_erro.dart';
+import '../../widgets/page_vazia.dart';
 
 class SearchProtocolos extends SearchDelegate<String> {
-  final int? idunidade;
-  final int? tipoAviso;
-  SearchProtocolos({required this.idunidade, required this.tipoAviso});
+  // final int? idunidade;
+  // final int? tipoAviso;
+  SearchProtocolos(/*{required this.idunidade, required this.tipoAviso}*/);
 
   @override
   String get searchFieldLabel => "Digite o Protocolo";
@@ -50,11 +53,15 @@ class SearchProtocolos extends SearchDelegate<String> {
   }
 
   final List listEntregar = [];
+  int idunidade = 0;
 
   @override
   Widget buildSuggestions(BuildContext context) {
     var size = MediaQuery.of(context).size;
     bool isChecked = false;
+    if (query.isEmpty) {
+      buildNoQuerySearch(context, mesagem: 'Procure um apartamento ou nome');
+    }
     return StatefulBuilder(builder: (context, setState) {
       bool isLoadingCodigo = false;
       return Scaffold(
@@ -92,11 +99,11 @@ class SearchProtocolos extends SearchDelegate<String> {
                                 snapshot.data['correspondencias'][index];
                             var idcorrespondencia =
                                 infoRetirada['idcorrespondencia'];
-                            var idunidade = infoRetirada['idunidade'];
+                            var idunidadeapi = infoRetirada['idunidade'];
                             var unidade = infoRetirada['unidade'];
-                            var divisao = infoRetirada[';'];
+                            var divisao = infoRetirada['divisao'];
                             var idcondominio = infoRetirada['idcondominio'];
-                            var nome_condominio = infoRetirada[';'];
+                            var nome_condominio = infoRetirada['nome_condominio'];
                             var idfuncionario = infoRetirada['idfuncionario'];
                             var nome_funcionario =
                                 infoRetirada['nome_funcionario'];
@@ -107,40 +114,48 @@ class SearchProtocolos extends SearchDelegate<String> {
                             var data_recebimento = DateFormat('dd/MM/yyyy')
                                 .format(DateTime.parse(
                                     infoRetirada['data_recebimento']));
-                            return ConstsWidget.buildPadding001(
-                              context,
-                              child: MyBoxShadow(
-                                child: ListTile(
-                                  title: ConstsWidget.buildTitleText(context,
-                                      title: remetente),
-                                  subtitle: ConstsWidget.buildSubTitleText(
-                                      context,
-                                      subTitle:
-                                          '$descricao - $data_recebimento'),
-                                  trailing: SizedBox(
-                                      width: size.width * 0.38,
-                                      child: StatefulBuilder(
-                                          builder: (context, setState) {
-                                        return ConstsWidget.buildCheckBox(
-                                            context,
-                                            isChecked: isChecked,
-                                            onChanged: (value) {
-                                          setState(
-                                            () {
-                                              isChecked = value!;
-                                              value == true
-                                                  ? listEntregar.add(
-                                                      idcorrespondencia
-                                                          .toString())
-                                                  : listEntregar.remove(
-                                                      idcorrespondencia
-                                                          .toString());
-                                            },
-                                          );
-                                        }, title: 'Entregar');
-                                      })),
+
+                            idunidade = idunidadeapi;
+
+                            return Column(
+                              children: [
+                                ConstsWidget.buildPadding001(
+                                  context,
+                                  child: MyBoxShadow(
+                                    child: ListTile(
+                                      title: ConstsWidget.buildTitleText(
+                                          context,
+                                          title: remetente),
+                                      subtitle: ConstsWidget.buildSubTitleText(
+                                          context,
+                                          subTitle:
+                                              '$descricao - $data_recebimento'),
+                                      trailing: SizedBox(
+                                          width: size.width * 0.38,
+                                          child: StatefulBuilder(
+                                              builder: (context, setState) {
+                                            return ConstsWidget.buildCheckBox(
+                                                context,
+                                                isChecked: isChecked,
+                                                onChanged: (value) {
+                                              setState(
+                                                () {
+                                                  isChecked = value!;
+                                                  value == true
+                                                      ? listEntregar.add(
+                                                          idcorrespondencia
+                                                              .toString())
+                                                      : listEntregar.remove(
+                                                          idcorrespondencia
+                                                              .toString());
+                                                },
+                                              );
+                                            }, title: 'Entregar');
+                                          })),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             );
                           },
                         ),
@@ -162,21 +177,31 @@ class SearchProtocolos extends SearchDelegate<String> {
                         //     );
                         //   });
                         // }, isLoading: isLoadingCodigo, title: 'Código de Entrega'),
-                        if (snapshot.data['correspondencias'] != null)
-                          ConstsWidget.buildCustomButton(
+                        ConstsWidget.buildPadding001(
+                          context,
+                          horizontal: 0.01,
+                          child: ConstsWidget.buildCustomButton(
                               context, 'Código de Entrega', onPressed: () {
                             // emiteEntrega(listEntregar.join(','));
-
-                            showModalEmiteEntrega(context,
+                            if (isChecked) {
+                              showModalEmiteEntrega(
+                                context,
                                 idunidade: idunidade,
-                                protocoloRetirada: query,
-                                tipoCompara: 1);
-                            listEntregar.clear();
-                          })
+                                listEntregar: listEntregar.toString(),
+                                tipoCompara: 'codigo',
+                              );
+                              listEntregar.clear();
+                            } else {
+                              buildMinhaSnackBar(context,
+                                  title: 'Cuidado',
+                                  subTitle: 'Selecione pelo menos um item');
+                            }
+                          }),
+                        )
                       ],
                     );
                   } else {
-                    return Text(snapshot.data['mensagem']);
+                    return PageVazia(title: snapshot.data['mensagem']);
                   }
                 } else {
                   return PageErro();
@@ -189,7 +214,7 @@ class SearchProtocolos extends SearchDelegate<String> {
 
   Future<dynamic> sugestoesUnidades() async {
     var url = Uri.parse(
-        '${Consts.apiPortaria}correspondencias/?fn=listarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&statusentrega=0&tipo=$tipoAviso&protocolo=$query');
+        '${Consts.apiPortaria}correspondencias/?fn=listarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&statusentrega=0&protocolo=$query');
     var resposta = await http.get(url);
     if (resposta.statusCode == 200) {
       return json.decode(resposta.body);

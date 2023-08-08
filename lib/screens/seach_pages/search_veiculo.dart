@@ -1,13 +1,14 @@
 // ignore_for_file: unused_local_variable
 
 import 'dart:convert';
+import 'package:app_porteiro/screens/seach_pages/search_empty.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:flutter/material.dart';
-import '../consts/consts.dart';
-import '../widgets/page_erro.dart';
+import '../../consts/consts.dart';
+import '../../widgets/page_erro.dart';
 
 class SearchVeiculo extends SearchDelegate<String> {
   @override
@@ -82,7 +83,7 @@ class SearchVeiculo extends SearchDelegate<String> {
     }
 
     if (query.isEmpty) {
-      return Text('Procure um veículo');
+      return buildNoQuerySearch(context, mesagem: 'Procure um veículo');
     } else {
       return FutureBuilder(
         future: sugestoesVeiculos(),

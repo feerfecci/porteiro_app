@@ -1,215 +1,378 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, unused_local_variable, non_constant_identifier_names
-import 'dart:convert';
-import 'package:app_porteiro/consts/consts.dart';
-import 'package:app_porteiro/consts/consts_future.dart';
-import 'package:app_porteiro/screens/avisos/avisos_screen.dart';
-import 'package:app_porteiro/seach_pages/search_unidades.dart';
+import 'dart:io';
+
+import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/screens/avisos/historico_notific.dart';
+import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
+import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
+import 'package:app_porteiro/screens/quadro_avisos/quadro_avisos.dart';
+import 'package:app_porteiro/screens/reservas_espacos/espacos_screen.dart';
+import 'package:app_porteiro/screens/seach_pages/search_protocolo.dart';
+import 'package:app_porteiro/screens/seach_pages/search_visitante.dart';
+import 'package:app_porteiro/screens/visitas/visitas_screen.dart';
+import 'package:app_porteiro/screens/seach_pages/search_veiculo.dart';
+import 'package:app_porteiro/widgets/alertdialog_all.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
-import 'package:app_porteiro/widgets/page_vazia.dart';
-import 'package:app_porteiro/widgets/seachBar.dart';
-import 'package:app_porteiro/widgets/shimmer_widget.dart';
+import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import '../../consts/consts_widget.dart';
-import '../../widgets/page_erro.dart';
-import '../correspondencias/multi_corresp.dart';
-import 'list_tile_ap.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../consts/consts.dart';
+import '../../consts/consts_future.dart';
+import '../correspondencias/multi_corresp/multicorresp_screen.dart';
+import '../seach_pages/search_unidades.dart';
+import '../../widgets/custom_drawer/custom_drawer.dart';
+import '../../widgets/seachBar.dart';
+import '../../widgets/snack_bar.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-  });
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-Future apiListarUnidades() async {
-  var url = Uri.parse(
-      '${Consts.apiPortaria}unidades/?fn=listarUnidades&idcond=${FuncionarioInfos.idcondominio}');
-  var resposta = await http.get(url);
-  if (resposta.statusCode == 200) {
-    return json.decode(resposta.body);
-  }
-  return false;
-}
-
 class _HomePageState extends State<HomePage> {
-  // Future oneSignalNotification() async {
-  //   OneSignal.shared.setAppId("5993cb79-853a-412e-94a1-f995c9797692");
-  //   OneSignal.shared.promptUserForPushNotificationPermission();
-  //   OneSignal.shared.sendTags({
-  //     'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
-  //     'idcond': FuncionarioInfos.idcondominio.toString(),
-  //     'idfuncao': FuncionarioInfos.idfuncao.toString(),
-  //   });
-  // }
+  DateTime timeBackPressed = DateTime.now();
+  Future oneSignalNotification() async {
+    OneSignal.shared.setAppId("5993cb79-853a-412e-94a1-f995c9797692");
+    // OneSignal.shared.promptUserForPushNotificationPermission().then((value) {
+    //   // OneSignal.shared.setExternalUserId('34');
+    // });
+    OneSignal.shared.sendTags({
+      'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
+      'idcond': FuncionarioInfos.idcondominio.toString(),
+      'idfuncao': FuncionarioInfos.idfuncao.toString(),
+    });
+  }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   apiListarUnidades();
-  // }
-
-  // @override
-  // void initState() {
-  //   apiListarUnidades();
-  //   oneSignalNotification();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    oneSignalNotification();
+  }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return ConstsWidget.buildRefreshIndicadtor(
-      context,
-      onRefresh: () async {
-        setState(() {
-          apiListarUnidades();
-        });
-      },
-      child: ConstsWidget.buildPadding001(
-        context,
-        horizontal: 0.01,
-        child: ListView(
-          children: [
-            ConstsWidget.buildCustomButton(
-              context,
-              'Adicionar Items',
-              onPressed: () {
-                ConstsFuture.navigatorPush(context, MultiCorrespScreen());
+    Widget buildCard({
+      required String title,
+      required String iconApi,
+      bool avisa = true,
+      bool isWhatss = false,
+      bool isSearchVeiculo = false,
+      void Function()? onTap,
+    }) {
+      return GestureDetector(
+        onTap: avisa
+            ? onTap
+            : () {
+                buildMinhaSnackBar(context,
+                    title: 'Desculpe',
+                    subTitle: 'Você não tem acesso à essa ação');
               },
+        child: MyBoxShadow(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FutureBuilder(
+              future: ConstsFuture.apiImage(iconApi),
+              builder: (context, snapshot) => SizedBox(
+                width: size.width * 0.13,
+                height: size.height * 0.059,
+                child: Image.network(
+                  iconApi,
+                  fit: BoxFit.fill,
+                ),
+              ),
             ),
             SizedBox(
               height: size.height * 0.01,
             ),
-            ConstsWidget.buildPadding001(
-              context,
-              child: ConstsWidget.buildCustomButton(
-                context,
-                'Histórico Avisos',
-                onPressed: () {
-                  ConstsFuture.navigatorPush(context, AvisosScreen());
+            ConstsWidget.buildTitleText(context, title: title, fontSize: 17),
+          ],
+        )),
+      );
+    }
+
+    Widget buildGridViewer({required List<Widget> children}) {
+      return ConstsWidget.buildPadding001(
+        context,
+        vertical: 0,
+        horizontal: 0.005,
+        child: GridView.count(
+            shrinkWrap: true,
+            physics: ClampingScrollPhysics(),
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 0.1,
+            crossAxisCount: 2,
+            childAspectRatio: 1.55,
+            children: children),
+      );
+    }
+
+    return WillPopScope(
+      onWillPop: () async {
+        final differenceBack = DateTime.now().difference(timeBackPressed);
+        final isExitWarning = differenceBack >= Duration(seconds: 1);
+        timeBackPressed = DateTime.now();
+
+        if (isExitWarning) {
+          Fluttertoast.showToast(
+              msg: 'Pressione novamente para sair',
+              fontSize: 18,
+              backgroundColor: Colors.black);
+          return false;
+        } else {
+          Fluttertoast.cancel();
+          return true;
+        }
+      },
+      child: Scaffold(
+          extendBody: true,
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            centerTitle: true,
+            title: ConstsWidget.buildTitleText(context,
+                title: FuncionarioInfos.nome_condominio, fontSize: 20),
+            iconTheme:
+                IconThemeData(color: Theme.of(context).colorScheme.primary),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0,
+            leadingWidth: size.height * 0.06,
+            leading: Padding(
+              padding: EdgeInsets.only(left: size.width * 0.025),
+              child: FutureBuilder(
+                future: ConstsFuture.apiImage(
+                  'https://a.portariaapp.com/img/logo_vermelho.png',
+                ),
+                builder: (context, snapshot) {
+                  return SizedBox(child: snapshot.data);
                 },
               ),
             ),
-            ConstsWidget.buildPadding001(
-              context,
-              vertical: 0,
-              horizontal: 0.01,
-              child: SeachBar(
-                label: 'Pesquise um apartamento',
-                hintText: 'ap01',
-                delegate: SearchUnidades(),
-              ),
-            ),
-            FutureBuilder<dynamic>(
-              future: apiListarUnidades(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return MyBoxShadow(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ShimmerWidget(
-                          height: size.height * 0.02, width: size.width * 0.5),
-                      ConstsWidget.buildPadding001(
-                        context,
-                        child: ShimmerWidget(
-                          height: size.height * 0.02,
-                          width: size.width * 0.5,
+          ),
+          endDrawer: CustomDrawer(),
+          body: ListView(
+            // padding: EdgeInsets.symmetric(horizontal: size.height * 0.005),
+            children: [
+              buildGridViewer(children: [
+                buildCard(
+                    title: 'Samu',
+                    iconApi: '${Consts.iconApiPort}ambulancia.png',
+                    onTap: () {
+                      launchNumber('192');
+                    },
+                    isWhatss: true),
+                buildCard(
+                    title: 'Polícia',
+                    iconApi: '${Consts.iconApiPort}policia.png',
+                    onTap: () {
+                      launchNumber('190');
+                    },
+                    isWhatss: true),
+                buildCard(
+                    title: 'Bombeiros',
+                    onTap: () {
+                      launchNumber('193');
+                    },
+                    iconApi: '${Consts.iconApiPort}bombeiro.png',
+                    isWhatss: true),
+                buildCard(
+                  title: 'Quadro de Avisos',
+                  iconApi: '${Consts.iconApiPort}quadrodeavisos.png',
+                  onTap: () {
+                    ConstsFuture.navigatorPush(
+                        context, QuadroHistoricoNotificScreen());
+                  },
+                ),
+                buildCard(
+                  title: 'Reservas de Espaços',
+                  iconApi: '${Consts.iconApiPort}reservas-solicitadas.png',
+                  onTap: () {
+                    ConstsFuture.navigatorPush(context, EspacosScreen());
+                  },
+                ),
+                buildCard(
+                  title: 'Visitante',
+                  iconApi: '${Consts.iconApiPort}visitas.png',
+                  onTap: () {
+                    showSearch(context: context, delegate: SearchVisitante());
+                    // ConstsFuture.navigatorPush(context, VisitasScreen());
+                  },
+                ),
+              ]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: size.width * 0.5,
+                    child: ConstsWidget.buildPadding001(
+                      context,
+                      vertical: 0,
+                      horizontal: 0.01,
+                      child: GestureDetector(
+                        onTap: () => showSearch(
+                            context: context, delegate: SearchProtocolos()),
+                        child: ConstsWidget.buildPadding001(
+                          context,
+                          horizontal: 0.01,
+                          child: Container(
+                            height: size.height * 0.085,
+                            width: double.maxFinite,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                                border: Border.all(
+                                    color: Consts.kColorRed,
+                                    width: size.width * 0.007),
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Spacer(flex: 3),
+                                ConstsWidget.buildTitleText(context,
+                                    title: 'Protocolos',
+                                    textAlign: TextAlign.center),
+                                Spacer(),
+                                Container(
+                                  height: size.height * 0.3,
+                                  width: size.width * 0.1,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Consts.kColorRed,
+                                  ),
+                                  child: Icon(
+                                    Icons.search,
+                                    color: Colors.white,
+                                    fill: 1,
+                                  ),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                      ShimmerWidget(
-                          height: size.height * 0.02, width: size.width * 0.3),
-                      ConstsWidget.buildPadding001(
-                        context,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
+                  ),
+                  SizedBox(
+                    width: size.width * 0.5,
+                    child: ConstsWidget.buildPadding001(
+                      context,
+                      vertical: 0,
+                      horizontal: 0.01,
+                      child: GestureDetector(
+                        onTap: () => showSearch(
+                            context: context, delegate: SearchUnidades()),
+                        child: ConstsWidget.buildPadding001(
+                          context,
+                          horizontal: 0.01,
+                          child: Container(
+                            height: size.height * 0.085,
+                            width: double.maxFinite,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                                border: Border.all(
+                                    color: Consts.kColorRed,
+                                    width: size.width * 0.007),
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Spacer(flex: 3),
+                                ConstsWidget.buildTitleText(context,
+                                    title: 'Unidades',
+                                    textAlign: TextAlign.center),
+                                Spacer(),
+                                Container(
+                                  height: size.height * 0.3,
+                                  width: size.width * 0.1,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Consts.kColorRed,
+                                  ),
+                                  child: Icon(
+                                    Icons.search,
+                                    color: Colors.white,
+                                    fill: 1,
+                                  ),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              buildGridViewer(
+                children: [
+                  buildCard(
+                    title: 'Notificações',
+                    onTap: () {
+                      ConstsFuture.navigatorPush(
+                          context, HistoricoNotificScreen());
+                    },
+                    iconApi: '${Consts.iconApiPort}historico-notificacoes.png',
+                  ),
+                  buildCard(
+                      title: 'Procurar Veículos',
+                      iconApi: '${Consts.iconApiPort}pesquisa-veiculos.png',
+                      onTap: () {
+                        showSearch(context: context, delegate: SearchVeiculo());
+                      },
+                      isSearchVeiculo: true),
+                  buildCard(
+                    title: 'Adicionar Itens',
+                    iconApi: '${Consts.iconApiPort}multi.png',
+                    avisa: FuncionarioInfos.avisa_corresp,
+                    onTap: () {
+                      showAllDialog(context,
                           children: [
-                            ShimmerWidget(
-                              height: size.height * 0.08,
-                              width: size.height * 0.08,
-                            ),
-                            ShimmerWidget(
-                              height: size.height * 0.08,
-                              width: size.height * 0.08,
-                            ),
-                            ShimmerWidget(
-                              height: size.height * 0.08,
-                              width: size.height * 0.08,
-                            ),
-                            ShimmerWidget(
-                              height: size.height * 0.08,
-                              width: size.height * 0.08,
+                            Column(
+                              children: [
+                                ConstsWidget.buildOutlinedButton(
+                                  context,
+                                  title: 'Várias Caixas',
+                                  onPressed: () {
+                                    ConstsFuture.navigatorPush(
+                                        context, EncomendasScreen());
+                                  },
+                                ),
+                                SizedBox(
+                                  height: size.height * 0.02,
+                                ),
+                                ConstsWidget.buildOutlinedButton(
+                                  context,
+                                  title: 'Várias Cartas',
+                                  onPressed: () {
+                                    ConstsFuture.navigatorPush(
+                                      context,
+                                      MultiCorresp(),
+                                    );
+                                  },
+                                ),
+                              ],
                             )
                           ],
-                        ),
-                      )
-                    ],
-                  ));
-                } else if (snapshot.hasData) {
-                  if (!snapshot.data['erro']) {
-                    return ListView.builder(
-                      // gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      //     maxCrossAxisExtent: size.width * 1,
-                      //     mainAxisExtent: size.height * 0.23),
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      itemCount: snapshot.data['unidades'].length,
-                      itemBuilder: (context, index) {
-                        var apiUnidade = snapshot.data['unidades'][index];
-                        var idunidade = apiUnidade['idunidade'];
-                        var ativo = apiUnidade['ativo'];
-                        var idcondominio = apiUnidade['idcondominio'];
-                        var nome_condominio = apiUnidade['nome_condominio'];
-                        var iddivisao = apiUnidade['iddivisao'];
-                        var nome_divisao = apiUnidade['nome_divisao'];
-                        var dividido_por = apiUnidade['dividido_por'];
-                        var numero = apiUnidade['numero'];
-                        String nome_responsavel =
-                            apiUnidade['nome_responsavel'];
-                        var login = apiUnidade['login'];
-                        List nomeEmLista = nome_responsavel.split(' ');
-                        List<String> listNomeAbreviado = [];
-                        for (var i = 1; i <= (nomeEmLista.length - 1); i++) {
-                          if (nomeEmLista[i] != '' &&
-                              (nomeEmLista[i] != 'de' &&
-                                  nomeEmLista[i] != 'do' &&
-                                  nomeEmLista[i] != 'dos' &&
-                                  nomeEmLista[i] != 'das' &&
-                                  nomeEmLista[i] != 'da')) {
-                            listNomeAbreviado
-                                .add(nomeEmLista[i].substring(0, 1));
-                          }
-                        }
-                        var segundoNome = listNomeAbreviado.join('. ');
-                        // var segundoNome = nomeEmLista.forEach((element) {
-                        //   return element.substring(0, 1);
-                        // });
-                        return ConstsWidget.buildPadding001(
-                          context,
-                          vertical: 0.005,
-                          child: ListTileAp(
-                            nomeResponsavel:
-                                '${nomeEmLista.first} $segundoNome.',
-                            bloco: '$dividido_por $nome_divisao - $numero',
-                            // nome_moradores: nome_moradores,
-                            idunidade: idunidade,
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    PageVazia(title: snapshot.data['mensagem']);
-                  }
-                }
-                return PageErro();
-              },
-            ),
-          ],
-        ),
-      ),
+                          title: ConstsWidget.buildTitleText(context,
+                              title: 'Escolha um modo'));
+                    },
+                  ),
+                  buildCard(
+                      title: 'Informe o Síndico',
+                      isWhatss: true,
+                      iconApi: '${Consts.iconApiPort}multi.png'),
+                ],
+              ),
+            ],
+          )),
     );
+  }
+
+  launchNumber(number) async {
+    await launchUrl(Uri.parse('tel:$number'));
   }
 }

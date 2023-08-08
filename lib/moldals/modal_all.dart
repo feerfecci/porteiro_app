@@ -5,7 +5,7 @@ import '../consts/consts.dart';
 Future buildModalAll(BuildContext context,
     {required Widget child,
     required String title,
-    bool? isDrawer,
+    bool? hasDrawer,
     double fontSize = 30}) {
   var size = MediaQuery.of(context).size;
   return showModalBottomSheet(
@@ -18,7 +18,7 @@ Future buildModalAll(BuildContext context,
             child: ScaffoldAll(
               title: title,
               fontSize: fontSize,
-              isDrawer: isDrawer ?? true,
+              hasDrawer: hasDrawer ?? true,
               key: Consts.modelScaffoldKey,
               body: Padding(
                 padding: EdgeInsets.all(size.height * 0.01),

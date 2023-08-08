@@ -123,7 +123,7 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
                       showModalEmiteEntrega(context,
                           idunidade: widget.idunidade,
                           idMorador: idMorador,
-                          tipoCompara: 2,
+                          tipoCompara: 'senha',
                           listEntregar: widget.listEntregar);
                     } else {
                       buildMinhaSnackBar(context);

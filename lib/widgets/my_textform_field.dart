@@ -13,7 +13,10 @@ Widget buildMyTextFormField(BuildContext context,
     String? hintText,
     String? initialValue,
     bool readOnly = false,
+    bool center = false,
     TextEditingController? controller,
+    double vertical = 0,
+    double horizontal = 0.03,
     final void Function(String? text)? onSaved,
     void Function()? onTap}) {
   var size = MediaQuery.of(context).size;
@@ -34,12 +37,12 @@ Widget buildMyTextFormField(BuildContext context,
       minLines: 1,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.03,
-          vertical: size.height * 0.00,
+          horizontal: size.width * horizontal,
+          vertical: size.height * vertical,
         ),
         filled: true,
         fillColor: Theme.of(context).canvasColor,
-        label: Text(label),
+        label: center ? Center(child: Text(label)) : Text(label),
         hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),

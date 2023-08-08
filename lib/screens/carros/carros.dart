@@ -1,4 +1,4 @@
-import 'package:app_porteiro/seach_pages/search_veiculo.dart';
+import 'package:app_porteiro/screens/seach_pages/search_veiculo.dart';
 import 'package:app_porteiro/widgets/seachBar.dart';
 import 'package:flutter/material.dart';
 

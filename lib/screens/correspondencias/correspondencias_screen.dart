@@ -18,11 +18,9 @@ class CorrespondenciasScreen extends StatefulWidget {
   final int? idunidade;
   final String? localizado;
 
-  final String? nome_responsavel;
   final int? tipoAviso;
   const CorrespondenciasScreen(
       {required this.localizado,
-      required this.nome_responsavel,
       required this.idunidade,
       required this.tipoAviso,
       super.key});
@@ -62,7 +60,7 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
           correspEntregar = [];
         });
       },
-      child: buildListViewAll([
+      child: buildListViewAll(children: [
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,6 +72,7 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
         ConstsWidget.buildPadding001(
           context,
           vertical: 0.015,
+          horizontal: 0.01,
           child: ConstsWidget.buildCustomButton(
             context,
             widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
@@ -83,8 +82,7 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                   title: widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
                   idunidade: widget.idunidade!,
                   tipoAviso: widget.tipoAviso!,
-                  nome_responsavel: widget.nome_responsavel,
-                  localizado: widget.nome_responsavel);
+                  localizado: widget.localizado);
             },
           ),
         ),
@@ -117,35 +115,40 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                 return Column(
                   children: [
                     if (snapshot.data['correspondencias'].length >= 1)
-                      ConstsWidget.buildCustomButton(
+                      ConstsWidget.buildPadding001(
                         context,
-                        'Emitir Entrega',
-                        color: Consts.kColorRed,
-                        onPressed: () {
-                          correspEntregar.isEmpty
-                              ? buildMinhaSnackBar(context,
-                                  title: 'Cuidado!',
-                                  subTitle: 'Selecione pelo menos um item')
-                              : showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertListMoradores(
-                                        idunidade: idUnidade,
-                                        listEntregar:
-                                            correspEntregar.join(','));
-                                  },
-                                );
+                        vertical: 0,
+                        horizontal: 0.01,
+                        child: ConstsWidget.buildCustomButton(
+                          context,
+                          'Emitir Entrega',
+                          color: Consts.kColorRed,
+                          onPressed: () {
+                            correspEntregar.isEmpty
+                                ? buildMinhaSnackBar(context,
+                                    title: 'Cuidado!',
+                                    subTitle: 'Selecione pelo menos um item')
+                                : showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertListMoradores(
+                                          idunidade: idUnidade,
+                                          listEntregar:
+                                              correspEntregar.join(','));
+                                    },
+                                  );
 
-                          // alertDialogMoradores(context,
-                          //     idunidade: idUnidade,
-                          //     listEntregar: correspEntregar.join(','));
+                            // alertDialogMoradores(context,
+                            //     idunidade: idUnidade,
+                            //     listEntregar: correspEntregar.join(','));
 
-                          // showModalEmiteEntrega(context,
-                          //     idunidade: idUnidade,
-                          //     protocoloRetirada: protocolo_entrega,
-                          //     tipoCompara: 2,
-                          //     listEntregar: correspEntregar.join(','));
-                        },
+                            // showModalEmiteEntrega(context,
+                            //     idunidade: idUnidade,
+                            //     protocoloRetirada: protocolo_entrega,
+                            //     tipoCompara: 2,
+                            //     listEntregar: correspEntregar.join(','));
+                          },
+                        ),
                       ),
                     SizedBox(
                       height: size.height * 0.015,

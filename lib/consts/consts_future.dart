@@ -7,13 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
-import '../items_bottom.dart';
+import '../screens/home/home_page.dart';
+import '../widgets/my_box_shadow.dart';
+import '../widgets/page_erro.dart';
+import '../widgets/page_vazia.dart';
+import 'consts_widget.dart';
 
 class ConstsFuture {
   static Future<dynamic> launchGetApi(BuildContext context, apiPortaria) async {
     var url = Uri.parse('${Consts.apiPortaria}$apiPortaria');
     var resposta = await http.get(url);
-
     if (resposta.statusCode == 200) {
       try {
         return json.decode(resposta.body);
@@ -81,11 +84,8 @@ class ConstsFuture {
           FuncionarioInfos.avisa_delivery = loginInfos['avisa_delivery'];
           FuncionarioInfos.avisa_encomendas = loginInfos['avisa_encomendas'];
           // Navigator.pop(context);
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => ItemsBottom(),
-              ),
-              (route) => true);
+
+          ConstsFuture.navigatorPushRemoveUntil(context, HomePage());
         } else {
           ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
           return buildMinhaSnackBar(
@@ -109,4 +109,87 @@ class ConstsFuture {
           )
         : Image.asset('assets/ico-error.png');
   }
+
+  // static AsyncSnapshot<dynamic> snapShotFora = snapShotFora;
+  // static FutureBuilder buildFutureBuilder(
+  //   BuildContext context, {
+  //   required String api,
+  //   required Widget widgetWaiting,
+  // }) {
+  //   return FutureBuilder<dynamic>(
+  //       future: ConstsFuture.launchGetApi(context, api),
+  //       builder: (context, snapshot) {
+  //         snapShotFora = snapshot;
+  //         if (snapshot.connectionState == ConnectionState.waiting) {
+  //           return widgetWaiting;
+  //         } else if (snapshot.hasData) {
+  //           if (!snapshot.data['erro']) {
+  //             return ListView.builder(
+  //               shrinkWrap: true,
+  //               physics: ClampingScrollPhysics(),
+  //               itemCount: snapshot.data['reserva_espacos'].length,
+  //               itemBuilder: (context, index) {
+  //                 var apiReservas = snapshot.data['reserva_espacos'][index];
+  //                 int idreserva = apiReservas['idreserva'];
+  //                 int status = apiReservas['status'];
+  //                 String texto_status = apiReservas['texto_status'];
+  //                 int idespaco = apiReservas['idespaco'];
+  //                 String nome_espaco = apiReservas['nome_espaco'];
+  //                 int idcondominio = apiReservas['idcondominio'];
+  //                 String nome_condominio = apiReservas['nome_condominio'];
+  //                 int idmorador = apiReservas['idmorador'];
+  //                 String nome_morador = apiReservas['nome_morador'];
+  //                 int idunidade = apiReservas['idunidade'];
+  //                 String unidade = apiReservas['unidade'];
+  //                 String data_reserva = apiReservas['data_reserva'];
+  //                 String datahora = apiReservas['datahora'];
+
+  //                 return MyBoxShadow(
+  //                     child: Column(
+  //                   children: [
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                       children: [
+  //                         ConstsWidget.buildSubTitleText(context,
+  //                             subTitle: 'Reservado por: '),
+  //                         ConstsWidget.buildTitleText(context,
+  //                             title: nome_morador),
+  //                       ],
+  //                     ),
+  //                     ConstsWidget.buildPadding001(
+  //                       context,
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                         children: [
+  //                           ConstsWidget.buildSubTitleText(context,
+  //                               subTitle: 'Local Reservado: '),
+  //                           ConstsWidget.buildTitleText(context,
+  //                               title: nome_espaco),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     ConstsWidget.buildPadding001(
+  //                       context,
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                         children: [
+  //                           ConstsWidget.buildSubTitleText(context,
+  //                               subTitle: 'Inicio da reserva:'),
+  //                           ConstsWidget.buildTitleText(context,
+  //                               title: data_reserva),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ));
+  //               },
+  //             );
+  //           } else {
+  //             return PageVazia(title: snapshot.data['mensagem']);
+  //           }
+  //         } else {
+  //           return PageErro();
+  //         }
+  //       });
+  // }
 }

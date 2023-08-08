@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:app_porteiro/consts/consts_future.dart';
+import 'package:app_porteiro/widgets/drop_search_remet.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -16,20 +17,19 @@ showModalIncluiCorresp(BuildContext context,
     {required String title,
     required int idunidade,
     required int tipoAviso,
-    required String? nome_responsavel,
     required String? localizado}) {
   var size = MediaQuery.of(context).size;
 
   buildModalAll(
     context,
     title: title,
-    isDrawer: false,
+    hasDrawer: false,
     child: WidgetModalCorresp(
-        title: title,
-        idunidade: idunidade,
-        tipoAviso: tipoAviso,
-        localizado: localizado,
-        nome_responsavel: nome_responsavel),
+      title: title,
+      idunidade: idunidade,
+      tipoAviso: tipoAviso,
+      localizado: localizado,
+    ),
   );
 }
 
@@ -37,13 +37,11 @@ class WidgetModalCorresp extends StatefulWidget {
   final String title;
   final int idunidade;
   final int? tipoAviso;
-  final String? nome_responsavel;
   final String? localizado;
   const WidgetModalCorresp(
       {required this.title,
       required this.idunidade,
       required this.tipoAviso,
-      required this.nome_responsavel,
       required this.localizado,
       super.key});
 
@@ -53,12 +51,13 @@ class WidgetModalCorresp extends StatefulWidget {
 
 class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
   final _formKey = GlobalKey<FormState>();
-  List listaRementes = [];
-  Object? dropRemetente;
+  // List listaRementes = [];
+  // Object? dropRemetente;
   bool loadingRetirada = false;
+  // int? idmsgs;
   @override
   void initState() {
-    apiListarRemetente();
+    // apiListarRemetente();
     super.initState();
   }
 
@@ -66,55 +65,52 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
 
   void carregandoRetirada() {
     setState(() {
-      loadingRetirada = !loadingRetirada;
+      loadingRetirada = true;
     });
 
-    Timer(Duration(seconds: 2), () {
-      var idmsgs = remetenteText == null ? dropRemetente : null;
-      ConstsFuture.launchGetApi(context,
-              'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$idmsgs')
-          .then((value) {
-        if (!value['erro']) {
-          setState(() {
-            loadingRetirada = !loadingRetirada;
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ScaffoldBottom(
-                          tipoAviso: widget.tipoAviso,
-                          idunidade: widget.idunidade,
-                          localizado: widget.localizado,
-                          nome_responsavel: widget.nome_responsavel,
-                        )));
-            buildMinhaSnackBar(context,
-                title: 'Tudo certo!', subTitle: value['mensagem']);
-          });
-        } else {
-          setState(() {
-            loadingRetirada = !loadingRetirada;
-            buildMinhaSnackBar(context,
-                title: 'Algo Saiu Mau!', subTitle: value['mensagem']);
-          });
-        }
-      });
+    var seIdmsgs = remetenteText == null ? DropSearchRemet.idRemet : null;
+    ConstsFuture.launchGetApi(context,
+            'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$seIdmsgs')
+        .then((value) {
+      if (!value['erro']) {
+        setState(() {
+          loadingRetirada = false;
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ScaffoldBottom(
+                        tipoAviso: widget.tipoAviso,
+                        idunidade: widget.idunidade,
+                        localizado: widget.localizado,
+                      )));
+          buildMinhaSnackBar(context,
+              title: 'Tudo certo!', subTitle: value['mensagem']);
+        });
+      } else {
+        setState(() {
+          loadingRetirada = !loadingRetirada;
+          buildMinhaSnackBar(context,
+              title: 'Algo Saiu Mau!', subTitle: value['mensagem']);
+        });
+      }
     });
   }
 
-  Future apiListarRemetente() async {
-    var url = Uri.parse(
-        '${Consts.apiPortaria}msgsprontas/index.php?fn=listarMensagens&tipo=${widget.tipoAviso}&idcond=${FuncionarioInfos.idcondominio}');
-    var resposta = await http.get(url);
-    if (resposta.statusCode == 200) {
-      final jsonResponse = json.decode(resposta.body);
-      setState(() {
-        listaRementes = jsonResponse['msgsprontas'];
-      });
-    } else {
-      return {'erro': true, 'mensagem': 'Erro no Servidor'};
-    }
-  }
+  // Future apiListarRemetente() async {
+  //   var url = Uri.parse(
+  //       '${Consts.apiPortaria}msgsprontas/index.php?fn=listarMensagens&tipo=${widget.tipoAviso}&idcond=${FuncionarioInfos.idcondominio}');
+  //   var resposta = await http.get(url);
+  //   if (resposta.statusCode == 200) {
+  //     final jsonResponse = json.decode(resposta.body);
+  //     setState(() {
+  //       listaRementes = jsonResponse['msgsprontas'];
+  //     });
+  //   } else {
+  //     return {'erro': true, 'mensagem': 'Erro no Servidor'};
+  //   }
+  // }
 
   String? dataInclusaoText;
   String? remetenteText;
@@ -123,7 +119,8 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    Widget builDropButtonRemetentes() {
+
+    /*   Widget builDropButtonRemetentes() {
       return ConstsWidget.buildPadding001(
         context,
         vertical: 0.005,
@@ -179,14 +176,17 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
         ),
       );
     }
-
+*/
     return Form(
       key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // ConstsWidget.buildClosePop(context, title: widget.title),
-          if (!preencheMao) builDropButtonRemetentes(),
+          if (!preencheMao)
+            DropSearchRemet(
+              tipoAviso: widget.tipoAviso,
+            ),
           // if (!preencheMao)
           ConstsWidget.buildPadding001(
             context,

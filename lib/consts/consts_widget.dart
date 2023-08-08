@@ -1,8 +1,12 @@
+import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:validatorless/validatorless.dart';
 
+import '../widgets/page_erro.dart';
+import '../widgets/page_vazia.dart';
 import 'consts.dart';
 
 class ConstsWidget {
@@ -24,10 +28,12 @@ class ConstsWidget {
     double fontSize = 16,
     TextAlign? textAlign,
     required String? title,
+    int? maxLines,
   }) {
     return Text(
       title ?? '',
       textAlign: textAlign,
+      maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
           fontWeight: FontWeight.bold,
@@ -173,14 +179,19 @@ class ConstsWidget {
     );
   }
 
-  static Widget buildAtivoInativo(BuildContext context, bool ativo) {
+  static Widget buildAtivoInativo(
+    BuildContext context,
+    bool ativo, {
+    String verdadeiro = 'Ativo',
+    String falso = 'Inativo',
+  }) {
     return Container(
       decoration: BoxDecoration(
           color: ativo ? Colors.green : Colors.red,
           borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: buildTitleText(context, title: ativo ? 'Ativo' : 'Inativo'),
+        child: buildTitleText(context, title: ativo ? verdadeiro : falso),
       ),
     );
   }
@@ -346,20 +357,20 @@ class ConstsWidget {
     );
   }
 
-  static Widget buildOutlinedButton(
-    BuildContext context, {
-    required String title,
-    required void Function()? onPressed,
-    double fontSize = 16,
-    IconData? icon,
-    double? altura,
-    Color? color = Consts.kButtonColor,
-  }) {
+  static Widget buildOutlinedButton(BuildContext context,
+      {required String title,
+      required void Function()? onPressed,
+      double fontSize = 16,
+      IconData? icon,
+      double? altura,
+      Color color = Consts.kButtonColor,
+      Color? backgroundColor = Colors.transparent}) {
     var size = MediaQuery.of(context).size;
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         alignment: Alignment.center,
-        side: BorderSide(width: size.width * 0.005, color: Colors.blue),
+        backgroundColor: backgroundColor,
+        side: BorderSide(width: size.width * 0.005, color: color),
         shape: StadiumBorder(),
       ),
       onPressed: onPressed,
@@ -370,7 +381,7 @@ class ConstsWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            if (icon != null) Icon(size: 18, icon, color: Consts.kButtonColor),
+            if (icon != null) Icon(size: 18, icon, color: color),
             if (icon != null)
               SizedBox(
                 width: size.width * 0.015,

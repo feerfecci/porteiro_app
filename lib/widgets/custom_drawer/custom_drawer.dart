@@ -22,7 +22,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
     Widget buidListTile(
         {required String title,
         required IconData leading,
-        IconData trailing = Icons.keyboard_arrow_right_outlined,
         void Function()? onPressed}) {
       return ConstsWidget.buildPadding001(
         context,
@@ -32,12 +31,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
             leading,
             size: 25,
           ),
-          title: ConstsWidget.buildTitleText(context, title: title),
+          title:
+              ConstsWidget.buildTitleText(context, title: title, fontSize: 14),
           trailing: IconButton(
             onPressed: onPressed,
             icon: Icon(
-              size: 30,
-              trailing,
+              size: 25,
+              color: Theme.of(context).iconTheme.color,
+              Icons.keyboard_arrow_right_outlined,
             ),
           ),
         ),

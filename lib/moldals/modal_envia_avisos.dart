@@ -11,40 +11,45 @@ import 'package:http/http.dart' as http;
 import '../consts/consts.dart';
 import '../consts/consts_future.dart';
 
-showModalAvisaDelivery(BuildContext context,
-    {required int? idunidade,
-    required String? localizado,
-    required String? nome_responsavel,
-    required int? tipoAviso,
-    required String title
-    // required String nome_moradores
-    }) {
+showModalAvisaDelivery(
+  BuildContext context, {
+  required int? idunidade,
+  required String? localizado,
+  required int? tipoAviso,
+  required String title,
+  String? nomeCadastrado,
+  int? idVisita,
+  // required String nome_moradores
+}) {
   return buildModalAll(context,
       title: title,
-      isDrawer: false,
+      hasDrawer: false,
       child: WidgetAvisaDelivery(
-        idunidade: idunidade,
-        localizado: localizado,
-        nome_responsavel: nome_responsavel,
-        tipoAviso: tipoAviso,
-        // nome_moradores: nome_moradores
-      ));
+          idunidade: idunidade,
+          localizado: localizado,
+          tipoAviso: tipoAviso,
+          nomeCadastrado: nomeCadastrado,
+          idVisita: idVisita
+          // nome_moradores: nome_moradores
+          ));
 }
 
 class WidgetAvisaDelivery extends StatefulWidget {
   final int? idunidade;
   final String? localizado;
-  final String? nome_responsavel;
   final int? tipoAviso;
+  final String? nomeCadastrado;
+  final int? idVisita;
   // final String? nome_moradores;
-  const WidgetAvisaDelivery({
-    required this.idunidade,
-    super.key,
-    required this.localizado,
-    required this.nome_responsavel,
-    required this.tipoAviso,
-    // required this.nome_moradores,
-  });
+  const WidgetAvisaDelivery(
+      {required this.idunidade,
+      super.key,
+      required this.localizado,
+      required this.tipoAviso,
+      this.nomeCadastrado,
+      this.idVisita
+      // required this.nome_moradores,
+      });
 
   @override
   State<WidgetAvisaDelivery> createState() => _WidgetAvisaDeliveryState();
@@ -109,11 +114,6 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
                               child: ConstsWidget.buildSubTitleText(context,
                                   subTitle: e['texto'], fontSize: 16),
                             )
-                            // ListTile(
-                            //   textColor: Theme.of(context).colorScheme.primary,
-                            //   title: Text(e['titulo']),
-                            //   subtitle: Text(e['texto']),
-                            // ),
                           ],
                         ));
                   }).toList(),
@@ -147,10 +147,6 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // ConstsWidget.buildClosePop(context,
-          //     title: widget.tipoAviso == 1 ? 'Delivery' : 'Vistita'),
-          ConstsWidget.buildTitleText(context,
-              title: widget.nome_responsavel, fontSize: 20),
           ConstsWidget.buildPadding001(
             context,
             vertical: 0.02,
@@ -167,6 +163,7 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
             context,
             widget.tipoAviso == 1 ? 'Nome Restaurante' : 'Nome Visitante',
             hintText: 'Exemplo: Gustavo da Silva Sousa',
+            initialValue: widget.nomeCadastrado,
             onSaved: (text) => nomeVisitante = text,
           ),
           SizedBox(
@@ -194,10 +191,14 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
                         respostaTipo = 8;
                       }
                       ConstsFuture.launchGetApi(context,
-                              'msgsprontas/index.php?fn=enviarMensagem&idcond=${FuncionarioInfos.idcondominio}&idmsg=$dropdownValue&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&nome_visitante=$nomeVisitante&tipo=$respostaTipo')
+                              'msgsprontas/index.php?fn=enviarMensagem&idcond=${FuncionarioInfos.idcondominio}&idmsg=$dropdownValue&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&nome_visitante=${widget.idVisita == null ? nomeVisitante : widget.nomeCadastrado}&tipo=$respostaTipo')
                           .then((value) {
                         if (!value['erro']) {
                           Navigator.pop(context);
+                          if (widget.idVisita != null) {
+                            ConstsFuture.launchGetApi(context,
+                                'lista_visitantes/?fn=compareceuVisitante&idcond=${FuncionarioInfos.idcondominio}&idvisita=${widget.idVisita}');
+                          }
                           return buildMinhaSnackBar(context,
                               title: 'Aviso Enviado',
                               subTitle: value['mensagem']);

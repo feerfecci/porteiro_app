@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../consts/consts_widget.dart';
 import 'custom_drawer/custom_drawer.dart';
+import 'listview_all.dart';
 
 // ignore: must_be_immutable
 class ScaffoldAll extends StatefulWidget {
@@ -10,12 +11,12 @@ class ScaffoldAll extends StatefulWidget {
   final Widget? floatingActionButton;
   final double fontSize;
   bool resizeToAvoidBottomInset;
-  bool isDrawer;
+  bool hasDrawer;
   ScaffoldAll(
       {required this.title,
       required this.body,
       this.floatingActionButton,
-      this.isDrawer = false,
+      this.hasDrawer = false,
       this.resizeToAvoidBottomInset = false,
       this.fontSize = 30,
       super.key});
@@ -39,10 +40,11 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
         elevation: 0,
       ),
-      endDrawer: widget.isDrawer ? CustomDrawer() : null,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.height * 0.01),
-        child: widget.body,
+      endDrawer: widget.hasDrawer ? CustomDrawer() : null,
+      body: buildListViewAll(
+        children: [
+          widget.body!,
+        ],
       ),
     );
   }
