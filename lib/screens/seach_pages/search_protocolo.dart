@@ -71,14 +71,11 @@ class SearchProtocolos extends SearchDelegate<String> {
               if (query.isEmpty) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ConstsWidget.buildTitleText(
-                        context,
-                        title: 'Aqui mostrará um item quando procurar na barra',
-                      ),
-                    ],
+                  child: Center(
+                    child: ConstsWidget.buildTitleText(
+                      context,
+                      title: 'Aqui mostrará um item',
+                    ),
                   ),
                 );
               } else {
@@ -103,7 +100,8 @@ class SearchProtocolos extends SearchDelegate<String> {
                             var unidade = infoRetirada['unidade'];
                             var divisao = infoRetirada['divisao'];
                             var idcondominio = infoRetirada['idcondominio'];
-                            var nome_condominio = infoRetirada['nome_condominio'];
+                            var nome_condominio =
+                                infoRetirada['nome_condominio'];
                             var idfuncionario = infoRetirada['idfuncionario'];
                             var nome_funcionario =
                                 infoRetirada['nome_funcionario'];

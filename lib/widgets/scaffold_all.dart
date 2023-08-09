@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../consts/consts_widget.dart';
+import '../screens/home/home_page.dart';
 import 'custom_drawer/custom_drawer.dart';
 import 'listview_all.dart';
 
@@ -35,7 +36,8 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
       appBar: AppBar(
         centerTitle: true,
         title: ConstsWidget.buildTitleText(context,
-            title: widget.title, fontSize: widget.fontSize),
+            title: widget.title,
+            fontSize: HomePage.isAndroid ? widget.fontSize : 20),
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
         elevation: 0,

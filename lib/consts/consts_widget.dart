@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:validatorless/validatorless.dart';
 
+import '../screens/home/home_page.dart';
 import '../widgets/page_erro.dart';
 import '../widgets/page_vazia.dart';
 import 'consts.dart';
@@ -37,7 +38,7 @@ class ConstsWidget {
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: fontSize,
+          fontSize: HomePage.isAndroid ? fontSize : (fontSize - 2),
           color: color ?? Theme.of(context).colorScheme.primary),
     );
   }

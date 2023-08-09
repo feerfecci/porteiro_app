@@ -90,21 +90,24 @@ class _MultiCorrespState extends State<MultiCorresp> {
                           return DecorationDropSearch.itemBuilder(
                               context, item.toString());
                         },
+                        
                         onItemRemoved: (selectedItems, removedItem) {
                           itemsModelApto.map((e) {
                             if (e.nomeUnidade == removedItem.toString()) {
-                              print(removedItem.toString());
+                              
                               setState(() {
                                 listAptos.remove(e.idap);
                               });
                             }
                           }).toString();
                         },
+
                         onItemAdded: (selectedItems, addedItem) {
                           itemsModelApto.map((e) {
                             if (e.nomeUnidade == addedItem.toString()) {
                               setState(() {
                                 listAptos.add(e.idap);
+                                print(selectedItems);
                               });
                             }
                           }).toString();

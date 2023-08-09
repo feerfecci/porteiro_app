@@ -1,7 +1,9 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable, prefer_typing_uninitialized_variables
 import 'dart:convert';
+import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/correspondencias/alert_dialog_moradores.dart';
+import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
@@ -77,13 +79,17 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
             context,
             widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
             icon: Icons.add,
-            onPressed: () {
-              showModalIncluiCorresp(context,
-                  title: widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
-                  idunidade: widget.idunidade!,
-                  tipoAviso: widget.tipoAviso!,
-                  localizado: widget.localizado);
-            },
+            onPressed: widget.tipoAviso == 3
+                ? () {
+                    showModalIncluiCorresp(context,
+                        title: widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
+                        idunidade: widget.idunidade!,
+                        tipoAviso: widget.tipoAviso!,
+                        localizado: widget.localizado);
+                  }
+                : () {
+                    ConstsFuture.navigatorPush(context, EncomendasScreen());
+                  },
           ),
         ),
         FutureBuilder<dynamic>(

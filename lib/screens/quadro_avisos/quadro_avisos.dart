@@ -1,6 +1,7 @@
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/page_erro.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
@@ -56,7 +57,16 @@ class _QuadroHistoricoNotificScreenState
                         context,
                         child: Column(
                           children: [
-                            ConstsWidget.buildTitleText(context, title: titulo),
+                            ConstsWidget.buildTitleText(
+                              context,
+                              fontSize: 18,
+                              title: titulo,
+                            ),
+                            SizedBox(
+                              height: size.height * 0.01,
+                            ),
+                            ConstsWidget.buildSubTitleText(context,
+                                subTitle: 'Descrição'),
                             ConstsWidget.buildTitleText(context, title: texto),
                           ],
                         ),

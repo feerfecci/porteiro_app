@@ -26,6 +26,7 @@ import '../../widgets/seachBar.dart';
 import '../../widgets/snack_bar.dart';
 
 class HomePage extends StatefulWidget {
+  static bool isAndroid = false;
   const HomePage({super.key});
 
   @override
@@ -49,6 +50,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    HomePage.isAndroid = Platform.isAndroid;
     oneSignalNotification();
   }
 
