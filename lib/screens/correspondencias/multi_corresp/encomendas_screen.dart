@@ -4,6 +4,7 @@ import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/home/home_page.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/widgets/alertdialog_all.dart';
 import 'package:app_porteiro/widgets/drop_search_remet.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
@@ -72,6 +73,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
   @override
   void initState() {
     apiListarApartamento();
+    nomeApto = widget.idUnidade == null ? '' : widget.localizado!;
     super.initState();
   }
 
@@ -80,7 +82,11 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
     var size = MediaQuery.of(context).size;
     var dataNow = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    double? height = itemsMulti.length >= 3 ? size.height * 0.35 : null;
+    double? height = itemsMulti.length >= 3
+        ? SplashScreen.isSmall
+            ? size.height * 0.25
+            : size.height * 0.35
+        : null;
     Widget buildDropSearchAp() {
       return DropdownSearch(
         selectedItem: 'Selecione Um Apartamento',
@@ -227,7 +233,9 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                 Html(
                   data: value['Recibo'][0]['txt_recibo_preenchido'],
                   style: {
-                    'b': Style(fontWeight: FontWeight.bold),
+                    'b': Style(
+                      fontWeight: FontWeight.bold,
+                    ),
                   },
                 ),
                 ConstsWidget.buildPadding001(
@@ -483,7 +491,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                                 context,
                                 child: Center(
                                   child: ConstsWidget.buildTitleText(context,
-                                      title: widget.localizado),
+                                      title: widget.localizado!),
                                 ),
                               ),
                             ),

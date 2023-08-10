@@ -1,3 +1,4 @@
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../consts/consts_widget.dart';
@@ -36,8 +37,8 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
       appBar: AppBar(
         centerTitle: true,
         title: ConstsWidget.buildTitleText(context,
-            title: widget.title,
-            fontSize: HomePage.isAndroid ? widget.fontSize : 20),
+            title: widget.title ?? '',
+            fontSize: SplashScreen.isSmall ? (widget.fontSize - 4) : 20),
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
         elevation: 0,

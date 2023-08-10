@@ -5,6 +5,7 @@ import 'package:app_porteiro/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../consts/consts.dart';
+import '../../screens/splash/splash_screen.dart';
 import 'change_theme_button.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -29,7 +30,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           iconColor: Theme.of(context).iconTheme.color,
           leading: Icon(
             leading,
-            size: 25,
+            size: SplashScreen.isSmall ? 20 : 25,
           ),
           title:
               ConstsWidget.buildTitleText(context, title: title, fontSize: 14),
@@ -57,8 +58,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: size.height * 0.08,
-                width: size.width * 0.85,
+                height: SplashScreen.isSmall
+                    ? size.height * 0.1
+                    : size.height * 0.08,
+                width: double.maxFinite,
                 child: DrawerHeader(
                   padding: EdgeInsets.symmetric(
                     vertical: size.height * 0.02,

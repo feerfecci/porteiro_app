@@ -6,9 +6,11 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:validatorless/validatorless.dart';
 
 import '../screens/home/home_page.dart';
+import '../screens/splash/splash_screen.dart';
 import '../widgets/page_erro.dart';
 import '../widgets/page_vazia.dart';
 import 'consts.dart';
+import 'consts_future.dart';
 
 class ConstsWidget {
   static Widget buildPadding001(BuildContext context,
@@ -28,17 +30,17 @@ class ConstsWidget {
     Color? color,
     double fontSize = 16,
     TextAlign? textAlign,
-    required String? title,
+    required String title,
     int? maxLines,
   }) {
     return Text(
-      title ?? '',
+      title,
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: HomePage.isAndroid ? fontSize : (fontSize - 2),
+          fontSize: SplashScreen.isSmall ? (fontSize - 3) : fontSize,
           color: color ?? Theme.of(context).colorScheme.primary),
     );
   }
@@ -52,7 +54,7 @@ class ConstsWidget {
     return Text(
       subTitle,
       style: TextStyle(
-          fontSize: fontSize,
+          fontSize: SplashScreen.isSmall ? (fontSize! - 2) : fontSize,
           color: color ?? Theme.of(context).colorScheme.primary),
     );
   }
@@ -382,7 +384,8 @@ class ConstsWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            if (icon != null) Icon(size: 18, icon, color: color),
+            if (icon != null)
+              Icon(size: SplashScreen.isSmall ? 16 : 18, icon, color: color),
             if (icon != null)
               SizedBox(
                 width: size.width * 0.015,
@@ -392,7 +395,7 @@ class ConstsWidget {
               style: TextStyle(
                 overflow: TextOverflow.ellipsis,
                 color: Consts.kButtonColor,
-                fontSize: fontSize,
+                fontSize: SplashScreen.isSmall ? (fontSize - 2) : fontSize,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -412,5 +415,28 @@ class ConstsWidget {
         displacement: size.height * 0.1,
         onRefresh: onRefresh,
         child: child);
+  }
+
+  static Widget buildFutureImage(BuildContext context,
+      {required String iconApi, double? width, double? height}) {
+    var size = MediaQuery.of(context).size;
+    return FutureBuilder(
+        future: ConstsFuture.apiImage(iconApi),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasData) {
+            return SizedBox(
+              width: width != null ? size.width * width : null,
+              height: height != null ? size.height * height : null,
+              child: Image.network(
+                iconApi,
+                fit: BoxFit.fill,
+              ),
+            );
+          } else {
+            return Image.asset('assets/ico-error.png');
+          }
+        });
   }
 }

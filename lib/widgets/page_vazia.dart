@@ -13,7 +13,7 @@ class _PageVaziaState extends State<PageVazia> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Column(
+    return Wrap(
       children: [
         Image.asset('assets/vazio.png'),
         SizedBox(

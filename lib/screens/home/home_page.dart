@@ -8,6 +8,7 @@ import 'package:app_porteiro/screens/quadro_avisos/quadro_avisos.dart';
 import 'package:app_porteiro/screens/reservas_espacos/espacos_screen.dart';
 import 'package:app_porteiro/screens/seach_pages/search_protocolo.dart';
 import 'package:app_porteiro/screens/seach_pages/search_visitante.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/screens/visitas/visitas_screen.dart';
 import 'package:app_porteiro/screens/seach_pages/search_veiculo.dart';
 import 'package:app_porteiro/widgets/alertdialog_all.dart';
@@ -26,7 +27,6 @@ import '../../widgets/seachBar.dart';
 import '../../widgets/snack_bar.dart';
 
 class HomePage extends StatefulWidget {
-  static bool isAndroid = false;
   const HomePage({super.key});
 
   @override
@@ -50,7 +50,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    HomePage.isAndroid = Platform.isAndroid;
     oneSignalNotification();
   }
 
@@ -77,21 +76,29 @@ class _HomePageState extends State<HomePage> {
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FutureBuilder(
-              future: ConstsFuture.apiImage(iconApi),
-              builder: (context, snapshot) => SizedBox(
-                width: size.width * 0.13,
-                height: size.height * 0.059,
-                child: Image.network(
-                  iconApi,
-                  fit: BoxFit.fill,
-                ),
-              ),
+            ConstsWidget.buildFutureImage(
+              context,
+              iconApi: iconApi,
+              height: SplashScreen.isSmall ? 0.065 : 0.059,
+              width: SplashScreen.isSmall ? 0.12 : 0.13,
             ),
+            // FutureBuilder(
+            //   future: ConstsFuture.apiImage(iconApi),
+            //   builder: (context, snapshot) => SizedBox(
+            //     width:
+            //         SplashScreen.isSmall ? size.width * 0.1 : size.width * 0.13,
+            //     height: size.height * 0.059,
+            //     child: Image.network(
+            //       iconApi,
+            //       fit: BoxFit.fill,
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               height: size.height * 0.01,
             ),
-            ConstsWidget.buildTitleText(context, title: title, fontSize: 17),
+            ConstsWidget.buildTitleText(context,
+                title: title, fontSize: SplashScreen.isSmall ? 15 : 17),
           ],
         )),
       );
@@ -101,14 +108,14 @@ class _HomePageState extends State<HomePage> {
       return ConstsWidget.buildPadding001(
         context,
         vertical: 0,
-        horizontal: 0.005,
+        horizontal: SplashScreen.isSmall ? 0.015 : 0.005,
         child: GridView.count(
             shrinkWrap: true,
             physics: ClampingScrollPhysics(),
             crossAxisSpacing: 5,
-            mainAxisSpacing: 0.1,
+            mainAxisSpacing: SplashScreen.isSmall ? 0.2 : 0.1,
             crossAxisCount: 2,
-            childAspectRatio: 1.55,
+            childAspectRatio: SplashScreen.isSmall ? 1.95 : 1.55,
             children: children),
       );
     }
@@ -136,29 +143,49 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             centerTitle: true,
             title: ConstsWidget.buildTitleText(context,
-                title: FuncionarioInfos.nome_condominio, fontSize: 20),
+                title: FuncionarioInfos.nome_condominio!, fontSize: 20),
             iconTheme:
                 IconThemeData(color: Theme.of(context).colorScheme.primary),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             elevation: 0,
-            leadingWidth: size.height * 0.06,
+            leadingWidth: size.width * 0.13,
             leading: Padding(
-              padding: EdgeInsets.only(left: size.width * 0.025),
-              child: FutureBuilder(
-                future: ConstsFuture.apiImage(
-                  'https://a.portariaapp.com/img/logo_vermelho.png',
+                padding: EdgeInsets.only(
+                  left: size.width * 0.025,
+                  top: SplashScreen.isSmall
+                      ? size.height * 0.015
+                      : size.height * 0.01,
+                  bottom: SplashScreen.isSmall
+                      ? size.height * 0.028
+                      : size.height * 0.01,
                 ),
-                builder: (context, snapshot) {
-                  return SizedBox(child: snapshot.data);
-                },
-              ),
-            ),
+                child: ConstsWidget.buildFutureImage(
+                  context,
+                  iconApi: 'https://a.portariaapp.com/img/logo_vermelho.png',
+                )
+
+                //  FutureBuilder(
+                //   future: ConstsFuture.apiImage(
+                //     'https://a.portariaapp.com/img/logo_vermelho.png',
+                //   ),
+                //   builder: (context, snapshot) {
+                //     return SizedBox(child: snapshot.data);
+                //   },
+                // ),
+                ),
           ),
           endDrawer: CustomDrawer(),
           body: ListView(
             // padding: EdgeInsets.symmetric(horizontal: size.height * 0.005),
             children: [
               buildGridViewer(children: [
+                buildCard(
+                    title: 'Bombeiros',
+                    onTap: () {
+                      launchNumber('193');
+                    },
+                    iconApi: '${Consts.iconApiPort}bombeiro.png',
+                    isWhatss: true),
                 buildCard(
                     title: 'Samu',
                     iconApi: '${Consts.iconApiPort}ambulancia.png',
@@ -172,13 +199,6 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       launchNumber('190');
                     },
-                    isWhatss: true),
-                buildCard(
-                    title: 'Bombeiros',
-                    onTap: () {
-                      launchNumber('193');
-                    },
-                    iconApi: '${Consts.iconApiPort}bombeiro.png',
                     isWhatss: true),
                 buildCard(
                   title: 'Quadro de Avisos',
@@ -225,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                             decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 border: Border.all(
-                                    color: Consts.kColorRed,
+                                    color: Color.fromARGB(255, 39, 211, 104),
                                     width: size.width * 0.007),
                                 borderRadius: BorderRadius.circular(16)),
                             child: Row(
@@ -241,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                                   width: size.width * 0.1,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Consts.kColorRed,
+                                    color: Color.fromARGB(255, 39, 211, 104),
                                   ),
                                   child: Icon(
                                     Icons.search,
@@ -366,7 +386,7 @@ class _HomePageState extends State<HomePage> {
                   buildCard(
                       title: 'Informe o Síndico',
                       isWhatss: true,
-                      iconApi: '${Consts.iconApiPort}multi.png'),
+                      iconApi: '${Consts.iconApiPort}informe-sindico.png'),
                 ],
               ),
             ],

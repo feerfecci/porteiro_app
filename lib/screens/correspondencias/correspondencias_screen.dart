@@ -68,7 +68,7 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ConstsWidget.buildTitleText(context,
-                title: widget.localizado, fontSize: 20),
+                title: widget.localizado!, fontSize: 20),
           ],
         ),
         ConstsWidget.buildPadding001(
@@ -85,10 +85,15 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                         title: widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
                         idunidade: widget.idunidade!,
                         tipoAviso: widget.tipoAviso!,
-                        localizado: widget.localizado);
+                        localizado: widget.localizado!);
                   }
                 : () {
-                    ConstsFuture.navigatorPush(context, EncomendasScreen());
+                    ConstsFuture.navigatorPush(
+                        context,
+                        EncomendasScreen(
+                          idUnidade: widget.idunidade!,
+                          localizado: widget.localizado!,
+                        ));
                   },
           ),
         ),

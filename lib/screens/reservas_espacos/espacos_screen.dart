@@ -6,6 +6,7 @@ import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:intl/intl.dart';
 
 import '../../consts/consts_widget.dart';
 import '../../widgets/alertdialog_all.dart';
@@ -28,7 +29,7 @@ class _EspacosScreenState extends State<EspacosScreen> {
         title: 'Espaços',
         body: FutureBuilder<dynamic>(
             future: ConstsFuture.launchGetApi(context,
-                'reserva_espacos/?fn=listarReservas&idcond=${FuncionarioInfos.idcondominio}&ativo=2'),
+                'reserva_espacos/?fn=listarReservas&idcond=${FuncionarioInfos.idcondominio}&ativo=1'),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return MyBoxShadow(
@@ -93,6 +94,7 @@ class _EspacosScreenState extends State<EspacosScreen> {
 
                       return MyBoxShadow(
                           child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -123,7 +125,8 @@ class _EspacosScreenState extends State<EspacosScreen> {
                                 ConstsWidget.buildSubTitleText(context,
                                     subTitle: 'Inicio da reserva:'),
                                 ConstsWidget.buildTitleText(context,
-                                    title: data_reserva),
+                                    title: DateFormat('dd/MM/yyyy HH:mm')
+                                        .format(DateTime.parse(data_reserva))),
                               ],
                             ),
                           ),

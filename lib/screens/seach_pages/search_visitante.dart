@@ -59,7 +59,8 @@ class SearchVisitante extends SearchDelegate<String> {
     var size = MediaQuery.of(context).size;
 
     if (query.isEmpty) {
-      return buildNoQuerySearch(context, mesagem: 'Procure um documento');
+      return buildNoQuerySearch(context,
+          mesagem: 'Digite um documento para localizar o visitante');
     } else {
       return StatefulBuilder(builder: (context, setState) {
         return FutureBuilder(
@@ -121,7 +122,7 @@ class SearchVisitante extends SearchDelegate<String> {
                             ),
                           ],
                         ),
-                        if (acompanhante != null)
+                        if (acompanhante != '')
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [

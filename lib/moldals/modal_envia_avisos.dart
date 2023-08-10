@@ -151,7 +151,7 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
             context,
             vertical: 0.02,
             child: ConstsWidget.buildTitleText(context,
-                title: widget.localizado, fontSize: 22),
+                title: widget.localizado!, fontSize: 22),
           ),
           // SizedBox(
           //     height: size.height * 0.1,

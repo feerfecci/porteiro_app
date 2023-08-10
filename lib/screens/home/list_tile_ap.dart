@@ -10,6 +10,7 @@ import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
 import 'package:flutter/material.dart';
 
 import '../correspondencias/scafffoldItem.dart';
+import '../splash/splash_screen.dart';
 
 class ListTileAp extends StatefulWidget {
   // final String nome_moradores;
@@ -60,15 +61,23 @@ class _ListTileApState extends State<ListTileAp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              FutureBuilder(
-                  future: ConstsFuture.apiImage(iconApi),
-                  builder: (context, snapshot) => SizedBox(
-                      width: size.width * 0.15,
-                      height: size.height * 0.07,
-                      child: Image.network(
-                        iconApi,
-                        fit: BoxFit.cover,
-                      ))),
+              ConstsWidget.buildFutureImage(
+                context,
+                iconApi: iconApi,
+                width: SplashScreen.isSmall ? 0.16 : 0.15,
+                height: SplashScreen.isSmall ? 0.09 : 0.07,
+              ),
+              // FutureBuilder(
+              //   future: ConstsFuture.apiImage(iconApi),
+              //   builder: (context, snapshot) => SizedBox(
+              //     width: size.width * 0.15,
+              //     height: size.height * 0.07,
+              //     child: Image.network(
+              //       iconApi,
+              //       fit: BoxFit.cover,
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: size.height * 0.01,
               ),
@@ -77,7 +86,7 @@ class _ListTileApState extends State<ListTileAp> {
                   child: ConstsWidget.buildTitleText(
                     context,
                     textAlign: TextAlign.center,
-                    title: titleModal,
+                    title: titleModal!,
                   ))
             ],
           ),

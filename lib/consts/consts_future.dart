@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:convert';
+import 'dart:io';
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/screens/login/login_screen.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
@@ -100,14 +101,24 @@ class ConstsFuture {
   }
 
   static Future<Widget> apiImage(String iconApi) async {
-    var url = Uri.parse(iconApi);
-    var resposta = await http.get(url);
+    // var url = Uri.parse(iconApi);
+    // var resposta = await http.get(url);
+    Widget? image;
+    try {
+      image = Image.network(
+        iconApi,
+      );
+    } on HttpException catch (e) {
+      print(e);
+      image = Image.asset('assets/ico-error.png');
+    }
+    return image;
 
-    return resposta.statusCode == 200
-        ? Image.network(
-            iconApi,
-          )
-        : Image.asset('assets/ico-error.png');
+    // return resposta.statusCode == 200
+    //     ? Image.network(
+    //         iconApi,
+    //       )
+    //     : Image.asset('assets/ico-error.png');
   }
 
   // static AsyncSnapshot<dynamic> snapShotFora = snapShotFora;
