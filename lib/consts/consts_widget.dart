@@ -9,6 +9,7 @@ import '../screens/home/home_page.dart';
 import '../screens/splash/splash_screen.dart';
 import '../widgets/page_erro.dart';
 import '../widgets/page_vazia.dart';
+import '../widgets/shimmer_widget.dart';
 import 'consts.dart';
 import 'consts_future.dart';
 
@@ -424,7 +425,13 @@ class ConstsWidget {
         future: ConstsFuture.apiImage(iconApi),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return ShimmerWidget(
+                height: SplashScreen.isSmall
+                    ? size.height * 0.08
+                    : size.height * 0.068,
+                width: SplashScreen.isSmall
+                    ? size.width * 0.14
+                    : size.width * 0.15);
           } else if (snapshot.hasData) {
             return SizedBox(
               width: width != null ? size.width * width : null,

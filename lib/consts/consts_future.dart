@@ -86,7 +86,8 @@ class ConstsFuture {
           FuncionarioInfos.avisa_encomendas = loginInfos['avisa_encomendas'];
           // Navigator.pop(context);
 
-          ConstsFuture.navigatorPushRemoveUntil(context, HomePage());
+          apiTotalResarvaHoje(context).then((value) =>
+              ConstsFuture.navigatorPushRemoveUntil(context, HomePage()));
         } else {
           ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
           return buildMinhaSnackBar(
@@ -100,20 +101,51 @@ class ConstsFuture {
     }
   }
 
-  static Future<Widget> apiImage(String iconApi) async {
-    // var url = Uri.parse(iconApi);
-    // var resposta = await http.get(url);
-    Widget? image;
-    try {
-      image = Image.network(
-        iconApi,
-      );
-    } on HttpException catch (e) {
-      print(e);
-      image = Image.asset('assets/ico-error.png');
-    }
-    return image;
+  static Future apiTotalResarvaHoje(BuildContext context) {
+    List<int> listIdReserva = <int>[];
+    return ConstsFuture.launchGetApi(context,
+            'reserva_espacos/?fn=listarReservas&idcond=${FuncionarioInfos.idcondominio}&ativo=1')
+        .then((value) {
+      if (!value['erro']) {
+        // HomePage.qntEventos = value['reserva_espacos'].length;
+        for (var i = 0; i <= value['reserva_espacos'].length - 1; i++) {
+          try {
+            final dateReserva =
+                DateTime.parse(value['reserva_espacos'][i]['data_reserva']);
 
+            DateTime now = DateTime.now();
+            int difference =
+                DateTime(dateReserva.day).difference(DateTime(now.day)).inDays;
+
+            if (difference == 0) {
+              listIdReserva.add(value['reserva_espacos'][i]['idreserva']);
+
+              print('id: ${value['reserva_espacos'][i]['idreserva']}');
+            } else {
+              listIdReserva.remove(value['reserva_espacos'][i]['idreserva']);
+            }
+          } catch (e) {
+            print(e);
+          }
+        }
+        HomePage.qntEventos = listIdReserva.length;
+        print('Reservas hoje ${HomePage.qntEventos} ');
+
+        // print(HomePage.qntEventos);
+      }
+    });
+  }
+
+  static Future<Widget> apiImage(String iconApi) async {
+    var url = Uri.parse(iconApi);
+    var resposta = await http.get(url);
+    try {
+      return resposta.statusCode == 200
+          ? Image.network(iconApi)
+          : Image.asset('assets/ico-error.png');
+    } catch (e) {
+      return Image.asset('assets/ico-error.png');
+    }
     // return resposta.statusCode == 200
     //     ? Image.network(
     //         iconApi,

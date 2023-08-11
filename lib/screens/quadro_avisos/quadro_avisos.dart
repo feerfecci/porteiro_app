@@ -10,6 +10,7 @@ import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QuadroHistoricoNotificScreen extends StatefulWidget {
   const QuadroHistoricoNotificScreen({super.key});
@@ -68,6 +69,38 @@ class _QuadroHistoricoNotificScreenState
                             ConstsWidget.buildSubTitleText(context,
                                 subTitle: 'Descrição'),
                             ConstsWidget.buildTitleText(context, title: texto),
+                            SizedBox(
+                              height: size.height * 0.01,
+                            ),
+                            if (arquivo != '')
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(
+                                      width: size.width * 0.005,
+                                      color: Colors.blue),
+                                  shape: StadiumBorder(),
+                                ),
+                                onPressed: () {
+                                  launchUrl(Uri.parse(arquivo),
+                                      mode: LaunchMode
+                                          .externalNonBrowserApplication);
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: size.height * 0.023),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ConstsWidget.buildSubTitleText(
+                                        context,
+                                        subTitle: 'Ver Anexo',
+                                        fontSize: 18,
+                                        color: Colors.blue,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                       ));

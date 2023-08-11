@@ -80,7 +80,7 @@ class SearchProtocolos extends SearchDelegate<String> {
                 );
               } else {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasData) {
                   if (!snapshot.data['erro']) {
                     return ListView(
@@ -120,36 +120,57 @@ class SearchProtocolos extends SearchDelegate<String> {
                                 ConstsWidget.buildPadding001(
                                   context,
                                   child: MyBoxShadow(
-                                    child: ListTile(
-                                      title: ConstsWidget.buildTitleText(
-                                          context,
-                                          title: remetente),
-                                      subtitle: ConstsWidget.buildSubTitleText(
-                                          context,
-                                          subTitle:
-                                              '$descricao - $data_recebimento'),
-                                      trailing: SizedBox(
-                                          width: size.width * 0.38,
-                                          child: StatefulBuilder(
-                                              builder: (context, setState) {
-                                            return ConstsWidget.buildCheckBox(
-                                                context,
-                                                isChecked: isChecked,
-                                                onChanged: (value) {
-                                              setState(
-                                                () {
-                                                  isChecked = value!;
-                                                  value == true
-                                                      ? listEntregar.add(
-                                                          idcorrespondencia
-                                                              .toString())
-                                                      : listEntregar.remove(
-                                                          idcorrespondencia
-                                                              .toString());
-                                                },
-                                              );
-                                            }, title: 'Entregar');
-                                          })),
+                                    child: Column(
+                                      children: [
+                                        ConstsWidget.buildTitleText(context,
+                                            title: '$divisao - $unidade',
+                                            fontSize: 20),
+                                        ListTile(
+                                          title: ConstsWidget.buildTitleText(
+                                              context,
+                                              title: remetente),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ConstsWidget.buildSubTitleText(
+                                                  context,
+                                                  subTitle: descricao),
+                                              SizedBox(
+                                                height: size.height * 0.01,
+                                              ),
+                                              ConstsWidget.buildTitleText(
+                                                  context,
+                                                  title: 'Recebido em'),
+                                              ConstsWidget.buildSubTitleText(
+                                                  context,
+                                                  subTitle: data_recebimento),
+                                            ],
+                                          ),
+                                          trailing: SizedBox(
+                                              width: size.width * 0.38,
+                                              child: StatefulBuilder(
+                                                  builder: (context, setState) {
+                                                return ConstsWidget
+                                                    .buildCheckBox(context,
+                                                        isChecked: isChecked,
+                                                        onChanged: (value) {
+                                                  setState(
+                                                    () {
+                                                      isChecked = value!;
+                                                      value == true
+                                                          ? listEntregar.add(
+                                                              idcorrespondencia
+                                                                  .toString())
+                                                          : listEntregar.remove(
+                                                              idcorrespondencia
+                                                                  .toString());
+                                                    },
+                                                  );
+                                                }, title: 'Entregar');
+                                              })),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),

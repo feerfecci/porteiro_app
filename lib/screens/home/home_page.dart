@@ -26,7 +26,10 @@ import '../../widgets/custom_drawer/custom_drawer.dart';
 import '../../widgets/seachBar.dart';
 import '../../widgets/snack_bar.dart';
 
+import 'package:badges/badges.dart' as badges;
+
 class HomePage extends StatefulWidget {
+  static int qntEventos = 0;
   const HomePage({super.key});
 
   @override
@@ -56,6 +59,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
     Widget buildCard({
       required String title,
       required String iconApi,
@@ -137,260 +141,284 @@ class _HomePageState extends State<HomePage> {
           return true;
         }
       },
-      child: Scaffold(
-          extendBody: true,
-          extendBodyBehindAppBar: true,
-          appBar: AppBar(
-            centerTitle: true,
-            title: ConstsWidget.buildTitleText(context,
-                title: FuncionarioInfos.nome_condominio!, fontSize: 20),
-            iconTheme:
-                IconThemeData(color: Theme.of(context).colorScheme.primary),
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            elevation: 0,
-            leadingWidth: size.width * 0.13,
-            leading: Padding(
-                padding: EdgeInsets.only(
-                  left: size.width * 0.025,
-                  top: SplashScreen.isSmall
-                      ? size.height * 0.015
-                      : size.height * 0.01,
-                  bottom: SplashScreen.isSmall
-                      ? size.height * 0.028
-                      : size.height * 0.01,
-                ),
-                child: ConstsWidget.buildFutureImage(
-                  context,
-                  iconApi: 'https://a.portariaapp.com/img/logo_vermelho.png',
-                )
+      child: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            ConstsFuture.apiTotalResarvaHoje(context);
+            HomePage.qntEventos;
+          });
+        },
+        child: Scaffold(
+            extendBody: true,
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              centerTitle: true,
+              title: ConstsWidget.buildTitleText(context,
+                  title: FuncionarioInfos.nome_condominio!, fontSize: 20),
+              iconTheme:
+                  IconThemeData(color: Theme.of(context).colorScheme.primary),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              elevation: 0,
+              leadingWidth: size.width * 0.13,
+              leading: Padding(
+                  padding: EdgeInsets.only(
+                    left: size.width * 0.025,
+                    top: SplashScreen.isSmall
+                        ? size.height * 0.015
+                        : size.height * 0.01,
+                    bottom: SplashScreen.isSmall
+                        ? size.height * 0.028
+                        : size.height * 0.01,
+                  ),
+                  child: ConstsWidget.buildFutureImage(
+                    context,
+                    iconApi: 'https://a.portariaapp.com/img/logo_vermelho.png',
+                  )
 
-                //  FutureBuilder(
-                //   future: ConstsFuture.apiImage(
-                //     'https://a.portariaapp.com/img/logo_vermelho.png',
-                //   ),
-                //   builder: (context, snapshot) {
-                //     return SizedBox(child: snapshot.data);
-                //   },
-                // ),
-                ),
-          ),
-          endDrawer: CustomDrawer(),
-          body: ListView(
-            // padding: EdgeInsets.symmetric(horizontal: size.height * 0.005),
-            children: [
-              buildGridViewer(children: [
-                buildCard(
-                    title: 'Bombeiros',
-                    onTap: () {
-                      launchNumber('193');
-                    },
-                    iconApi: '${Consts.iconApiPort}bombeiro.png',
-                    isWhatss: true),
-                buildCard(
-                    title: 'Samu',
-                    iconApi: '${Consts.iconApiPort}ambulancia.png',
-                    onTap: () {
-                      launchNumber('192');
-                    },
-                    isWhatss: true),
-                buildCard(
-                    title: 'Polícia',
-                    iconApi: '${Consts.iconApiPort}policia.png',
-                    onTap: () {
-                      launchNumber('190');
-                    },
-                    isWhatss: true),
-                buildCard(
-                  title: 'Quadro de Avisos',
-                  iconApi: '${Consts.iconApiPort}quadrodeavisos.png',
-                  onTap: () {
-                    ConstsFuture.navigatorPush(
-                        context, QuadroHistoricoNotificScreen());
-                  },
-                ),
-                buildCard(
-                  title: 'Reservas de Espaços',
-                  iconApi: '${Consts.iconApiPort}reservas-solicitadas.png',
-                  onTap: () {
-                    ConstsFuture.navigatorPush(context, EspacosScreen());
-                  },
-                ),
-                buildCard(
-                  title: 'Visitante',
-                  iconApi: '${Consts.iconApiPort}visitas.png',
-                  onTap: () {
-                    showSearch(context: context, delegate: SearchVisitante());
-                    // ConstsFuture.navigatorPush(context, VisitasScreen());
-                  },
-                ),
-              ]),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: size.width * 0.5,
-                    child: ConstsWidget.buildPadding001(
-                      context,
-                      vertical: 0,
-                      horizontal: 0.01,
-                      child: GestureDetector(
-                        onTap: () => showSearch(
-                            context: context, delegate: SearchProtocolos()),
-                        child: ConstsWidget.buildPadding001(
-                          context,
-                          horizontal: 0.01,
-                          child: Container(
-                            height: size.height * 0.085,
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).cardColor,
-                                border: Border.all(
-                                    color: Color.fromARGB(255, 39, 211, 104),
-                                    width: size.width * 0.007),
-                                borderRadius: BorderRadius.circular(16)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Spacer(flex: 3),
-                                ConstsWidget.buildTitleText(context,
-                                    title: 'Protocolos',
-                                    textAlign: TextAlign.center),
-                                Spacer(),
-                                Container(
-                                  height: size.height * 0.3,
-                                  width: size.width * 0.1,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color.fromARGB(255, 39, 211, 104),
-                                  ),
-                                  child: Icon(
-                                    Icons.search,
-                                    color: Colors.white,
-                                    fill: 1,
-                                  ),
-                                ),
-                                Spacer(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                  //  FutureBuilder(
+                  //   future: ConstsFuture.apiImage(
+                  //     'https://a.portariaapp.com/img/logo_vermelho.png',
+                  //   ),
+                  //   builder: (context, snapshot) {
+                  //     return SizedBox(child: snapshot.data);
+                  //   },
+                  // ),
                   ),
-                  SizedBox(
-                    width: size.width * 0.5,
-                    child: ConstsWidget.buildPadding001(
-                      context,
-                      vertical: 0,
-                      horizontal: 0.01,
-                      child: GestureDetector(
-                        onTap: () => showSearch(
-                            context: context, delegate: SearchUnidades()),
-                        child: ConstsWidget.buildPadding001(
-                          context,
-                          horizontal: 0.01,
-                          child: Container(
-                            height: size.height * 0.085,
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).cardColor,
-                                border: Border.all(
-                                    color: Consts.kColorRed,
-                                    width: size.width * 0.007),
-                                borderRadius: BorderRadius.circular(16)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Spacer(flex: 3),
-                                ConstsWidget.buildTitleText(context,
-                                    title: 'Unidades',
-                                    textAlign: TextAlign.center),
-                                Spacer(),
-                                Container(
-                                  height: size.height * 0.3,
-                                  width: size.width * 0.1,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Consts.kColorRed,
-                                  ),
-                                  child: Icon(
-                                    Icons.search,
-                                    color: Colors.white,
-                                    fill: 1,
-                                  ),
-                                ),
-                                Spacer(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              buildGridViewer(
-                children: [
+            ),
+            endDrawer: CustomDrawer(),
+            body: ListView(
+              // padding: EdgeInsets.symmetric(horizontal: size.height * 0.005),
+              children: [
+                buildGridViewer(children: [
                   buildCard(
-                    title: 'Notificações',
+                      title: 'Bombeiros',
+                      onTap: () {
+                        launchNumber('193');
+                      },
+                      iconApi: '${Consts.iconApiPort}bombeiro.png',
+                      isWhatss: true),
+                  buildCard(
+                      title: 'Samu',
+                      iconApi: '${Consts.iconApiPort}ambulancia.png',
+                      onTap: () {
+                        launchNumber('192');
+                      },
+                      isWhatss: true),
+                  buildCard(
+                      title: 'Polícia',
+                      iconApi: '${Consts.iconApiPort}policia.png',
+                      onTap: () {
+                        launchNumber('190');
+                      },
+                      isWhatss: true),
+                  buildCard(
+                    title: 'Quadro de Avisos',
+                    iconApi: '${Consts.iconApiPort}quadrodeavisos.png',
                     onTap: () {
                       ConstsFuture.navigatorPush(
-                          context, HistoricoNotificScreen());
+                          context, QuadroHistoricoNotificScreen());
                     },
-                    iconApi: '${Consts.iconApiPort}historico-notificacoes.png',
                   ),
-                  buildCard(
-                      title: 'Procurar Veículos',
-                      iconApi: '${Consts.iconApiPort}pesquisa-veiculos.png',
+                  badges.Badge(
+                    // largeSize: 30,
+                    showBadge: HomePage.qntEventos != 0,
+                    badgeContent: ConstsWidget.buildTitleText(context,
+                        title: HomePage.qntEventos.toString(),
+                        // padding: EdgeInsets.all(16),
+
+                        color: Colors.white),
+                    position: badges.BadgePosition.topEnd(),
+                    badgeStyle: badges.BadgeStyle(
+                      badgeColor: Consts.kColorRed,
+                    ),
+
+                    child: buildCard(
+                      title: 'Espaços Reservados',
+                      iconApi: '${Consts.iconApiPort}reservas-solicitadas.png',
                       onTap: () {
-                        showSearch(context: context, delegate: SearchVeiculo());
+                        ConstsFuture.navigatorPush(context, EspacosScreen());
                       },
-                      isSearchVeiculo: true),
-                  buildCard(
-                    title: 'Adicionar Itens',
-                    iconApi: '${Consts.iconApiPort}multi.png',
-                    avisa: FuncionarioInfos.avisa_corresp,
-                    onTap: () {
-                      showAllDialog(context,
-                          children: [
-                            Column(
-                              children: [
-                                ConstsWidget.buildOutlinedButton(
-                                  context,
-                                  title: 'Várias Caixas',
-                                  onPressed: () {
-                                    ConstsFuture.navigatorPush(
-                                        context, EncomendasScreen());
-                                  },
-                                ),
-                                SizedBox(
-                                  height: size.height * 0.02,
-                                ),
-                                ConstsWidget.buildOutlinedButton(
-                                  context,
-                                  title: 'Várias Cartas',
-                                  onPressed: () {
-                                    ConstsFuture.navigatorPush(
-                                      context,
-                                      MultiCorresp(),
-                                    );
-                                  },
-                                ),
-                              ],
-                            )
-                          ],
-                          title: ConstsWidget.buildTitleText(context,
-                              title: 'Escolha um modo'));
-                    },
+                    ),
                   ),
                   buildCard(
-                      title: 'Informe o Síndico',
-                      isWhatss: true,
-                      iconApi: '${Consts.iconApiPort}informe-sindico.png'),
-                ],
-              ),
-            ],
-          )),
+                    title: 'Visitante',
+                    iconApi: '${Consts.iconApiPort}visitas.png',
+                    onTap: () {
+                      showSearch(context: context, delegate: SearchVisitante());
+                      // ConstsFuture.navigatorPush(context, VisitasScreen());
+                    },
+                  ),
+                ]),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: size.width * 0.5,
+                      child: ConstsWidget.buildPadding001(
+                        context,
+                        vertical: 0,
+                        horizontal: 0.01,
+                        child: GestureDetector(
+                          onTap: () => showSearch(
+                              context: context, delegate: SearchProtocolos()),
+                          child: ConstsWidget.buildPadding001(
+                            context,
+                            horizontal: 0.01,
+                            child: Container(
+                              height: size.height * 0.085,
+                              width: double.maxFinite,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  border: Border.all(
+                                      color: Color.fromARGB(255, 39, 211, 104),
+                                      width: size.width * 0.007),
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Spacer(flex: 3),
+                                  ConstsWidget.buildTitleText(context,
+                                      title: 'Protocolos',
+                                      textAlign: TextAlign.center),
+                                  Spacer(),
+                                  Container(
+                                    height: size.height * 0.3,
+                                    width: size.width * 0.1,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color.fromARGB(255, 39, 211, 104),
+                                    ),
+                                    child: Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                      fill: 1,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: size.width * 0.5,
+                      child: ConstsWidget.buildPadding001(
+                        context,
+                        vertical: 0,
+                        horizontal: 0.01,
+                        child: GestureDetector(
+                          onTap: () => showSearch(
+                              context: context, delegate: SearchUnidades()),
+                          child: ConstsWidget.buildPadding001(
+                            context,
+                            horizontal: 0.01,
+                            child: Container(
+                              height: size.height * 0.085,
+                              width: double.maxFinite,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  border: Border.all(
+                                      color: Consts.kColorRed,
+                                      width: size.width * 0.007),
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Spacer(flex: 3),
+                                  ConstsWidget.buildTitleText(context,
+                                      title: 'Unidades',
+                                      textAlign: TextAlign.center),
+                                  Spacer(),
+                                  Container(
+                                    height: size.height * 0.3,
+                                    width: size.width * 0.1,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Consts.kColorRed,
+                                    ),
+                                    child: Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                      fill: 1,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                buildGridViewer(
+                  children: [
+                    buildCard(
+                      title: 'Notificações',
+                      onTap: () {
+                        ConstsFuture.navigatorPush(
+                            context, HistoricoNotificScreen());
+                      },
+                      iconApi:
+                          '${Consts.iconApiPort}historico-notificacoes.png',
+                    ),
+                    buildCard(
+                        title: 'Procurar Veículos',
+                        iconApi: '${Consts.iconApiPort}pesquisa-veiculos.png',
+                        onTap: () {
+                          showSearch(
+                              context: context, delegate: SearchVeiculo());
+                        },
+                        isSearchVeiculo: true),
+                    buildCard(
+                      title: 'Adicionar Itens',
+                      iconApi: '${Consts.iconApiPort}multi.png',
+                      avisa: FuncionarioInfos.avisa_corresp,
+                      onTap: () {
+                        showAllDialog(context,
+                            children: [
+                              Column(
+                                children: [
+                                  ConstsWidget.buildOutlinedButton(
+                                    context,
+                                    title: 'Várias Caixas',
+                                    onPressed: () {
+                                      ConstsFuture.navigatorPush(
+                                          context, EncomendasScreen());
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.02,
+                                  ),
+                                  ConstsWidget.buildOutlinedButton(
+                                    context,
+                                    title: 'Várias Cartas',
+                                    onPressed: () {
+                                      ConstsFuture.navigatorPush(
+                                        context,
+                                        MultiCorresp(),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                            title: ConstsWidget.buildTitleText(context,
+                                title: 'Escolha um modo'));
+                      },
+                    ),
+                    buildCard(
+                        title: 'Informe o Síndico',
+                        isWhatss: true,
+                        iconApi: '${Consts.iconApiPort}informe-sindico.png'),
+                  ],
+                ),
+              ],
+            )),
+      ),
     );
   }
 
