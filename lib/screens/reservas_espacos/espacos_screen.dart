@@ -32,7 +32,6 @@ class _EspacosScreenState extends State<EspacosScreen> {
         setState(() {});
       },
       child: ScaffoldAll(
-          hasDrawer: true,
           title: 'Espaços Reservados',
           body: FutureBuilder<dynamic>(
               future: ConstsFuture.launchGetApi(context,

@@ -1,18 +1,26 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/main.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
+import 'package:app_porteiro/widgets/alertdialog_all.dart';
 import 'package:app_porteiro/widgets/drop_search_remet.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
+import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../../../consts/consts.dart';
+import '../../../consts/consts_future.dart';
+import 'analisaErroScreen.dart';
 import 'encomendas_screen.dart';
 
 class MultiCorresp extends StatefulWidget {
@@ -22,10 +30,18 @@ class MultiCorresp extends StatefulWidget {
   State<MultiCorresp> createState() => _MultiCorrespState();
 }
 
-class _MultiCorrespState extends State<MultiCorresp> {
-  List<ModelApto> itemsModelApto = <ModelApto>[];
-  List<int> listAptos = <int>[];
+bool isLoading = false;
+// List<Map<String, dynamic>> hasError = [];
+Map<String, dynamic> hasError = {};
+bool? isErro;
 
+class _MultiCorrespState extends State<MultiCorresp> {
+  final dropDownKey = GlobalKey<DropdownSearchState>();
+  List<ModelApto> itemsModelApto = <ModelApto>[];
+  List<int> listarUniApi = <int>[];
+  List<int> listUnidade = <int>[];
+
+  var now = DateFormat('yyyy-MM-dd').format(DateTime.now());
   Future apiListarApartamento() async {
     var url = Uri.parse(
         '${Consts.apiPortaria}unidades/?fn=listarUnidades&idcond=${FuncionarioInfos.idcondominio}');
@@ -35,6 +51,7 @@ class _MultiCorrespState extends State<MultiCorresp> {
       for (var i = 0; i <= jsonResponse['unidades'].length - 1; i++) {
         var apiUnidade = jsonResponse['unidades'][i];
         setState(() {
+          listarUniApi.add(apiUnidade['idunidade']);
           itemsModelApto.add(
             ModelApto(
               idap: apiUnidade['idunidade'],
@@ -49,37 +66,146 @@ class _MultiCorrespState extends State<MultiCorresp> {
     }
   }
 
+  resetinfos() {
+    setState(() {
+      hasError.clear();
+      isLoading = false;
+      DropSearchRemet.tituloRemente == null;
+    });
+  }
+
   @override
   void initState() {
     apiListarApartamento();
+    resetinfos();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldAll(
-        title: 'Cartas',
-        body: Column(
-          children: [
-            MyBoxShadow(
-              child: Column(
-                children: [
-                  DropSearchRemet(tipoAviso: 3),
-                  DropdownSearch.multiSelection(
-                    dropdownDecoratorProps:
-                        DecorationDropSearch.dropdownDecoratorProps(context),
-                    dropdownButtonProps:
-                        DecorationDropSearch.dropdownButtonProps(context),
-                    // onChanged: (value) {
-                    //   itemsModelApto.map((e) {
-                    //     if (e.nomeUnidade == value) {
-                    //       setState(() {
-                    //         listAptos.add(e.idap);
-                    //       });
-                    //     }
-                    //   }).toString();
-                    // },
-                    popupProps: PopupPropsMultiSelection.menu(
+    var size = MediaQuery.of(context).size;
+    TextStyle buildTextStyle({
+      double? fontSize,
+      FontWeight? fontWeight,
+    }) {
+      return TextStyle(
+          fontWeight: fontWeight,
+          fontSize: fontSize ?? 18,
+          height: 1.5,
+          color: Consts.kColorRed);
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        resetinfos();
+      },
+      child: ScaffoldAll(
+          title: 'Cartas',
+          body: Column(
+            children: [
+              MyBoxShadow(
+                child: Column(
+                  children: [
+                    DropSearchRemet(tipoAviso: 3),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Aqui você avisará ',
+                        style: buildTextStyle(),
+                        children: [
+                          TextSpan(
+                            text: 'todas as unidade',
+                            style: buildTextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: SplashScreen.isSmall ? 18 : 20),
+                          ),
+                          TextSpan(
+                              text:
+                                  ', exceto quais selecionar na etapa seguinte',
+                              style: buildTextStyle()),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    DropdownSearch.multiSelection(
+                      key: dropDownKey,
+                      dropdownBuilder: (context, selectedItems) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: selectedItems.map((eSelec) {
+                            return ConstsWidget.buildPadding001(
+                              context,
+                              child: Container(
+                                decoration: UnderlineTabIndicator(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary)),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ConstsWidget.buildTitleText(context,
+                                        title: eSelec.toString()),
+                                    IconButton(
+                                        onPressed: () {
+                                          itemsModelApto.map((e) {
+                                            if (e.nomeUnidade == eSelec) {
+                                              setState(() {
+                                                listUnidade.remove(e.idap);
+                                                selectedItems.remove(eSelec);
+                                              });
+                                            }
+                                          }).toString();
+                                        },
+                                        icon: Icon(
+                                          Icons.close,
+                                          color:
+                                              Theme.of(context).iconTheme.color,
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
+                      clearButtonProps: ClearButtonProps(
+                        isVisible: true,
+                        color: Theme.of(context).colorScheme.primary,
+                        onPressed: () {
+                          dropDownKey.currentState?.clear();
+                          setState(() {
+                            setState(() {
+                              listUnidade.clear();
+                            });
+                          });
+                        },
+                      ),
+                      dropdownDecoratorProps:
+                          DecorationDropSearch.dropdownDecoratorProps(context),
+                      dropdownButtonProps:
+                          DecorationDropSearch.dropdownButtonProps(context),
+                      popupProps: PopupPropsMultiSelection.menu(
+                        selectionWidget: (context, item, isSelected) {
+                          return Transform.scale(
+                            scale: 1.3,
+                            child: Checkbox(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              value: isSelected,
+                              onChanged: (value) {
+                                isSelected == value;
+                                if (isSelected) {
+                                  setState(() {
+                                    print('object');
+                                  });
+                                }
+                              },
+                            ),
+                          );
+                        },
                         emptyBuilder: (context, searchEntry) {
                           return DecorationDropSearch.emptyBuilder(context);
                         },
@@ -90,49 +216,99 @@ class _MultiCorrespState extends State<MultiCorresp> {
                           return DecorationDropSearch.itemBuilder(
                               context, item.toString());
                         },
-                        
                         onItemRemoved: (selectedItems, removedItem) {
                           itemsModelApto.map((e) {
                             if (e.nomeUnidade == removedItem.toString()) {
-                              
                               setState(() {
-                                listAptos.remove(e.idap);
+                                listUnidade.remove(e.idap);
                               });
                             }
                           }).toString();
                         },
-
                         onItemAdded: (selectedItems, addedItem) {
                           itemsModelApto.map((e) {
                             if (e.nomeUnidade == addedItem.toString()) {
                               setState(() {
-                                listAptos.add(e.idap);
-                                print(selectedItems);
+                                listUnidade.add(e.idap);
+                                // print(selectedItems);
                               });
                             }
                           }).toString();
                         },
                         showSearchBox: true,
+                        containerBuilder: (context, popupWidget) {
+                          return MyBoxShadow(child: popupWidget);
+                        },
                         searchFieldProps:
-                            DecorationDropSearch.searchFieldProps(context)),
-                    items: itemsModelApto.map((ModelApto e) {
-                      return e.nomeUnidade;
-                    }).toList(),
-                  ),
-                  ConstsWidget.buildPadding001(
-                    context,
-                    child: ConstsWidget.buildOutlinedButton(
-                      context,
-                      title: 'Print',
-                      onPressed: () {
-                        print(listAptos);
-                      },
+                            DecorationDropSearch.searchFieldProps(context),
+                      ),
+                      items: itemsModelApto.map((ModelApto e) {
+                        return e.nomeUnidade;
+                      }).toList(),
                     ),
-                  )
-                ],
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
+                    ConstsWidget.buildPadding001(
+                      context,
+                      child: ConstsWidget.buildLoadingButton(
+                        context,
+                        isLoading: isLoading,
+                        title: 'Gravar e Avisar',
+                        onPressed: () {
+                          if (DropSearchRemet.tituloRemente == null) {
+                            buildMinhaSnackBar(context,
+                                title: 'Cuidado',
+                                subTitle: 'Selecione um Remetente');
+                          } else {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            enviarNotifc().then((valueList) async {
+                              ConstsFuture.launchGetApi(context,
+                                      'correspondencias/?fn=incluirCorrespondenciasMultiLista&idcond=${FuncionarioInfos.idcondominio}&listaunidades=${valueList.join(',')}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$now&tipo=3&remetente=${DropSearchRemet.tituloRemente}&descricao=Envelope')
+                                  .then((value) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                if (!value['erro']) {
+                                  ConstsFuture.navigatorPopPush(
+                                      context, '/homePage');
+                                  buildMinhaSnackBar(context,
+                                      title: 'Tudo certo',
+                                      subTitle: value['mensagem']);
+                                } else {
+                                  buildMinhaSnackBar(context,
+                                      title: 'Algo Saiu mal',
+                                      subTitle: value['mensagem']);
+                                }
+                              });
+                            });
+                          }
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
-        ));
+            ],
+          )),
+    );
+  }
+
+  Future<List<int>> enviarNotifc() async {
+    listUnidade.map((e) {
+      listarUniApi.remove(e);
+    }).toSet();
+
+    return listarUniApi;
+  }
+
+  verificaErro(Map<String, dynamic> hasError) {
+    if (hasError.containsValue(true)) {
+      print('tem erro no Map');
+    } else {
+      print('Não tem erro no Map');
+    }
   }
 }

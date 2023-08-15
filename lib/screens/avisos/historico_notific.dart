@@ -32,7 +32,6 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
       },
       child: ScaffoldAll(
           title: 'Histórico de Avisos',
-          hasDrawer: true,
           fontSize: 26,
           body: Column(
             children: [
@@ -163,7 +162,8 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                                       width: size.width * 0.9,
                                       child: ConstsWidget.buildTitleText(
                                           context,
-                                          title: titulo),
+                                          title: titulo,
+                                          color: Consts.kColorRed),
                                     ),
                                     SizedBox(
                                       height: size.height * 0.005,

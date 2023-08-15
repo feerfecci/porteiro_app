@@ -1,23 +1,39 @@
-import 'dart:convert';
+// ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:signature/signature.dart';
 import '../../../consts/consts.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as encoder;
 
 class AssinaturaScreen extends StatefulWidget {
   final String nomeEntregador;
   final String docEntregador;
+  final List<int> listIdCorresp;
   const AssinaturaScreen(
-      {required this.nomeEntregador, required this.docEntregador, super.key});
+      {required this.nomeEntregador,
+      required this.docEntregador,
+      required this.listIdCorresp,
+      super.key});
 
   @override
   State<AssinaturaScreen> createState() => _AssinaturaScreenState();
 }
+
+bool isLoading = false;
 
 class _AssinaturaScreenState extends State<AssinaturaScreen> {
   SignatureController controllerAssinatura = SignatureController(
@@ -25,25 +41,7 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
       penColor: Colors.black,
       exportBackgroundColor: Colors.white);
 
-  var exportedImage;
-  String? image64;
-  @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  // }
-
-  // Image imageFromBase64String(String base64String) {
-  //   return Image.memory(base64Decode(base64String));
-  // }
-
-  // Uint8List dataFromBase64String(String base64String) {
-  //   return base64Decode(base64String);
-  // }
-
-  // String base64String(Uint8List data) {
-  //   return base64Encode(data);
-  // }
+  var signature;
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +54,6 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
             Signature(
               controller: controllerAssinatura,
               height: size.height * 0.6,
-              // height: 200,
-              // width: 400,
               width: size.width * 0.9,
               backgroundColor: Colors.white,
             ),
@@ -79,56 +75,95 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
                   context,
                   'Limpar',
                   onPressed: () {
-                    controllerAssinatura.clear();
+                    setState(() {
+                      controllerAssinatura.clear();
+                    });
                     SystemChrome.setPreferredOrientations(
                         [DeviceOrientation.portraitUp]);
                   },
                 ),
-                ConstsWidget.buildCustomButton(
+                ConstsWidget.buildLoadingButton(
                   context,
-                  'Salvar',
+                  title: 'Salvar',
+                  isLoading: isLoading,
                   color: Consts.kColorRed,
                   onPressed: () async {
-                    exportedImage = await controllerAssinatura.toPngBytes();
-                    if (exportedImage != null) {
-                      image64 = base64.encode(
-                        exportedImage!,
-                      );
+                    if (controllerAssinatura.isNotEmpty) {
+                      signature = await exportController();
+                      setState(() {
+                        signature;
+                        isLoading == true;
+                      });
+                      final tempDir = await getTemporaryDirectory();
 
-                      XFile xFile = XFile.fromData(exportedImage);
-
-                      print(xFile.path);
-
-                      // var imageDecode = base64.decode(image64!);
-                      // Image asdsa = imageFromBase64String(image64!);
-
-                      // print([image64]);
-                      // print(imageDecode);
-                      // ConstsFuture.launchGetApi(context,
-                      //         'assinatura_entregador/?fn=gravarDados&idcond=${FuncionarioInfos.idcondominio}&nome_entregador=${widget.nomeEntregador}&documento_entregador=${widget.docEntregador}&img_assinatura=${image64}')
-                      //     .then((value) {
-                      //
-                      //   if (!value['erro']) {
-                      //     buildMinhaSnackBar(context,
-                      //         title: 'Passou API', subTitle: value['mensagem']);
-                      //   } else {
-                      //     buildMinhaSnackBar(context,
-                      //         subTitle: value['mensagem']);
-                      //   }
-                      // });
+                      File fileToBeUploaded =
+                          await File('${tempDir.path}/imageAssinatura.png')
+                              .create();
+                      fileToBeUploaded.writeAsBytesSync(signature);
+                      upload(
+                              nameImage: 'imageAssinatura.png',
+                              pathImage: fileToBeUploaded.path)
+                          .then((value) {
+                        setState(() {
+                          isLoading == false;
+                        });
+                        if (!value['erro']) {
+                          ConstsFuture.navigatorPushRemoveUntil(
+                              context, HomePage());
+                          buildMinhaSnackBar(context,
+                              title: 'Tudo Certo!',
+                              subTitle: value['mensagem']);
+                        } else {
+                          buildMinhaSnackBar(context,
+                              title: 'Algo Saiu mal!',
+                              subTitle: value['mensagem']);
+                        }
+                      });
                     } else {
-                      buildMinhaSnackBar(
-                        context,
-                        title: 'Cuidado!',
-                        subTitle: 'Preencha a assinatura',
-                      );
+                      buildMinhaSnackBar(context,
+                          title: 'Cuidado!', subTitle: 'Faça uma assinatura');
                     }
                   },
                 )
               ],
             ),
-            // if (exportedImage != null) imageFromBase64String(image64!),
           ],
         ));
+  }
+
+  Future<Uint8List?> exportController() async {
+    final exportController = SignatureController(
+      points: controllerAssinatura.points,
+    );
+    final signature = await exportController.toPngBytes();
+    exportController.dispose();
+    return signature;
+  }
+
+  Future upload(
+      {required String? nameImage, required String? pathImage}) async {
+    var postUri = Uri.parse(
+        "https://a.portariaapp.com/portaria/api/assinatura_entregador/?fn=gravarDados");
+
+    http.MultipartRequest request = http.MultipartRequest("POST", postUri);
+
+    if (pathImage != '') {
+      http.MultipartFile multipartFile = await http.MultipartFile.fromPath(
+          'imagem', pathImage!,
+          filename: nameImage);
+
+      request.files.add(multipartFile);
+    }
+    request.fields['idcond'] = '${FuncionarioInfos.idcondominio}';
+    request.fields['nome_entregador'] = widget.nomeEntregador;
+    request.fields['documento_entregador'] = widget.docEntregador;
+    request.fields['lista_correspondencias'] = widget.listIdCorresp.toString();
+
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      return {'erro': false, "mensagem": 'Cadastrado com Sucesso!'};
+    } else {
+      return {'erro': true, 'mensagem': 'Tente Novamente'};
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:app_porteiro/repositories/theme_modals/theme_modals.dart';
 import 'package:app_porteiro/repositories/theme_modals/themes_provider.dart';
+import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
           initialRoute: '/splashScreen',
           routes: {
             '/splashScreen': (context) => SplashScreen(),
+            '/homePage': (context) => HomePage(),
           },
         );
       },

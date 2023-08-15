@@ -13,15 +13,18 @@ class _PageVaziaState extends State<PageVazia> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Wrap(
-      children: [
-        Image.asset('assets/vazio.png'),
-        SizedBox(
-          height: size.height * 0.01,
-        ),
-        ConstsWidget.buildTitleText(context,
-            title: widget.title, textAlign: TextAlign.center, fontSize: 20)
-      ],
+    return Center(
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        children: [
+          Image.asset('assets/vazio.png'),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          ConstsWidget.buildTitleText(context,
+              title: widget.title, textAlign: TextAlign.center, fontSize: 20)
+        ],
+      ),
     );
   }
 }

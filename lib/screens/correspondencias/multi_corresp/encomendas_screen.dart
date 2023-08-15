@@ -40,6 +40,8 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
 
   List<MultiItem> itemsMulti = <MultiItem>[];
   List<ModelApto> itemsModelApto = <ModelApto>[];
+  List<int> listIdUnidade = [];
+  List<int> listIdCorresp = [];
   Object? dropRemetente;
   int idApto = 0;
   int idRemet = 0;
@@ -74,6 +76,9 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
   void initState() {
     apiListarApartamento();
     nomeApto = widget.idUnidade == null ? '' : widget.localizado!;
+    widget.idUnidade != null
+        ? listIdUnidade.add(widget.idUnidade!)
+        : listIdUnidade;
     super.initState();
   }
 
@@ -119,6 +124,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
             if (e.nomeUnidade == value) {
               setState(() {
                 idApto = e.idap;
+                listIdUnidade.add(idApto);
                 nomeApto = e.nomeUnidade;
               });
             }
@@ -244,18 +250,12 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                     context,
                     'Assinar',
                     onPressed: () {
-                      print([
-                        nomeEntregador.text,
-                        docEntregador.text,
-                        totalQnt,
-                        DropSearchRemet.idRemet,
-                        DropSearchRemet.tituloRemente
-                      ]);
                       ConstsFuture.navigatorPush(
                           context,
                           AssinaturaScreen(
                             docEntregador: docEntregador.text,
                             nomeEntregador: nomeEntregador.text,
+                            listIdCorresp: listIdCorresp,
                           ));
                     },
                   ),
@@ -311,6 +311,8 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                             'correspondencias/?fn=incluirCorrespondenciasMulti&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idUnidade == null ? idApto : widget.idUnidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataNow&tipo=4&remetente=${DropSearchRemet.tituloRemente}&nome_entregador=${nomeEntregador.text}&doc_entregador=${docEntregador.text}')
                         .then((value) {
                       if (!value['erro']) {
+                        listIdCorresp.add(value['correspondencias'][0]
+                            ['ultima_correspondencia']);
                         if (widget.idUnidade != null) {
                           return alertRecibo();
                         } else {
@@ -319,6 +321,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                               itemsMulti.add(MultiItem(nomeApto, qntCtrl.text));
                               totalQnt = totalQnt + int.parse(qntCtrl.text);
                               qntCtrl.clear();
+                              dropRemetente == null;
                             });
                             Navigator.pop(context);
                           }
@@ -339,7 +342,6 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
     return ScaffoldAll(
         resizeToAvoidBottomInset: true,
         title: 'Entregas',
-        hasDrawer: true,
         body: Column(
           children: [
             // Form(
@@ -549,16 +551,22 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                       if ((widget.idUnidade != null && itemsValid) ||
                           entregadorValid ||
                           (widget.idUnidade != null || itemsMulti.isNotEmpty)) {
-                        if (widget.idUnidade != null) {
-                          setState(() {
-                            itemsMulti.add(
-                                MultiItem(widget.localizado!, qntCtrl.text));
-                            totalQnt = totalQnt + int.parse(qntCtrl.text);
+                        if (qntCtrl.text.isEmpty) {
+                          if (widget.idUnidade != null) {
+                            setState(() {
+                              itemsMulti.add(
+                                  MultiItem(widget.localizado!, qntCtrl.text));
+                              totalQnt = totalQnt + int.parse(qntCtrl.text);
 
-                            alertConfirmaCorresp(dataNow);
-                          });
+                              alertConfirmaCorresp(dataNow);
+                            });
+                          } else {
+                            alertRecibo();
+                          }
                         } else {
-                          alertRecibo();
+                          return buildMinhaSnackBar(context,
+                              title: 'Cuidado',
+                              subTitle: 'Termine de adicionar');
                         }
                       } else {
                         return buildMinhaSnackBar(context,

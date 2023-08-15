@@ -143,7 +143,9 @@ class ConstsFuture {
       return resposta.statusCode == 200
           ? Image.network(iconApi)
           : Image.asset('assets/ico-error.png');
-    } catch (e) {
+    } on Exception catch (e) {
+      return Image.asset('assets/ico-error.png');
+    } on HttpException catch (e) {
       return Image.asset('assets/ico-error.png');
     }
     // return resposta.statusCode == 200

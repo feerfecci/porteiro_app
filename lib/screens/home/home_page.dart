@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
       bool avisa = true,
       bool isWhatss = false,
       bool isSearchVeiculo = false,
+      bool idEspacos = false,
       void Function()? onTap,
     }) {
       return GestureDetector(
@@ -80,24 +81,22 @@ class _HomePageState extends State<HomePage> {
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ConstsWidget.buildFutureImage(
-              context,
-              iconApi: iconApi,
-              height: SplashScreen.isSmall ? 0.065 : 0.059,
-              width: SplashScreen.isSmall ? 0.12 : 0.13,
+            badges.Badge(
+              showBadge: idEspacos ? HomePage.qntEventos != 0 : false,
+              badgeAnimation: badges.BadgeAnimation.fade(toAnimate: false),
+              badgeContent: ConstsWidget.buildTitleText(context,
+                  title: HomePage.qntEventos.toString(), color: Colors.white),
+              position: badges.BadgePosition.topEnd(top: -20, end: -60),
+              badgeStyle: badges.BadgeStyle(
+                badgeColor: Consts.kColorRed,
+              ),
+              child: ConstsWidget.buildFutureImage(
+                context,
+                iconApi: iconApi,
+                height: SplashScreen.isSmall ? 0.065 : 0.059,
+                width: SplashScreen.isSmall ? 0.12 : 0.13,
+              ),
             ),
-            // FutureBuilder(
-            //   future: ConstsFuture.apiImage(iconApi),
-            //   builder: (context, snapshot) => SizedBox(
-            //     width:
-            //         SplashScreen.isSmall ? size.width * 0.1 : size.width * 0.13,
-            //     height: size.height * 0.059,
-            //     child: Image.network(
-            //       iconApi,
-            //       fit: BoxFit.fill,
-            //     ),
-            //   ),
-            // ),
             SizedBox(
               height: size.height * 0.01,
             ),
@@ -219,26 +218,26 @@ class _HomePageState extends State<HomePage> {
                           context, QuadroHistoricoNotificScreen());
                     },
                   ),
-                  badges.Badge(
-                    // largeSize: 30,
-                    showBadge: HomePage.qntEventos != 0,
-                    badgeContent: ConstsWidget.buildTitleText(context,
-                        title: HomePage.qntEventos.toString(),
-                        // padding: EdgeInsets.all(16),
-
-                        color: Colors.white),
-                    position: badges.BadgePosition.topEnd(),
-                    badgeStyle: badges.BadgeStyle(
-                      badgeColor: Consts.kColorRed,
-                    ),
-
-                    child: buildCard(
-                      title: 'Espaços Reservados',
-                      iconApi: '${Consts.iconApiPort}reservas-solicitadas.png',
-                      onTap: () {
-                        ConstsFuture.navigatorPush(context, EspacosScreen());
-                      },
-                    ),
+                  // badges.Badge(
+                  //   showBadge: HomePage.qntEventos != 0,
+                  //   badgeAnimation:
+                  //       badges.BadgeAnimation.fade(toAnimate: false),
+                  //   badgeContent: ConstsWidget.buildTitleText(context,
+                  //       title: HomePage.qntEventos.toString(),
+                  //       color: Colors.white),
+                  //   position: badges.BadgePosition.topEnd(),
+                  //   badgeStyle: badges.BadgeStyle(
+                  //     badgeColor: Consts.kColorRed,
+                  //   ),
+                  //   child:
+                  // ),
+                  buildCard(
+                    title: 'Espaços Reservados',
+                    idEspacos: true,
+                    iconApi: '${Consts.iconApiPort}reservas-solicitadas.png',
+                    onTap: () {
+                      ConstsFuture.navigatorPush(context, EspacosScreen());
+                    },
                   ),
                   buildCard(
                     title: 'Visitante',

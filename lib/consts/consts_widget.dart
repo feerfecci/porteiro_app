@@ -236,7 +236,7 @@ class ConstsWidget {
             backgroundColor: color,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Consts.borderButton))),
-        onPressed: onPressed,
+        onPressed: isLoading ? () {} : onPressed,
         child: isLoading == false
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,

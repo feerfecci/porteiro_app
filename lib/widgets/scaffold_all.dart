@@ -18,7 +18,7 @@ class ScaffoldAll extends StatefulWidget {
       {required this.title,
       required this.body,
       this.floatingActionButton,
-      this.hasDrawer = false,
+      this.hasDrawer = true,
       this.resizeToAvoidBottomInset = false,
       this.fontSize = 30,
       super.key});
