@@ -50,6 +50,7 @@ class WidgetModalCorresp extends StatefulWidget {
 }
 
 class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
+  TextEditingController qtdCartas = TextEditingController(text: '1');
   final _formKey = GlobalKey<FormState>();
   // List listaRementes = [];
   // Object? dropRemetente;
@@ -70,7 +71,7 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
 
     var seIdmsgs = remetenteText == null ? DropSearchRemet.idRemet : null;
     ConstsFuture.launchGetApi(context,
-            'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$seIdmsgs')
+            'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$seIdmsgs&qtd=${qtdCartas.text}')
         .then((value) {
       if (!value['erro']) {
         setState(() {
@@ -218,21 +219,35 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
                 ),
               ],
             ),
-          ConstsWidget.buildMyTextFormObrigatorio(
-            context,
-            'Data',
-            inputFormatters: [MaskTextInputFormatter(mask: '##/##/####')],
-            onSaved: (text) {
-              var ano = text!.substring(6);
-              var mes = text.substring(3, 5);
+          Row(
+            children: [
+              SizedBox(
+                width: size.width * 0.5,
+                child: ConstsWidget.buildMyTextFormObrigatorio(
+                  context,
+                  'Data',
+                  inputFormatters: [MaskTextInputFormatter(mask: '##/##/####')],
+                  onSaved: (text) {
+                    var ano = text!.substring(6);
+                    var mes = text.substring(3, 5);
 
-              var dia = text.substring(0, 2);
-              dataInclusaoText = '$ano-$mes-$dia';
-            },
-            // validator: Validatorless.date('Data invalida'),
-            initialValue: DateFormat('dd/MM/yyy').format(
-              DateTime.now(),
-            ),
+                    var dia = text.substring(0, 2);
+                    dataInclusaoText = '$ano-$mes-$dia';
+                  },
+                  // validator: Validatorless.date('Data invalida'),
+                  initialValue: DateFormat('dd/MM/yyy').format(
+                    DateTime.now(),
+                  ),
+                ),
+              ),
+              Spacer(),
+              SizedBox(
+                width: size.width * 0.35,
+                child: ConstsWidget.buildMyTextFormObrigatorio(
+                    context, 'Quantidade',
+                    controller: qtdCartas, keyboardType: TextInputType.number),
+              )
+            ],
           ),
           SizedBox(
             height: size.height * 0.015,

@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: Validatorless.multiple([
               Validatorless.required('Senha é obrigatório'),
-              Validatorless.min(3, 'Mínimo de 6 caracteres')
+              Validatorless.min(6, 'Mínimo de 6 caracteres')
             ]),
             onEditingComplete: () => TextInput.finishAutofillContext(),
             autofillHints: const [AutofillHints.password],

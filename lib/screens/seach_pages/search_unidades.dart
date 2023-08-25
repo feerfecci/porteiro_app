@@ -92,7 +92,7 @@ class SearchUnidades extends SearchDelegate<String> {
 
   Future<dynamic> sugestoesUnidades() async {
     var url = Uri.parse(
-        '${Consts.apiPortaria}unidades/index.php?fn=pesquisarUnidades&idcond=${FuncionarioInfos.idcondominio}&palavra=$query');
+        '${Consts.apiPortaria}unidades/index.php?fn=pesquisarUnidades&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&palavra=$query');
     var resposta = await http.get(url);
     if (resposta.statusCode == 200) {
       return json.decode(resposta.body);

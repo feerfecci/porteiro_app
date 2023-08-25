@@ -16,6 +16,7 @@ class FuncionarioInfos {
   static bool avisa_visita = false;
   static bool avisa_delivery = false;
   static bool avisa_encomendas = false;
+  static bool envia_avisos = false;
 }
 
 class Consts {
@@ -27,7 +28,6 @@ class Consts {
   static const kBackPageColor = Color.fromARGB(255, 245, 245, 255);
   // static const kButtonColor = Color.fromARGB(255, 0, 134, 252);
   static const kButtonColor = kColorApp;
-
   static const kColorApp = Color.fromARGB(255, 75, 132, 255);
   static const kColorRed = Color.fromARGB(255, 251, 80, 93);
   // Color.fromARGB(255, 127, 99, 254);

@@ -19,7 +19,7 @@ class SearchVisitante extends SearchDelegate<String> {
   String get searchFieldLabel => 'ex: RG, CPF';
   Future sugestoesVisitantes() async {
     var url = Uri.parse(
-        '${Consts.apiPortaria}lista_visitantes/?fn=listarVisitantes&idcond=${FuncionarioInfos.idcondominio}&palavra=$query');
+        '${Consts.apiPortaria}lista_visitantes/?fn=listarVisitantes&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&palavra=$query');
     var resposta = await http.get(url);
     if (resposta.statusCode == 200) {
       return json.decode(resposta.body);

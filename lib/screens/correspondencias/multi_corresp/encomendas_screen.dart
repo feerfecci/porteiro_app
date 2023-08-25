@@ -29,6 +29,17 @@ class EncomendasScreen extends StatefulWidget {
   State<EncomendasScreen> createState() => _EncomendasScreenState();
 }
 
+bool _isLoading = false;
+setOrientation(Orientation orientation) {
+  if (orientation == Orientation.landscape) {
+    return SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft]);
+  } else {
+    return SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp]);
+  }
+}
+
 class _EncomendasScreenState extends State<EncomendasScreen> {
   final TextEditingController nomeEntregador = TextEditingController();
   final TextEditingController docEntregador = TextEditingController();
@@ -42,13 +53,14 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
   List<ModelApto> itemsModelApto = <ModelApto>[];
   List<int> listIdUnidade = [];
   List<int> listIdCorresp = [];
-  Object? dropRemetente;
   int idApto = 0;
   int idRemet = 0;
   String nomeApto = '';
+// ignore: prefer_final_fields
+  bool _apConfirmado = false;
+  Object selectedItemAP = 'Selecione uma unidade';
   // String nomeRemet = '';
   int totalQnt = 0;
-
   Future apiListarApartamento() async {
     var url = Uri.parse(
         '${Consts.apiPortaria}unidades/?fn=listarUnidades&idcond=${FuncionarioInfos.idcondominio}');
@@ -94,16 +106,28 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
         : null;
     Widget buildDropSearchAp() {
       return DropdownSearch(
-        selectedItem: 'Selecione Um Apartamento',
+        selectedItem: selectedItemAP,
         dropdownDecoratorProps:
             DecorationDropSearch.dropdownDecoratorProps(context),
         dropdownButtonProps: DecorationDropSearch.dropdownButtonProps(context),
         dropdownBuilder: (context, selectedItem) {
-          if (selectedItem == 'Selecione Um Apartamento') {
-            return Center(child: Text(selectedItem.toString()));
+          if (!_apConfirmado) {
+            if (selectedItem == 'Selecione uma unidade') {
+              return Center(
+                child: Text(
+                  selectedItem.toString(),
+                ),
+              );
+            } else {
+              return DecorationDropSearch.dropDownBuilder(
+                context,
+                selectedItem.toString(),
+              );
+            }
           } else {
-            return DecorationDropSearch.dropDownBuilder(
-                context, selectedItem.toString());
+            return Center(
+              child: Text('Selecione uma unidade'),
+            );
           }
         },
         popupProps: PopupProps.menu(
@@ -126,6 +150,8 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                 idApto = e.idap;
                 listIdUnidade.add(idApto);
                 nomeApto = e.nomeUnidade;
+                selectedItemAP = nomeApto;
+                _apConfirmado = false;
               });
             }
           }).toString();
@@ -211,7 +237,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
 
     alertRecibo() {
       ConstsFuture.launchGetApi(context,
-              'txt_recibo/index.php?fn=mostrarRecibo&idcond=${FuncionarioInfos.idcondominio}&nome_entregador=${nomeEntregador.text}&documento_entregador=${docEntregador.text}&total_itens=$totalQnt&nome_remetente=${DropSearchRemet.tituloRemente}')
+              'txt_recibo/index.php?fn=mostrarRecibo&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&nome_entregador=${nomeEntregador.text}&documento_entregador=${docEntregador.text}&total_itens=$totalQnt&nome_remetente=${DropSearchRemet.tituloRemente}&descricao=${DropSearchRemet.textoRemente}')
           .then((value) {
         if (!value['erro']) {
           showAllDialog(context,
@@ -250,6 +276,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                     context,
                     'Assinar',
                     onPressed: () {
+                      setOrientation(Orientation.landscape);
                       ConstsFuture.navigatorPush(
                           context,
                           AssinaturaScreen(
@@ -273,7 +300,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
           children: [
             RichText(
               text: TextSpan(
-                text: 'Ao continuar você enviará um aviso para o apartamento ',
+                text: 'Ao continuar você enviará um aviso para a unidade ',
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.primary, fontSize: 16),
                 children: [
@@ -283,6 +310,24 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                           fontWeight: FontWeight.bold,
                           color: Colors.red,
                           fontSize: 18)),
+                  TextSpan(
+                    text: ' com ',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 16),
+                  ),
+                  TextSpan(
+                      text: qntCtrl.text,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                          fontSize: 18)),
+                  TextSpan(
+                    text: ' itens',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 16),
+                  ),
                 ],
               ),
             ),
@@ -303,13 +348,21 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                   },
                 ),
                 Spacer(),
-                ConstsWidget.buildCustomButton(
+                ConstsWidget.buildLoadingButton(
                   context,
-                  'Continuar',
+                  title: '    Continuar    ',
+                  isLoading: _isLoading,
                   onPressed: () {
+                    setState(() {
+                      _isLoading == true;
+                    });
                     ConstsFuture.launchGetApi(context,
-                            'correspondencias/?fn=incluirCorrespondenciasMulti&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idUnidade == null ? idApto : widget.idUnidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataNow&tipo=4&remetente=${DropSearchRemet.tituloRemente}&nome_entregador=${nomeEntregador.text}&doc_entregador=${docEntregador.text}')
+                            'correspondencias/?fn=incluirCorrespondenciasMulti&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idUnidade == null ? idApto : widget.idUnidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataNow&tipo=4&remetente=${DropSearchRemet.tituloRemente}&descricao=${DropSearchRemet.textoRemente}&nome_entregador=${nomeEntregador.text}&doc_entregador=${docEntregador.text}&qtd=${qntCtrl.text}')
                         .then((value) {
+                      setState(() {
+                        _isLoading = false;
+                        _apConfirmado = true;
+                      });
                       if (!value['erro']) {
                         listIdCorresp.add(value['correspondencias'][0]
                             ['ultima_correspondencia']);
@@ -321,13 +374,11 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                               itemsMulti.add(MultiItem(nomeApto, qntCtrl.text));
                               totalQnt = totalQnt + int.parse(qntCtrl.text);
                               qntCtrl.clear();
-                              dropRemetente == null;
                             });
                             Navigator.pop(context);
                           }
                         }
                       } else {
-                        Navigator.pop(context);
                         buildMinhaSnackBar(context,
                             subTitle: value['mensagem']);
                       }
@@ -514,18 +565,24 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                             'Gravar e Adicionar Entrega',
                             icon: Icons.add,
                             onPressed: () {
-                              var remetenteValid =
+                              FocusManager.instance.primaryFocus?.unfocus();
+
+                              var itemsValid =
                                   itemsInfos.currentState?.validate() ?? false;
                               var entregadorValid =
                                   entregadorInfos.currentState?.validate() ??
                                       false;
-                              if (remetenteValid &&
+                              if (itemsValid &&
                                   entregadorValid &&
-                                  nomeApto != '' &&
+                                  selectedItemAP == nomeApto &&
+                                  !_apConfirmado &&
                                   DropSearchRemet.tituloRemente != '') {
                                 alertConfirmaCorresp(dataNow);
-                              } else if (nomeApto == '' ||
-                                  DropSearchRemet.tituloRemente == '') {
+                              } else
+                              /* if (nomeApto == '' ||
+                                  DropSearchRemet.tituloRemente == '' ||
+                                  selectedItemAP == 'Selecione uma unidade')*/
+                              {
                                 buildMinhaSnackBar(context,
                                     title: 'Cuidado!',
                                     subTitle:
@@ -544,15 +601,14 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                     context,
                     'Emitir Recibo',
                     onPressed: () async {
-                      var entregadorValid =
-                          entregadorInfos.currentState?.validate() ?? false;
-                      var itemsValid =
-                          itemsInfos.currentState?.validate() ?? false;
-                      if ((widget.idUnidade != null && itemsValid) ||
-                          entregadorValid ||
-                          (widget.idUnidade != null || itemsMulti.isNotEmpty)) {
-                        if (qntCtrl.text.isEmpty) {
-                          if (widget.idUnidade != null) {
+                      if (widget.idUnidade != null) {
+                        var entregadorValid =
+                            entregadorInfos.currentState?.validate() ?? false;
+                        var itemsValid =
+                            itemsInfos.currentState?.validate() ?? false;
+
+                        if (itemsValid && entregadorValid) {
+                          if (qntCtrl.text.isNotEmpty) {
                             setState(() {
                               itemsMulti.add(
                                   MultiItem(widget.localizado!, qntCtrl.text));
@@ -561,17 +617,23 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                               alertConfirmaCorresp(dataNow);
                             });
                           } else {
-                            alertRecibo();
+                            return buildMinhaSnackBar(context,
+                                title: 'Cuidado',
+                                subTitle: 'Termine de adicionar');
                           }
+                        } else {
+                          return buildMinhaSnackBar(context,
+                              title: 'Cuidado',
+                              subTitle: 'Adicione pelo menos um item');
+                        }
+                      } else {
+                        if (listIdCorresp.isNotEmpty) {
+                          alertRecibo();
                         } else {
                           return buildMinhaSnackBar(context,
                               title: 'Cuidado',
                               subTitle: 'Termine de adicionar');
                         }
-                      } else {
-                        return buildMinhaSnackBar(context,
-                            title: 'Cuidado',
-                            subTitle: 'Adicione pelo menos um item');
                       }
                     },
                     icon: Icons.edit_document,

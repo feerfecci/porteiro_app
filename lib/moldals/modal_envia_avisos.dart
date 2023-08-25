@@ -191,13 +191,13 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
                         respostaTipo = 8;
                       }
                       ConstsFuture.launchGetApi(context,
-                              'msgsprontas/index.php?fn=enviarMensagem&idcond=${FuncionarioInfos.idcondominio}&idmsg=$dropdownValue&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&nome_visitante=${widget.idVisita == null ? nomeVisitante : widget.nomeCadastrado}&tipo=$respostaTipo')
+                              'msgsprontas/index.php?fn=enviarMensagem&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&idmsg=$dropdownValue&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&nome_visitante=${widget.idVisita == null ? nomeVisitante : widget.nomeCadastrado}&tipo=$respostaTipo')
                           .then((value) {
                         if (!value['erro']) {
                           Navigator.pop(context);
                           if (widget.idVisita != null) {
                             ConstsFuture.launchGetApi(context,
-                                'lista_visitantes/?fn=compareceuVisitante&idcond=${FuncionarioInfos.idcondominio}&idvisita=${widget.idVisita}');
+                                'lista_visitantes/?fn=compareceuVisitante&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&idvisita=${widget.idVisita}');
                           }
                           return buildMinhaSnackBar(context,
                               title: 'Aviso Enviado',

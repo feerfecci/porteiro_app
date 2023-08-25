@@ -17,6 +17,7 @@ import '../screens/correspondencias/multi_corresp/encomendas_screen.dart';
 class DropSearchRemet extends StatefulWidget {
   static int? idRemet;
   static String? tituloRemente;
+  static String? textoRemente;
   int? tipoAviso;
   // tipoAviso 3 = carta; 4 = encomenda
   DropSearchRemet({required this.tipoAviso, super.key});
@@ -91,16 +92,21 @@ class DropSearchRemetState extends State<DropSearchRemet> {
         ),
         onChanged: (value) {
           itemsModelRemet.map((e) {
-            if (e.tituloRemente == value) {
+            if ('${e.tituloRemente} - ${e.textoRemente}' == value) {
+              print('Trocou');
               setState(() {
                 DropSearchRemet.idRemet = e.idRemente;
+                print('id ${DropSearchRemet.idRemet}');
                 DropSearchRemet.tituloRemente = e.tituloRemente;
+                print('titulo ${DropSearchRemet.tituloRemente}');
+                DropSearchRemet.textoRemente = e.textoRemente;
+                print('texto ${DropSearchRemet.textoRemente}');
               });
             }
-          }).toString();
+          }).toSet();
         },
         items: itemsModelRemet.map((ModelRemet e) {
-          return e.tituloRemente;
+          return '${e.tituloRemente} - ${e.textoRemente}';
         }).toList(),
       ),
     );

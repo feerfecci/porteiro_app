@@ -186,6 +186,7 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                               .toString();
                           var tipo = apiCorresp['tipo'];
                           var remetente = apiCorresp['remetente'];
+                          var quantidade = apiCorresp['quantidade'];
                           var descricao = apiCorresp['descricao'];
                           var protocolo = apiCorresp['protocolo'];
                           protocolo_entrega = protocolo_entrega =
@@ -217,9 +218,28 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                                           ),
                                           ConstsWidget.buildSubTitleText(
                                               context,
-                                              fontSize: 16,
+                                              fontSize: 18,
                                               subTitle:
                                                   '$descricao - $data_recebimento'),
+                                          SizedBox(
+                                            height: size.height * 0.01,
+                                          ),
+                                          if (quantidade != '1')
+                                            Row(
+                                              children: [
+                                                ConstsWidget.buildSubTitleText(
+                                                    context,
+                                                    fontSize: 16,
+                                                    subTitle: 'Quantidade - '),
+                                                SizedBox(
+                                                  height: size.height * 0.01,
+                                                ),
+                                                ConstsWidget.buildTitleText(
+                                                    context,
+                                                    title: quantidade,
+                                                    fontSize: 18),
+                                              ],
+                                            )
                                         ],
                                       ),
                                     ),

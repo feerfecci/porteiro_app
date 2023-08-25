@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalInfos {
@@ -20,5 +21,17 @@ class LocalInfos {
 
     preferences.remove('user');
     preferences.remove('senha');
+  }
+
+  static Future setLoginDate() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString(
+        'dateLogin', DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()));
+  }
+
+  static Future getLoginDate() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? dateLogin = preferences.getString('dateLogin');
+    return dateLogin;
   }
 }

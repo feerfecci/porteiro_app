@@ -84,8 +84,8 @@ class ConstsFuture {
           FuncionarioInfos.avisa_visita = loginInfos['avisa_visita'];
           FuncionarioInfos.avisa_delivery = loginInfos['avisa_delivery'];
           FuncionarioInfos.avisa_encomendas = loginInfos['avisa_encomendas'];
+          FuncionarioInfos.envia_avisos = loginInfos['envia_avisos'];
           // Navigator.pop(context);
-
           apiTotalResarvaHoje(context).then((value) =>
               ConstsFuture.navigatorPushRemoveUntil(context, HomePage()));
         } else {

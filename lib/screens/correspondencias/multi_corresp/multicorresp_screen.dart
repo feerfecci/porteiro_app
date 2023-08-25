@@ -23,11 +23,11 @@ import '../../../consts/consts_future.dart';
 import 'analisaErroScreen.dart';
 import 'encomendas_screen.dart';
 
-class MultiCorresp extends StatefulWidget {
-  const MultiCorresp({super.key});
+class MultiCartas extends StatefulWidget {
+  const MultiCartas({super.key});
 
   @override
-  State<MultiCorresp> createState() => _MultiCorrespState();
+  State<MultiCartas> createState() => _MultiCartasState();
 }
 
 bool isLoading = false;
@@ -35,7 +35,7 @@ bool isLoading = false;
 Map<String, dynamic> hasError = {};
 bool? isErro;
 
-class _MultiCorrespState extends State<MultiCorresp> {
+class _MultiCartasState extends State<MultiCartas> {
   final dropDownKey = GlobalKey<DropdownSearchState>();
   List<ModelApto> itemsModelApto = <ModelApto>[];
   List<int> listarUniApi = <int>[];
@@ -71,6 +71,7 @@ class _MultiCorrespState extends State<MultiCorresp> {
       hasError.clear();
       isLoading = false;
       DropSearchRemet.tituloRemente == null;
+      DropSearchRemet.textoRemente == null;
     });
   }
 
@@ -108,19 +109,19 @@ class _MultiCorrespState extends State<MultiCorresp> {
                   children: [
                     DropSearchRemet(tipoAviso: 3),
                     RichText(
+                      textAlign: TextAlign.center,
                       text: TextSpan(
                         text: 'Aqui você avisará ',
                         style: buildTextStyle(),
                         children: [
                           TextSpan(
-                            text: 'todas as unidade',
+                            text: 'todas as unidades',
                             style: buildTextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: SplashScreen.isSmall ? 18 : 20),
                           ),
                           TextSpan(
-                              text:
-                                  ', exceto quais selecionar na etapa seguinte',
+                              text: ', exceto quais selecionar abaixo',
                               style: buildTextStyle()),
                         ],
                       ),
@@ -265,8 +266,9 @@ class _MultiCorrespState extends State<MultiCorresp> {
                               isLoading = true;
                             });
                             enviarNotifc().then((valueList) async {
+                              // $qtdCartas
                               ConstsFuture.launchGetApi(context,
-                                      'correspondencias/?fn=incluirCorrespondenciasMultiLista&idcond=${FuncionarioInfos.idcondominio}&listaunidades=${valueList.join(',')}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$now&tipo=3&remetente=${DropSearchRemet.tituloRemente}&descricao=Envelope')
+                                      'correspondencias/?fn=incluirCorrespondenciasMultiLista&idcond=${FuncionarioInfos.idcondominio}&listaunidades=${valueList.join(',')}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$now&tipo=3&remetente=${DropSearchRemet.tituloRemente}&descricao=${DropSearchRemet.textoRemente}')
                                   .then((value) {
                                 setState(() {
                                   isLoading = false;

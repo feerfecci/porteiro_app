@@ -1,4 +1,5 @@
 import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
+import 'package:badges/badges.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import '../widgets/page_vazia.dart';
 import '../widgets/shimmer_widget.dart';
 import 'consts.dart';
 import 'consts_future.dart';
+import 'package:badges/badges.dart' as badges;
 
 class ConstsWidget {
   static Widget buildPadding001(BuildContext context,
@@ -31,18 +33,23 @@ class ConstsWidget {
     Color? color,
     double fontSize = 16,
     TextAlign? textAlign,
+    double? sizedWidth,
     required String title,
     int? maxLines,
   }) {
-    return Text(
-      title,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: SplashScreen.isSmall ? (fontSize - 3) : fontSize,
-          color: color ?? Theme.of(context).colorScheme.primary),
+    var size = MediaQuery.of(context).size;
+    return SizedBox(
+      width: sizedWidth == null ? null : size.width * sizedWidth,
+      child: Text(
+        title,
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: SplashScreen.isSmall ? (fontSize - 3) : fontSize,
+            color: color ?? Theme.of(context).colorScheme.primary),
+      ),
     );
   }
 
@@ -101,11 +108,13 @@ class ConstsWidget {
   }
 
   static Widget buildMyTextFormObrigatorio(BuildContext context, String title,
-      {String mensagem = 'Este campo é obrigatótio',
+      {String mensagem = 'Obrigatório',
       List<TextInputFormatter>? inputFormatters,
       String? hintText,
       String? initialValue,
       String? Function(String?)? validator,
+      TextEditingController? controller,
+      TextInputType? keyboardType,
       bool obscureText = false,
       final void Function(String? text)? onSaved}) {
     var size = MediaQuery.of(context).size;
@@ -114,10 +123,12 @@ class ConstsWidget {
       child: TextFormField(
         style: TextStyle(color: Theme.of(context).colorScheme.primary),
         initialValue: initialValue,
+        controller: controller,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         textAlign: TextAlign.start,
         obscureText: obscureText,
         textInputAction: TextInputAction.next,
+        keyboardType: keyboardType,
         onSaved: onSaved,
         inputFormatters: inputFormatters,
         validator: validator ??
@@ -445,5 +456,25 @@ class ConstsWidget {
             return Image.asset('assets/ico-error.png');
           }
         });
+  }
+
+  static Widget buildBadge(BuildContext context,
+      {String title = '',
+      required bool showBadge,
+      required Widget? child,
+      BadgePosition? position}) {
+    return badges.Badge(
+        showBadge: showBadge,
+        badgeAnimation: badges.BadgeAnimation.fade(toAnimate: false),
+        badgeContent: Text(
+          title,
+          style: TextStyle(
+              color: Theme.of(context).cardColor, fontWeight: FontWeight.bold),
+        ),
+        position: position,
+        badgeStyle: badges.BadgeStyle(
+          badgeColor: Consts.kColorRed,
+        ),
+        child: child);
   }
 }

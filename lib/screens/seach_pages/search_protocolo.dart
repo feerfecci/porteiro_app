@@ -17,7 +17,7 @@ class SearchProtocolos extends SearchDelegate<String> {
   // final int? idunidade;
   // final int? tipoAviso;
   SearchProtocolos(/*{required this.idunidade, required this.tipoAviso}*/);
-
+  String? protocoloRetirada = '';
   @override
   String get searchFieldLabel => "Digite o Protocolo";
 
@@ -108,7 +108,7 @@ class SearchProtocolos extends SearchDelegate<String> {
                             var tipo = infoRetirada['tipo'];
                             var remetente = infoRetirada['remetente'];
                             var descricao = infoRetirada['descricao'];
-                            var protocolo = infoRetirada['protocolo'];
+                            protocoloRetirada = infoRetirada['protocolo'];
                             var data_recebimento = DateFormat('dd/MM/yyyy')
                                 .format(DateTime.parse(
                                     infoRetirada['data_recebimento']));
@@ -207,6 +207,7 @@ class SearchProtocolos extends SearchDelegate<String> {
                                 context,
                                 idunidade: idunidade,
                                 listEntregar: listEntregar.toString(),
+                                protocoloRetirada: protocoloRetirada,
                                 tipoCompara: 'codigo',
                               );
                               listEntregar.clear();
@@ -233,7 +234,7 @@ class SearchProtocolos extends SearchDelegate<String> {
 
   Future<dynamic> sugestoesUnidades() async {
     var url = Uri.parse(
-        '${Consts.apiPortaria}correspondencias/?fn=listarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&statusentrega=0&protocolo=$query');
+        '${Consts.apiPortaria}correspondencias/?fn=listarCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&statusentrega=0&protocolo=$query');
     var resposta = await http.get(url);
     if (resposta.statusCode == 200) {
       return json.decode(resposta.body);

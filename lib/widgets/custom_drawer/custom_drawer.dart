@@ -2,7 +2,10 @@ import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/repositories/shared_preferences.dart';
 import 'package:app_porteiro/screens/login/login_screen.dart';
+import 'package:app_porteiro/screens/politica/politica_screen.dart';
+import 'package:app_porteiro/screens/termodeuso/termo_de_uso.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../consts/consts.dart';
 import '../../screens/splash/splash_screen.dart';
@@ -24,19 +27,19 @@ class _CustomDrawerState extends State<CustomDrawer> {
         {required String title,
         required IconData leading,
         void Function()? onPressed}) {
-      return ConstsWidget.buildPadding001(
-        context,
-        child: ListTile(
-          iconColor: Theme.of(context).iconTheme.color,
-          leading: Icon(
-            leading,
-            size: SplashScreen.isSmall ? 20 : 25,
-          ),
-          title:
-              ConstsWidget.buildTitleText(context, title: title, fontSize: 14),
-          trailing: IconButton(
-            onPressed: onPressed,
-            icon: Icon(
+      return GestureDetector(
+        onTap: onPressed,
+        child: ConstsWidget.buildPadding001(
+          context,
+          child: ListTile(
+            iconColor: Theme.of(context).iconTheme.color,
+            leading: Icon(
+              leading,
+              size: SplashScreen.isSmall ? 20 : 25,
+            ),
+            title: ConstsWidget.buildTitleText(context,
+                title: title, fontSize: 14),
+            trailing: Icon(
               size: 25,
               color: Theme.of(context).iconTheme.color,
               Icons.keyboard_arrow_right_outlined,
@@ -100,18 +103,44 @@ class _CustomDrawerState extends State<CustomDrawer> {
               buidListTile(
                 title: 'Seja um Representante',
                 leading: Icons.business_center_outlined,
+                onPressed: () => launchUrl(
+                    Uri.parse(
+                        'https://www.portariaapp.com/seja-um-representante'),
+                    mode: LaunchMode.externalNonBrowserApplication),
               ),
               buidListTile(
                 title: 'Política de privacidade',
+                onPressed: () =>
+                    ConstsFuture.navigatorPush(context, PoliticaScreen()),
                 leading: Icons.privacy_tip_outlined,
+              ),
+              buidListTile(
+                title: 'Termos de uso',
+                leading: Icons.supervised_user_circle,
+                onPressed: () =>
+                    ConstsFuture.navigatorPush(context, TermoDeUsoScreen()),
               ),
               buidListTile(
                 title: 'Central de Ajuda',
                 leading: Icons.support,
+                onPressed: () => launchUrl(
+                    Uri.parse('https://www.portariaapp.com/central-de-ajuda'),
+                    mode: LaunchMode.externalNonBrowserApplication),
               ),
               buidListTile(
                 title: 'Indicar para amigos',
                 leading: Icons.add_reaction_outlined,
+                onPressed: () => launchUrl(
+                    Uri.parse('https://www.portariaapp.com/central-de-ajuda'),
+                    mode: LaunchMode.externalNonBrowserApplication),
+              ),
+              buidListTile(
+                title: 'Efetuar logoff',
+                leading: Icons.logout_outlined,
+                onPressed: () {
+                  LocalInfos.removeCache();
+                  ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
+                },
               ),
               ChangeThemeButton(),
               Spacer(),
@@ -119,12 +148,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 padding: EdgeInsets.all(size.height * 0.01),
                 child: ConstsWidget.buildCustomButton(
                   context,
-                  'Sair',
+                  'Fechar Menu',
                   color: Color.fromARGB(255, 251, 80, 93),
                   onPressed: () {
-                    LocalInfos.removeCache();
-                    ConstsFuture.navigatorPushRemoveUntil(
-                        context, LoginScreen());
+                    Navigator.pop(context);
                   },
                 ),
               ),

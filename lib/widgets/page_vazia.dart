@@ -17,7 +17,8 @@ class _PageVaziaState extends State<PageVazia> {
       child: Wrap(
         alignment: WrapAlignment.center,
         children: [
-          Image.asset('assets/vazio.png'),
+          ConstsWidget.buildFutureImage(context,
+              iconApi: 'https://a.portariaapp.com/img/ico-nao-encontrado.png'),
           SizedBox(
             height: size.height * 0.01,
           ),

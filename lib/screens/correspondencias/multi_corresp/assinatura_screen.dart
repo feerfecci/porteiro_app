@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
 import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
@@ -33,7 +34,7 @@ class AssinaturaScreen extends StatefulWidget {
   State<AssinaturaScreen> createState() => _AssinaturaScreenState();
 }
 
-bool isLoading = false;
+bool _isLoading = false;
 
 class _AssinaturaScreenState extends State<AssinaturaScreen> {
   SignatureController controllerAssinatura = SignatureController(
@@ -78,21 +79,19 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
                     setState(() {
                       controllerAssinatura.clear();
                     });
-                    SystemChrome.setPreferredOrientations(
-                        [DeviceOrientation.portraitUp]);
                   },
                 ),
                 ConstsWidget.buildLoadingButton(
                   context,
                   title: 'Salvar',
-                  isLoading: isLoading,
+                  isLoading: _isLoading,
                   color: Consts.kColorRed,
                   onPressed: () async {
                     if (controllerAssinatura.isNotEmpty) {
                       signature = await exportController();
                       setState(() {
                         signature;
-                        isLoading == true;
+                        _isLoading == true;
                       });
                       final tempDir = await getTemporaryDirectory();
 
@@ -105,9 +104,10 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
                               pathImage: fileToBeUploaded.path)
                           .then((value) {
                         setState(() {
-                          isLoading == false;
+                          _isLoading == false;
                         });
                         if (!value['erro']) {
+                          setOrientation(Orientation.portrait);
                           ConstsFuture.navigatorPushRemoveUntil(
                               context, HomePage());
                           buildMinhaSnackBar(context,

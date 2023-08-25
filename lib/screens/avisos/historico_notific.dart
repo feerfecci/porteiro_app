@@ -27,7 +27,7 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
       onRefresh: () async {
         setState(() {
           ConstsFuture.launchGetApi(context,
-              'msgsprontas/index.php?fn=historicoAvisos&idcond=${FuncionarioInfos.idcondominio}&resposta=$filtrar');
+              'msgsprontas/index.php?fn=historicoAvisos&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&resposta=$filtrar');
         });
       },
       child: ScaffoldAll(
@@ -69,7 +69,7 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
               ),
               FutureBuilder<dynamic>(
                   future: ConstsFuture.launchGetApi(context,
-                      'msgsprontas/index.php?fn=historicoAvisos&idcond=${FuncionarioInfos.idcondominio}&resposta=$filtrar'),
+                      'msgsprontas/index.php?fn=historicoAvisos&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&resposta=$filtrar'),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return MyBoxShadow(

@@ -15,7 +15,7 @@ class SearchVeiculo extends SearchDelegate<String> {
   String get searchFieldLabel => 'ex: ABC0123, ABC0A123';
   Future sugestoesVeiculos() async {
     var url = Uri.parse(
-        '${Consts.apiPortaria}veiculos/index.php?fn=listarVeiculos&idcond&idcond=${FuncionarioInfos.idcondominio}&palavra=$query');
+        '${Consts.apiPortaria}veiculos/index.php?fn=listarVeiculos&idcond&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&palavra=$query');
     var resposta = await http.get(url);
     if (resposta.statusCode == 200) {
       return json.decode(resposta.body);

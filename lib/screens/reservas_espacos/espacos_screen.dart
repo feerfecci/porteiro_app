@@ -35,7 +35,7 @@ class _EspacosScreenState extends State<EspacosScreen> {
           title: 'Espaços Reservados',
           body: FutureBuilder<dynamic>(
               future: ConstsFuture.launchGetApi(context,
-                  'reserva_espacos/?fn=listarReservas&idcond=${FuncionarioInfos.idcondominio}&ativo=1'),
+                  'reserva_espacos/?fn=listarReservas&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&ativo=1'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return ListView.builder(
