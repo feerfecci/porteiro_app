@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
+import '../screens/termodeuso/aceitar_alert.dart';
 import '../screens/home/home_page.dart';
+import '../screens/quadro_avisos/quadro_avisos.dart';
 import '../widgets/my_box_shadow.dart';
 import '../widgets/page_erro.dart';
 import '../widgets/page_vazia.dart';
@@ -41,7 +43,7 @@ class ConstsFuture {
         MaterialPageRoute(
           builder: (context) => pageRoute,
         ),
-        (route) => false);
+        (route) => true);
   }
 
   static navigatorPush(BuildContext context, Widget pageRoute) {
@@ -84,10 +86,20 @@ class ConstsFuture {
           FuncionarioInfos.avisa_visita = loginInfos['avisa_visita'];
           FuncionarioInfos.avisa_delivery = loginInfos['avisa_delivery'];
           FuncionarioInfos.avisa_encomendas = loginInfos['avisa_encomendas'];
+          FuncionarioInfos.aceitou_termos = loginInfos['aceitou_termos'];
           FuncionarioInfos.envia_avisos = loginInfos['envia_avisos'];
           // Navigator.pop(context);
-          apiTotalResarvaHoje(context).then((value) =>
-              ConstsFuture.navigatorPushRemoveUntil(context, HomePage()));
+          apiTotalResarvaHoje(context)
+              .then((value) => apiQuadroAvisos().whenComplete(() {
+                    if (!FuncionarioInfos.aceitou_termos) {
+                      showDialogAceitar(
+                        context,
+                      );
+                    } else {
+                      ConstsFuture.navigatorPushRemoveUntil(
+                          context, HomePage());
+                    }
+                  }));
         } else {
           ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
           return buildMinhaSnackBar(

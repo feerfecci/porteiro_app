@@ -11,7 +11,7 @@ import '../../widgets/page_erro.dart';
 
 class SearchUnidades extends SearchDelegate<String> {
   @override
-  String get searchFieldLabel => 'ex: Bloco 2, AP23, João Silva';
+  String get searchFieldLabel => 'ex: AP23, Sala 12, João Silva';
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -44,7 +44,8 @@ class SearchUnidades extends SearchDelegate<String> {
 
     if (query.isEmpty) {
       return buildNoQuerySearch(context,
-          mesagem: 'Procure um apartamento ou nome');
+          mesagem:
+              'Procure por: \n • Número da Unidade \n • Nome Completo ou Parcial  \n\n Em seguida poderá:\n • Cadastrar Cartas e Caixas\n • Anunciar Visitas e Delivery');
     } else {
       return FutureBuilder<dynamic>(
         future: sugestoesUnidades(),

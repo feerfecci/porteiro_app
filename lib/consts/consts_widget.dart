@@ -115,6 +115,7 @@ class ConstsWidget {
       String? Function(String?)? validator,
       TextEditingController? controller,
       TextInputType? keyboardType,
+      bool center = false,
       bool obscureText = false,
       final void Function(String? text)? onSaved}) {
     var size = MediaQuery.of(context).size;
@@ -138,7 +139,10 @@ class ConstsWidget {
               horizontal: size.width * 0.045, vertical: size.height * 0.025),
           filled: true,
           fillColor: Theme.of(context).canvasColor,
-          label: Text(title),
+          label: Text(
+            title,
+            textAlign: center ? null : TextAlign.center,
+          ),
           hintText: hintText,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -444,14 +448,18 @@ class ConstsWidget {
                     ? size.width * 0.14
                     : size.width * 0.15);
           } else if (snapshot.hasData) {
-            return SizedBox(
-              width: width != null ? size.width * width : null,
-              height: height != null ? size.height * height : null,
-              child: Image.network(
-                iconApi,
-                fit: BoxFit.fill,
-              ),
-            );
+            try {
+              return SizedBox(
+                width: width != null ? size.width * width : null,
+                height: height != null ? size.height * height : null,
+                child: Image.network(
+                  iconApi,
+                  fit: BoxFit.fill,
+                ),
+              );
+            } catch (e) {
+              return Image.asset('assets/ico-error.png');
+            }
           } else {
             return Image.asset('assets/ico-error.png');
           }

@@ -12,7 +12,7 @@ showAllDialog(BuildContext context,
         ),
         insetPadding: EdgeInsets.symmetric(
             horizontal: size.width * 0.05, vertical: size.height * 0.05),
-        title: title,
+        title: Center(child: title),
         content: SizedBox(
           width: size.width * 0.9,
           child: Column(

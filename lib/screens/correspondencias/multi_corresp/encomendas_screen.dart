@@ -335,23 +335,20 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
               height: size.height * 0.02,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Spacer(
-                  flex: 2,
-                ),
                 ConstsWidget.buildOutlinedButton(
                   context,
-                  title: 'Cancelar',
+                  title: '    Cancelar    ',
                   onPressed: () {
                     Navigator.pop(context);
                   },
                 ),
-                Spacer(),
                 ConstsWidget.buildLoadingButton(
                   context,
-                  title: '    Continuar    ',
+                  title: '          Continuar          ',
                   isLoading: _isLoading,
+                  color: Consts.kColorRed,
                   onPressed: () {
                     setState(() {
                       _isLoading == true;
@@ -384,7 +381,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                       }
                     });
                   },
-                )
+                ),
               ],
             )
           ]);
@@ -551,12 +548,9 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                       SizedBox(
                         height: size.height * 0.01,
                       ),
-                      SizedBox(
-                          width: size.width * 0.4,
-                          child: buildMyTextFormObrigatorio(
-                              context, 'Quantidade',
-                              keyboardType: TextInputType.number,
-                              controller: qntCtrl)),
+                      buildMyTextFormObrigatorio(context, 'Quantidade',
+                          keyboardType: TextInputType.number,
+                          controller: qntCtrl),
                       if (widget.idUnidade == null)
                         ConstsWidget.buildPadding001(
                           context,

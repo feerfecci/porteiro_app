@@ -17,6 +17,7 @@ class FuncionarioInfos {
   static bool avisa_delivery = false;
   static bool avisa_encomendas = false;
   static bool envia_avisos = false;
+  static bool aceitou_termos = false;
 }
 
 class Consts {

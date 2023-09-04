@@ -60,25 +60,15 @@ class SearchProtocolos extends SearchDelegate<String> {
     var size = MediaQuery.of(context).size;
     bool isChecked = false;
     if (query.isEmpty) {
-      buildNoQuerySearch(context, mesagem: 'Procure um apartamento ou nome');
-    }
-    return StatefulBuilder(builder: (context, setState) {
-      bool isLoadingCodigo = false;
-      return Scaffold(
-        body: FutureBuilder<dynamic>(
-            future: sugestoesUnidades(),
-            builder: (context, snapshot) {
-              if (query.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: ConstsWidget.buildTitleText(
-                      context,
-                      title: 'Aqui mostrará um item',
-                    ),
-                  ),
-                );
-              } else {
+      return buildNoQuerySearch(context,
+          mesagem: 'Procure por um código de retirada');
+    } else {
+      return StatefulBuilder(builder: (context, setState) {
+        bool isLoadingCodigo = false;
+        return Scaffold(
+          body: FutureBuilder<dynamic>(
+              future: sugestoesUnidades(),
+              builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasData) {
@@ -226,10 +216,10 @@ class SearchProtocolos extends SearchDelegate<String> {
                 } else {
                   return PageErro();
                 }
-              }
-            }),
-      );
-    });
+              }),
+        );
+      });
+    }
   }
 
   Future<dynamic> sugestoesUnidades() async {

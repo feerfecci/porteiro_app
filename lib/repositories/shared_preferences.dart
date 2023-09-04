@@ -26,7 +26,7 @@ class LocalInfos {
   static Future setLoginDate() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(
-        'dateLogin', DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()));
+        'dateLogin', DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()));
   }
 
   static Future getLoginDate() async {

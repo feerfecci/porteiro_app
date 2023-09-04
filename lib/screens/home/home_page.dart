@@ -16,6 +16,7 @@ import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/page_erro.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
+import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -42,13 +43,15 @@ class _HomePageState extends State<HomePage> {
   DateTime timeBackPressed = DateTime.now();
   Future oneSignalNotification() async {
     OneSignal.shared.setAppId("5993cb79-853a-412e-94a1-f995c9797692");
-    // OneSignal.shared.promptUserForPushNotificationPermission().then((value) {
-    //   // OneSignal.shared.setExternalUserId('34');
-    // });
-    OneSignal.shared.sendTags({
-      'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
-      'idcond': FuncionarioInfos.idcondominio.toString(),
-      'idfuncao': FuncionarioInfos.idfuncao.toString(),
+    OneSignal.shared.promptUserForPushNotificationPermission().then((value) {
+      // OneSignal.shared.setExternalUserId('34');
+      if (value) {
+        OneSignal.shared.sendTags({
+          'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
+          'idcond': FuncionarioInfos.idcondominio.toString(),
+          'idfuncao': FuncionarioInfos.idfuncao.toString(),
+        });
+      }
     });
   }
 
@@ -56,7 +59,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     oneSignalNotification();
-    apiQuadroAvisos();
   }
 
   @override
@@ -104,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return MyBoxShadow(
                         child: Column(
-                      children: [],
+                      children: [ShimmerWidget(height: 40)],
                     ));
                   } else if (snapshot.hasData) {
                     if (!snapshot.data['erro']) {
@@ -392,7 +394,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   buildCard(
-                    title: 'Visitante',
+                    title: 'Visitas Cadastradas',
                     iconApi: '${Consts.iconApiPort}visitas.png',
                     onTap: () {
                       showSearch(context: context, delegate: SearchVisitante());
@@ -400,110 +402,109 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(
-                      width: size.width * 0.5,
-                      child: ConstsWidget.buildPadding001(
-                        context,
-                        vertical: 0,
-                        horizontal: 0.01,
-                        child: GestureDetector(
-                          onTap: () => showSearch(
-                              context: context, delegate: SearchProtocolos()),
-                          child: ConstsWidget.buildPadding001(
-                            context,
-                            horizontal: 0.01,
-                            child: Container(
-                              height: size.height * 0.085,
-                              width: double.maxFinite,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).cardColor,
-                                  border: Border.all(
-                                      color: Color.fromARGB(255, 39, 211, 104),
-                                      width: size.width * 0.007),
-                                  borderRadius: BorderRadius.circular(16)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Spacer(flex: 3),
-                                  ConstsWidget.buildTitleText(context,
-                                      title: 'Protocolos',
-                                      textAlign: TextAlign.center),
-                                  Spacer(),
-                                  Container(
-                                    height: size.height * 0.3,
-                                    width: size.width * 0.1,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color.fromARGB(255, 39, 211, 104),
-                                    ),
-                                    child: Icon(
-                                      Icons.search,
-                                      color: Colors.white,
-                                      fill: 1,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                ],
+                ConstsWidget.buildPadding001(
+                  context,
+                  vertical: 0,
+                  horizontal: 0.01,
+                  child: GestureDetector(
+                    onTap: () => showSearch(
+                        context: context, delegate: SearchProtocolos()),
+                    child: ConstsWidget.buildPadding001(
+                      context,
+                      horizontal: 0.01,
+                      child: Container(
+                        height: size.height * 0.085,
+                        width: double.maxFinite,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            border: Border.all(
+                                color: Color.fromARGB(255, 39, 211, 104),
+                                width: size.width * 0.007),
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Spacer(flex: 3),
+                            ConstsWidget.buildTitleText(context,
+                                title: 'Pesquisar Protocolos',
+                                textAlign: TextAlign.center),
+                            Spacer(
+                              flex: 2,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.04),
+                              child: Container(
+                                height: size.height * 0.3,
+                                width: size.width * 0.1,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color.fromARGB(255, 39, 211, 104),
+                                ),
+                                child: Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                  fill: 1,
+                                ),
                               ),
                             ),
-                          ),
+                            // Spacer(),
+                          ],
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: size.width * 0.5,
-                      child: ConstsWidget.buildPadding001(
-                        context,
-                        vertical: 0,
-                        horizontal: 0.01,
-                        child: GestureDetector(
-                          onTap: () => showSearch(
-                              context: context, delegate: SearchUnidades()),
-                          child: ConstsWidget.buildPadding001(
-                            context,
-                            horizontal: 0.01,
-                            child: Container(
-                              height: size.height * 0.085,
-                              width: double.maxFinite,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).cardColor,
-                                  border: Border.all(
-                                      color: Consts.kColorRed,
-                                      width: size.width * 0.007),
-                                  borderRadius: BorderRadius.circular(16)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Spacer(flex: 3),
-                                  ConstsWidget.buildTitleText(context,
-                                      title: 'Unidades',
-                                      textAlign: TextAlign.center),
-                                  Spacer(),
-                                  Container(
-                                    height: size.height * 0.3,
-                                    width: size.width * 0.1,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Consts.kColorRed,
-                                    ),
-                                    child: Icon(
-                                      Icons.search,
-                                      color: Colors.white,
-                                      fill: 1,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                ],
+                  ),
+                ),
+                ConstsWidget.buildPadding001(
+                  context,
+                  vertical: 0,
+                  horizontal: 0.01,
+                  child: GestureDetector(
+                    onTap: () => showSearch(
+                        context: context, delegate: SearchUnidades()),
+                    child: ConstsWidget.buildPadding001(
+                      context,
+                      horizontal: 0.01,
+                      child: Container(
+                        height: size.height * 0.085,
+                        width: double.maxFinite,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            border: Border.all(
+                                color: Consts.kColorRed,
+                                width: size.width * 0.007),
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Spacer(flex: 3),
+                            ConstsWidget.buildTitleText(context,
+                                title: 'Localizar e Avisar a Unidade ',
+                                textAlign: TextAlign.center),
+                            Spacer(),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.04),
+                              child: Container(
+                                height: size.height * 0.3,
+                                width: size.width * 0.1,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Consts.kColorRed,
+                                ),
+                                child: Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                  fill: 1,
+                                ),
                               ),
                             ),
-                          ),
+                            // Spacer(),
+                          ],
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
                 buildGridViewer(
                   children: [
@@ -525,7 +526,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         isSearchVeiculo: true),
                     buildCard(
-                      title: 'Adicionar Itens',
+                      title: 'Avisar em Massa',
                       iconApi: '${Consts.iconApiPort}multi.png',
                       avisa: FuncionarioInfos.avisa_corresp,
                       onTap: () {

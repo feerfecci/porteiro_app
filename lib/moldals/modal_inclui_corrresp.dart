@@ -241,12 +241,8 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
                 ),
               ),
               Spacer(),
-              SizedBox(
-                width: size.width * 0.35,
-                child: ConstsWidget.buildMyTextFormObrigatorio(
-                    context, 'Quantidade',
-                    controller: qtdCartas, keyboardType: TextInputType.number),
-              )
+              ConstsWidget.buildMyTextFormObrigatorio(context, 'Quantidade',
+                  controller: qtdCartas, keyboardType: TextInputType.number)
             ],
           ),
           SizedBox(

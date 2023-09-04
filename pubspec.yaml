@@ -33,14 +33,15 @@ dependencies:
   image_gallery_saver: ^2.0.3
   path_provider: ^2.1.0
   flutter_html: ^3.0.0-alpha.3
+  flutter_local_notifications: ^15.1.1
 
 flutter_icons:  
   
-  image_path: "assets/logo-vermelho.png"
+  image_path: "assets/launch_icon.png"
   ios: true
   remove_alpha_ios: true
   android: "launch_icon"
-  adaptive_icon_foreground: "assets/logo-vermelho.png"
+  adaptive_icon_foreground: "assets/launch_icon.png"
 
 dev_dependencies:
   flutter_test:

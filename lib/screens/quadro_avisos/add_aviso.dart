@@ -152,7 +152,7 @@ class _AddAvisosState extends State<AddAvisos> {
   Future upload(
       {required String? nameImage, required String? pathImage}) async {
     var postUri = Uri.parse(
-        "https://a.portariaapp.com/sindico/api/quadro_avisos/?fn=enviarAviso");
+        "https://a.portariaapp.com/portaria/api/quadro_avisos/?fn=enviarAviso");
 
     http.MultipartRequest request = http.MultipartRequest("POST", postUri);
 

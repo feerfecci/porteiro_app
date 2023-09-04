@@ -36,7 +36,7 @@ Future apiQuadroAvisos() async {
   if (resposta.statusCode == 200) {
     var jsonResposta = json.decode(resposta.body);
     if (!jsonResposta['erro']) {
-      comparaAvisos(jsonResposta);
+      comparaAvisos(jsonResposta).whenComplete(() => LocalInfos.setLoginDate());
     }
 
     return json.decode(resposta.body);
@@ -45,7 +45,7 @@ Future apiQuadroAvisos() async {
   }
 }
 
-comparaAvisos(jsonResposta) {
+Future comparaAvisos(jsonResposta) async {
   List apiAvisos = jsonResposta['avisos'];
   LocalInfos.getLoginDate().then((dateValue) {
     for (var i = 0; i <= apiAvisos.length - 1; i++) {
@@ -60,7 +60,8 @@ comparaAvisos(jsonResposta) {
             QuadroHistoricoNotificScreen.qntAvisos.add(apiAvisos[i]['idaviso']);
           }
         }
-        LocalInfos.setLoginDate();
+      } else {
+        QuadroHistoricoNotificScreen.qntAvisos.add(apiAvisos[i]['idaviso']);
       }
     }
   });

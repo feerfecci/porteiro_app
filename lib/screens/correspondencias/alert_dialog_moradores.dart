@@ -130,7 +130,7 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Consts.kColorApp,
+                    backgroundColor: Consts.kColorRed,
                   ),
                   child: Text(
                     "Continuar",

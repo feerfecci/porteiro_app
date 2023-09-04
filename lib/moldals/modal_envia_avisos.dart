@@ -161,11 +161,14 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
           buildDropButtonAvisos(),
           buildMyTextFormObrigatorio(
             context,
-            widget.tipoAviso == 1 ? 'Nome Restaurante' : 'Nome Visitante',
+            widget.tipoAviso == 1
+                ? 'Nome Restaurante'
+                : 'Nome e Documento Visitante',
             hintText: 'Exemplo: Gustavo da Silva Sousa',
             initialValue: widget.nomeCadastrado,
             onSaved: (text) => nomeVisitante = text,
           ),
+
           SizedBox(
             height: size.height * 0.01,
           ),

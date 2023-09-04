@@ -131,7 +131,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 title: 'Indicar para amigos',
                 leading: Icons.add_reaction_outlined,
                 onPressed: () => launchUrl(
-                    Uri.parse('https://www.portariaapp.com/central-de-ajuda'),
+                    Uri.parse(
+                        'https://www.portariaapp.com/indicar-para-amigos'),
                     mode: LaunchMode.externalNonBrowserApplication),
               ),
               buidListTile(

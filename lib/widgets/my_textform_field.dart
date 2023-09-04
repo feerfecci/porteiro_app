@@ -1,3 +1,5 @@
+import 'package:app_porteiro/screens/home/home_page.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -97,7 +99,8 @@ Widget buildMyTextFormObrigatorio(BuildContext context, String title,
         ),
         filled: true,
         fillColor: Theme.of(context).canvasColor,
-        label: Text(title),
+        label: ConstsWidget.buildTitleText(context,
+            title: title, fontSize: SplashScreen.isSmall ? 16 : 18),
         hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
