@@ -35,10 +35,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
             iconColor: Theme.of(context).iconTheme.color,
             leading: Icon(
               leading,
-              size: SplashScreen.isSmall ? 20 : 25,
+              size: 25,
             ),
             title: ConstsWidget.buildTitleText(context,
-                title: title, fontSize: 14),
+                title: title, fontSize: 16),
             trailing: Icon(
               size: 25,
               color: Theme.of(context).iconTheme.color,

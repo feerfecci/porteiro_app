@@ -58,7 +58,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    SplashScreen.isSmall = size.width <= 350 ? true : false;
+    SplashScreen.isSmall = size.width <= 350
+        ? true
+        : Platform.isIOS
+            ? true
+            : false;
     return Scaffold(
       body: Column(
         children: [

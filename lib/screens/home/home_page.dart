@@ -230,8 +230,8 @@ class _HomePageState extends State<HomePage> {
               child: ConstsWidget.buildFutureImage(
                 context,
                 iconApi: iconApi,
-                height: SplashScreen.isSmall ? 0.065 : 0.059,
-                width: SplashScreen.isSmall ? 0.12 : 0.13,
+                height: SplashScreen.isSmall ? 0.06 : 0.059,
+                width: 0.13,
               ),
             ),
             // badges.Badge(
@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisSpacing: 5,
             mainAxisSpacing: SplashScreen.isSmall ? 0.2 : 0.1,
             crossAxisCount: 2,
-            childAspectRatio: SplashScreen.isSmall ? 1.95 : 1.55,
+            childAspectRatio: SplashScreen.isSmall ? 1.65 : 1.55,
             children: children),
       );
     }
@@ -315,16 +315,15 @@ class _HomePageState extends State<HomePage> {
               leading: Padding(
                   padding: EdgeInsets.only(
                     left: size.width * 0.025,
-                    top: SplashScreen.isSmall
-                        ? size.height * 0.015
-                        : size.height * 0.01,
-                    bottom: SplashScreen.isSmall
-                        ? size.height * 0.028
-                        : size.height * 0.01,
+                    top: size.height * 0.01,
+                    bottom: size.height * 0.01,
                   ),
-                  child: ConstsWidget.buildFutureImage(
-                    context,
-                    iconApi: 'https://a.portariaapp.com/img/logo_vermelho.png',
+                  child: Center(
+                    child: ConstsWidget.buildFutureImage(
+                      context,
+                      iconApi:
+                          'https://a.portariaapp.com/img/logo_vermelho.png',
+                    ),
                   )
 
                   //  FutureBuilder(

@@ -442,11 +442,9 @@ class ConstsWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ShimmerWidget(
                 height: SplashScreen.isSmall
-                    ? size.height * 0.08
+                    ? size.height * 0.06
                     : size.height * 0.068,
-                width: SplashScreen.isSmall
-                    ? size.width * 0.14
-                    : size.width * 0.15);
+                width: size.width * 0.15);
           } else if (snapshot.hasData) {
             try {
               return SizedBox(

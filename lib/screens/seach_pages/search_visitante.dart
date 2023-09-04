@@ -60,7 +60,7 @@ class SearchVisitante extends SearchDelegate<String> {
 
     if (query.isEmpty) {
       return buildNoQuerySearch(context,
-          mesagem: 'Digite um documento para localizar o visitante');
+          mesagem: 'Digite um documento\n para localizar o visitante');
     } else {
       return StatefulBuilder(builder: (context, setState) {
         return FutureBuilder(
