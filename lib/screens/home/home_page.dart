@@ -230,8 +230,8 @@ class _HomePageState extends State<HomePage> {
               child: ConstsWidget.buildFutureImage(
                 context,
                 iconApi: iconApi,
-                height: SplashScreen.isSmall ? 0.06 : 0.059,
-                width: 0.13,
+                height: SplashScreen.isSmall ? 0.06 : 0.065,
+                width: SplashScreen.isSmall ? 0.13 : 0.14,
               ),
             ),
             // badges.Badge(
