@@ -118,7 +118,7 @@ class _ListTileApState extends State<ListTileAp> {
                   buildActionIcon(
                       titleModal: 'Cartas',
                       labelModal: 'Remetente',
-                      iconApi: '${Consts.iconApiPort}correspondencias60px.png',
+                      iconApi: '${Consts.iconApiPort}correspondencias.png',
                       avisa: FuncionarioInfos.avisa_corresp,
                       pageRoute: ScaffoldBottom(
                         idunidade: widget.idunidade,
@@ -127,7 +127,7 @@ class _ListTileApState extends State<ListTileAp> {
                       )),
                 if (FuncionarioInfos.avisa_delivery)
                   buildActionIcon(
-                      iconApi: '${Consts.iconApiPort}mercadorias60px.png',
+                      iconApi: '${Consts.iconApiPort}mercadorias.png',
                       titleModal: 'Caixas',
                       labelModal: 'Remetente',
                       avisa: FuncionarioInfos.avisa_encomendas,
@@ -140,7 +140,7 @@ class _ListTileApState extends State<ListTileAp> {
                 if (FuncionarioInfos.avisa_visita)
                   buildActionIcon(
                       avisa: FuncionarioInfos.avisa_visita,
-                      iconApi: '${Consts.iconApiPort}visitas60px.png',
+                      iconApi: '${Consts.iconApiPort}visitas.png',
                       titleModal: 'Visitas',
                       onPressed: () {
                         showModalAvisaDelivery(
@@ -156,7 +156,7 @@ class _ListTileApState extends State<ListTileAp> {
                   buildActionIcon(
                       titleModal: 'Delivery',
                       avisa: FuncionarioInfos.avisa_delivery,
-                      iconApi: '${Consts.iconApiPort}delivery60px.png',
+                      iconApi: '${Consts.iconApiPort}delivery.png',
                       onPressed: () {
                         showModalAvisaDelivery(context,
                             title: 'Delivery',

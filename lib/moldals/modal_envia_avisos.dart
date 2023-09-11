@@ -56,7 +56,7 @@ class WidgetAvisaDelivery extends StatefulWidget {
 }
 
 class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
-  var keyFormField = GlobalKey<FormState>();
+  final keyFormField = GlobalKey<FormState>();
   String? nomeVisitante;
   List categoryItemListAvisos = [];
   Object? dropdownValue;

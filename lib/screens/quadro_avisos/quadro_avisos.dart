@@ -185,10 +185,10 @@ class _QuadroHistoricoNotificScreenState
                                         SizedBox(
                                           height: size.height * 0.01,
                                         ),
-                                        ConstsWidget.buildSubTitleText(context,
-                                            subTitle: 'Descrição'),
                                         ConstsWidget.buildTitleText(context,
-                                            title: texto),
+                                            maxLines: 10,
+                                            title: texto,
+                                            textAlign: TextAlign.center),
                                         SizedBox(
                                           height: size.height * 0.01,
                                         ),
