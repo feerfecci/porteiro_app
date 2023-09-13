@@ -226,9 +226,13 @@ class _WidgetEmiteEntregaState extends State<WidgetEmiteEntrega> {
                 borderSide: BorderSide(color: Colors.black26),
               ),
               label: Text(
-                'Código de confirmação',
+                widget.idMorador != null
+                    ? 'Senha Retirada'
+                    : 'Código de confirmação',
               ),
-              hintText: 'Código de confirmação',
+              hintText: widget.idMorador != null
+                  ? 'Senha Retirada'
+                  : 'Código de confirmação',
               suffixIcon: GestureDetector(
                 onTap: (() {
                   setState(() {
@@ -247,7 +251,9 @@ class _WidgetEmiteEntregaState extends State<WidgetEmiteEntrega> {
             vertical: 0.02,
             child: ConstsWidget.buildTitleText(
               context,
-              title: 'Peça o código de entrega',
+              title: widget.idMorador != null
+                  ? 'Peça a Senha Retirada'
+                  : 'Peça o código de entrega',
               color: Colors.red,
             ),
           ),

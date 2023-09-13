@@ -71,7 +71,7 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
 
     var seIdmsgs = remetenteText == null ? DropSearchRemet.idRemet : null;
     ConstsFuture.launchGetApi(context,
-            'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$seIdmsgs&qtd=${qtdCartas.text}')
+            'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&${seIdmsgs != null ? 'idmsg=$seIdmsgs' : ''}&qtd=${qtdCartas.text}')
         .then((value) {
       if (!value['erro']) {
         setState(() {
@@ -241,8 +241,13 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
                 ),
               ),
               Spacer(),
-              ConstsWidget.buildMyTextFormObrigatorio(context, 'Quantidade',
-                  controller: qtdCartas, keyboardType: TextInputType.number)
+              SizedBox(
+                width: size.width * 0.3,
+                child: ConstsWidget.buildMyTextFormObrigatorio(
+                    context, 'Quantidade',
+                    controller: qtdCartas, keyboardType: TextInputType.number),
+              ),
+              Spacer(),
             ],
           ),
           SizedBox(

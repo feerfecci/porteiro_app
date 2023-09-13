@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -39,7 +40,7 @@ class AceitarTermosScreen extends StatefulWidget {
 
 politicaApi() async {
   final url = Uri.parse(
-      '${Consts.apiPortaria}politica_privacidade/?fn=mostrarTermo&idcond=${FuncionarioInfos.idcondominio}');
+      '${Consts.apiPortaria}termo_uso/?fn=mostrarTermo&idcond=${FuncionarioInfos.idcondominio}');
   var resposta = await http.get(url);
 
   if (resposta.statusCode == 200) {
@@ -60,21 +61,23 @@ class _AceitarTermosScreenState extends State<AceitarTermosScreen> {
           horizontal: size.width * 0.05, vertical: size.height * 0.05),
       content: SizedBox(
         width: size.width * 0.98,
-        child: FutureBuilder<dynamic>(
-            future: politicaApi(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasData) {
-                if (!snapshot.data['erro']) {
-                  var texto = snapshot.data['politica_privacidade'][0]['texto'];
-                  return SafeArea(
-                    child: SingleChildScrollView(
-                      child: StatefulBuilder(builder: (context, setState) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          children: [
+            FutureBuilder<dynamic>(
+                future: politicaApi(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasData) {
+                    if (!snapshot.data['erro']) {
+                      var texto = snapshot.data['termo_uso'][0]['texto'];
+                      return SizedBox(
+                        height: SplashScreen.isSmall
+                            ? size.height * 0.06
+                            : size.height * 0.63,
+                        child: ListView(
                           children: [
                             // Padding(
                             //   padding: EdgeInsets.symmetric(
@@ -100,62 +103,65 @@ class _AceitarTermosScreenState extends State<AceitarTermosScreen> {
                                     fontWeight: FontWeight.bold)
                               },
                             ),
-                            ConstsWidget.buildCheckBox(context,
-                                isChecked: isChecked, onChanged: (value) {
-                              setState(() {
-                                isChecked = value!;
-                              });
-                            }, title: 'Li e aceito os termos'),
-                            SizedBox(
-                              height: size.height * 0.02,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ConstsWidget.buildOutlinedButton(
-                                  context,
-                                  title: '  Cancelar  ',
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                ConstsWidget.buildCustomButton(
-                                  context,
-                                  '    Aceitar    ',
-                                  color: isChecked
-                                      ? Consts.kColorRed
-                                      : Colors.grey,
-                                  onPressed: isChecked
-                                      ? () {
-                                          ConstsFuture.launchGetApi(context,
-                                                  'termo_uso/?fn=aceitaTermo&idfuncionario=${FuncionarioInfos.idFuncionario}')
-                                              .then((value) {
-                                            if (!value['erro']) {
-                                              ConstsFuture.navigatorPopAndPush(
-                                                  context, HomePage());
-                                            } else {
-                                              buildMinhaSnackBar(context,
-                                                  title: 'Algo Saiu Mau!',
-                                                  subTitle: value['mensagem']);
-                                            }
-                                          });
-                                        }
-                                      : () {},
-                                )
-                              ],
-                            )
                           ],
-                        );
-                      }),
-                    ),
-                  );
-                } else {
-                  return PageVazia(title: snapshot.data['mensagem']);
-                }
-              } else {
-                return PageErro();
-              }
-            }),
+                        ),
+                      );
+                    } else {
+                      return PageVazia(title: snapshot.data['mensagem']);
+                    }
+                  } else {
+                    return PageErro();
+                  }
+                }),
+            StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  children: [
+                    ConstsWidget.buildCheckBox(context, isChecked: isChecked,
+                        onChanged: (value) {
+                      setState(() {
+                        isChecked = value!;
+                      });
+                    }, title: 'Li e aceito os termos'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ConstsWidget.buildOutlinedButton(
+                          context,
+                          title: '  Cancelar  ',
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        ConstsWidget.buildCustomButton(
+                          context,
+                          '    Aceitar    ',
+                          color: isChecked ? Consts.kColorRed : Colors.grey,
+                          onPressed: isChecked
+                              ? () {
+                                  ConstsFuture.launchGetApi(context,
+                                          'termo_uso/?fn=aceitaTermo&idfuncionario=${FuncionarioInfos.idFuncionario}')
+                                      .then((value) {
+                                    if (!value['erro']) {
+                                      ConstsFuture.navigatorPopAndPush(
+                                          context, HomePage());
+                                    } else {
+                                      buildMinhaSnackBar(context,
+                                          title: 'Algo Saiu Mau!',
+                                          subTitle: value['mensagem']);
+                                    }
+                                  });
+                                }
+                              : () {},
+                        )
+                      ],
+                    )
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
