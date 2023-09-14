@@ -2,7 +2,6 @@
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
 import 'package:app_porteiro/screens/correspondencias/procura_screen.dart';
-import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/custom_drawer/custom_drawer.dart';
 

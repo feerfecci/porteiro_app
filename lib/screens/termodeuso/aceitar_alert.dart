@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 import 'package:http/http.dart' as http;

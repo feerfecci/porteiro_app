@@ -1,4 +1,3 @@
-import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:flutter/material.dart';
 
 class PageErro extends StatefulWidget {

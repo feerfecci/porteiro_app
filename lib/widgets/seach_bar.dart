@@ -1,6 +1,4 @@
 // ignore_for_file: must_be_immutable
-import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/my_textform_field.dart';
 import 'package:flutter/material.dart';
 

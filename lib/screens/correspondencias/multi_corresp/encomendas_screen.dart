@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/widgets/alertdialog_all.dart';
 import 'package:app_porteiro/widgets/drop_search_remet.dart';
@@ -353,7 +352,9 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                     setState(() {
                       _isLoading == true;
                     });
-                    ConstsFuture.launchGetApi(context,
+                    ConstsFuture.launchGetApi(
+                            context,
+                            // ignore: prefer_if_null_operators
                             'correspondencias/?fn=incluirCorrespondenciasMulti&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idUnidade == null ? idApto : widget.idUnidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataNow&tipo=4&remetente=${DropSearchRemet.tituloRemente}&descricao=${DropSearchRemet.textoRemente}&nome_entregador=${nomeEntregador.text}&doc_entregador=${docEntregador.text}&qtd=${qntCtrl.text}')
                         .then((value) {
                       setState(() {

@@ -1,8 +1,6 @@
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../consts/consts_widget.dart';
-import '../screens/home/home_page.dart';
 import 'custom_drawer/custom_drawer.dart';
 import 'listview_all.dart';
 
@@ -30,7 +28,7 @@ class ScaffoldAll extends StatefulWidget {
 class _ScaffoldAllState extends State<ScaffoldAll> {
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    //var size = MediaQuery.of(context).size;
     return Scaffold(
       // floatingActionButton: widget.floatingActionButton,
       resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,

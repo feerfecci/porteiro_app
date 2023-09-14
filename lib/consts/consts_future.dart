@@ -1,20 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:convert';
-import 'dart:io';
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/screens/login/login_screen.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-// ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
 import '../screens/termodeuso/aceitar_alert.dart';
 import '../screens/home/home_page.dart';
 import '../screens/quadro_avisos/quadro_avisos.dart';
-import '../widgets/my_box_shadow.dart';
-import '../widgets/page_erro.dart';
-import '../widgets/page_vazia.dart';
-import 'consts_widget.dart';
 
 class ConstsFuture {
   static Future<dynamic> launchGetApi(BuildContext context, apiPortaria) async {
@@ -120,30 +114,22 @@ class ConstsFuture {
         .then((value) {
       if (!value['erro']) {
         // HomePage.qntEventos = value['reserva_espacos'].length;
-        for (var i = 0; i <= value['reserva_espacos'].length - 1; i++) {
-          try {
-            final dateReserva =
-                DateTime.parse(value['reserva_espacos'][i]['data_reserva']);
+        List listMap = value['reserva_espacos'];
+        listMap.map((e) {
+          final dateReserva = DateTime.parse(e['data_reserva']);
 
-            DateTime now = DateTime.now();
-            int difference =
-                DateTime(dateReserva.day).difference(DateTime(now.day)).inDays;
+          DateTime now = DateTime.now();
+          int difference =
+              DateTime(dateReserva.day).difference(DateTime(now.day)).inDays;
 
-            if (difference == 0) {
-              listIdReserva.add(value['reserva_espacos'][i]['idreserva']);
-
-              print('id: ${value['reserva_espacos'][i]['idreserva']}');
-            } else {
-              listIdReserva.remove(value['reserva_espacos'][i]['idreserva']);
-            }
-          } catch (e) {
-            print(e);
+          if (difference == 0) {
+            listIdReserva.add(e['idreserva']);
+          } else {
+            listIdReserva.remove(e['idreserva']);
           }
-        }
+        }).toSet();
+        // }
         HomePage.qntEventos = listIdReserva.length;
-        print('Reservas hoje ${HomePage.qntEventos} ');
-
-        // print(HomePage.qntEventos);
       }
     });
   }
@@ -155,9 +141,7 @@ class ConstsFuture {
       return resposta.statusCode == 200
           ? Image.network(iconApi)
           : Image.asset('assets/ico-error.png');
-    } on Exception catch (e) {
-      return Image.asset('assets/ico-error.png');
-    } on HttpException catch (e) {
+    } on Exception {
       return Image.asset('assets/ico-error.png');
     }
     // return resposta.statusCode == 200

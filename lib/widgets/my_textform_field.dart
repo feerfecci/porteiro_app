@@ -1,4 +1,3 @@
-import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

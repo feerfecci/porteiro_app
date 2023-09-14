@@ -7,14 +7,9 @@ import 'package:app_porteiro/widgets/page_vazia.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
-
 import '../../consts/consts_widget.dart';
-import '../../widgets/alertdialog_all.dart';
 import '../../widgets/my_box_shadow.dart';
-import '../../widgets/snack_bar.dart';
 
 class EspacosScreen extends StatefulWidget {
   const EspacosScreen({super.key});

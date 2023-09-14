@@ -1,15 +1,10 @@
-import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
 import 'package:badges/badges.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:validatorless/validatorless.dart';
 
-import '../screens/home/home_page.dart';
 import '../screens/splash/splash_screen.dart';
-import '../widgets/page_erro.dart';
-import '../widgets/page_vazia.dart';
 import '../widgets/shimmer_widget.dart';
 import 'consts.dart';
 import 'consts_future.dart';

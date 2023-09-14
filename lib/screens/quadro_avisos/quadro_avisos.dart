@@ -1,11 +1,10 @@
-import 'dart:convert';
+// ignore_for_file: unused_local_variable, non_constant_identifier_names
 
+import 'dart:convert';
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/screens/home/home_page.dart';
 import 'package:app_porteiro/screens/quadro_avisos/add_aviso.dart';
-import 'package:app_porteiro/screens/quadro_avisos/quadro_avisos.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/page_erro.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
@@ -15,7 +14,6 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../repositories/shared_preferences.dart';
 
 class QuadroHistoricoNotificScreen extends StatefulWidget {
@@ -72,7 +70,6 @@ class _QuadroHistoricoNotificScreenState
   @override
   void initState() {
     apiQuadroAvisos();
-    // TODO: implement initState
     super.initState();
   }
 

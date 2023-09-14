@@ -2,9 +2,8 @@ import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
+// ignore: must_be_immutable
 class AnalisaErroScreen extends StatefulWidget {
   Map listErro;
   AnalisaErroScreen({required this.listErro, super.key});
@@ -23,7 +22,6 @@ class _AnalisaErroScreenState extends State<AnalisaErroScreen> {
           shrinkWrap: true,
           itemCount: widget.listErro.length,
           itemBuilder: (context, index) {
-            print(widget.listErro[index]);
             return MyBoxShadow(
                 child: ConstsWidget.buildTitleText(context,
                     title: widget.listErro[index]));

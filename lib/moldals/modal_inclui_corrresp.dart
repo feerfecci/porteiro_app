@@ -1,6 +1,4 @@
 // ignore_for_file: non_constant_identifier_names
-import 'dart:async';
-import 'dart:convert';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/widgets/drop_search_remet.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
@@ -9,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../consts/consts.dart';
 import '../consts/consts_widget.dart';
-import 'package:http/http.dart' as http;
-import '../screens/correspondencias/scafffoldItem.dart';
+import '../screens/correspondencias/scafffold_item.dart';
 import 'modal_all.dart';
 
 showModalIncluiCorresp(BuildContext context,
@@ -18,7 +15,7 @@ showModalIncluiCorresp(BuildContext context,
     required int idunidade,
     required int tipoAviso,
     required String? localizado}) {
-  var size = MediaQuery.of(context).size;
+  // var size = MediaQuery.of(context).size;
 
   buildModalAll(
     context,

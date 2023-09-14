@@ -1,17 +1,11 @@
 import 'package:app_porteiro/widgets/page_erro.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-
 import '../consts/consts.dart';
 import '../consts/consts_widget.dart';
-import '../screens/correspondencias/multi_corresp/encomendas_screen.dart';
 
 // ignore: must_be_immutable
 class DropSearchRemet extends StatefulWidget {
@@ -93,14 +87,10 @@ class DropSearchRemetState extends State<DropSearchRemet> {
         onChanged: (value) {
           itemsModelRemet.map((e) {
             if ('${e.tituloRemente} - ${e.textoRemente}' == value) {
-              print('Trocou');
               setState(() {
                 DropSearchRemet.idRemet = e.idRemente;
-                print('id ${DropSearchRemet.idRemet}');
                 DropSearchRemet.tituloRemente = e.tituloRemente;
-                print('titulo ${DropSearchRemet.tituloRemente}');
                 DropSearchRemet.textoRemente = e.textoRemente;
-                print('texto ${DropSearchRemet.textoRemente}');
               });
             }
           }).toSet();

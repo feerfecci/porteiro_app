@@ -1,26 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/main.dart';
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
-import 'package:app_porteiro/widgets/alertdialog_all.dart';
 import 'package:app_porteiro/widgets/drop_search_remet.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
 import '../../../consts/consts.dart';
 import '../../../consts/consts_future.dart';
-import 'analisaErroScreen.dart';
 import 'encomendas_screen.dart';
 
 class MultiCartas extends StatefulWidget {
@@ -198,11 +189,6 @@ class _MultiCartasState extends State<MultiCartas> {
                               value: isSelected,
                               onChanged: (value) {
                                 isSelected == value;
-                                if (isSelected) {
-                                  setState(() {
-                                    print('object');
-                                  });
-                                }
                               },
                             ),
                           );
@@ -304,13 +290,5 @@ class _MultiCartasState extends State<MultiCartas> {
     }).toSet();
 
     return listarUniApi;
-  }
-
-  verificaErro(Map<String, dynamic> hasError) {
-    if (hasError.containsValue(true)) {
-      print('tem erro no Map');
-    } else {
-      print('Não tem erro no Map');
-    }
   }
 }

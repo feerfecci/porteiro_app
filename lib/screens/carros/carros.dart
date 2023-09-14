@@ -1,5 +1,5 @@
 import 'package:app_porteiro/screens/seach_pages/search_veiculo.dart';
-import 'package:app_porteiro/widgets/seachBar.dart';
+import 'package:app_porteiro/widgets/seach_bar.dart';
 import 'package:flutter/material.dart';
 
 class CarrosPage extends StatefulWidget {

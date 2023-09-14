@@ -3,8 +3,6 @@ import 'package:app_porteiro/screens/quadro_avisos/quadro_avisos.dart';
 import 'package:app_porteiro/widgets/my_textform_field.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import '../../consts/consts.dart';
@@ -76,6 +74,7 @@ class _AddAvisosState extends State<AddAvisos> {
                           listImage.add(file.uri.toString());
                         });
                       } else {
+                        // ignore: use_build_context_synchronously
                         buildMinhaSnackBar(context,
                             title: 'Cuidado!',
                             subTitle: 'Permitido apenas um arquivo');

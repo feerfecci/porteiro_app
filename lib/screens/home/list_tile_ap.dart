@@ -2,14 +2,12 @@
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
-import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
 import 'package:flutter/material.dart';
 
-import '../correspondencias/scafffoldItem.dart';
+import '../correspondencias/scafffold_item.dart';
 import '../splash/splash_screen.dart';
 
 class ListTileAp extends StatefulWidget {

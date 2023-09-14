@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, non_constant_identifier_names
 
 import 'dart:convert';
 import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
@@ -10,9 +10,7 @@ import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../consts/consts.dart';
-import '../../widgets/alertdialog_all.dart';
 import '../../widgets/page_erro.dart';
-import '../../widgets/snack_bar.dart';
 
 class SearchVisitante extends SearchDelegate<String> {
   @override

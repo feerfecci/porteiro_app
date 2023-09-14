@@ -1,21 +1,18 @@
-import 'dart:io';
+// ignore_for_file: unused_local_variable, non_constant_identifier_names
 
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/avisos/historico_notific.dart';
-import 'package:app_porteiro/screens/correspondencias/correspondencias_screen.dart';
 import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
 import 'package:app_porteiro/screens/quadro_avisos/quadro_avisos.dart';
 import 'package:app_porteiro/screens/reservas_espacos/espacos_screen.dart';
 import 'package:app_porteiro/screens/seach_pages/search_protocolo.dart';
 import 'package:app_porteiro/screens/seach_pages/search_visitante.dart';
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
-import 'package:app_porteiro/screens/visitas/visitas_screen.dart';
 import 'package:app_porteiro/screens/seach_pages/search_veiculo.dart';
 import 'package:app_porteiro/widgets/alertdialog_all.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/page_erro.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
-import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -26,7 +23,6 @@ import '../../consts/consts_future.dart';
 import '../correspondencias/multi_corresp/multicorresp_screen.dart';
 import '../seach_pages/search_unidades.dart';
 import '../../widgets/custom_drawer/custom_drawer.dart';
-import '../../widgets/seachBar.dart';
 import '../../widgets/snack_bar.dart';
 
 import 'package:badges/badges.dart' as badges;
@@ -106,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return MyBoxShadow(
                         child: Column(
-                      children: [ShimmerWidget(height: 40)],
+                      children: const [ShimmerWidget(height: 40)],
                     ));
                   } else if (snapshot.hasData) {
                     if (!snapshot.data['erro']) {

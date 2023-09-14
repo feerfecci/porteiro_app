@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../consts/consts_widget.dart';
 
 Widget buildNoQuerySearch(BuildContext context, {required String mesagem}) {
-  var size = MediaQuery.of(context).size;
+  // var size = MediaQuery.of(context).size;
   return ConstsWidget.buildPadding001(
     context,
     vertical: 0.02,
