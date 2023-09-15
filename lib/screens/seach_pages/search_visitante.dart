@@ -1,6 +1,7 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names
 
 import 'dart:convert';
+import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
 import 'package:app_porteiro/screens/seach_pages/search_empty.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../consts/consts.dart';
 import '../../widgets/page_erro.dart';
+import '../avisos/emite_avisos_screen.dart';
 
 class SearchVisitante extends SearchDelegate<String> {
   @override
@@ -188,13 +190,23 @@ class SearchVisitante extends SearchDelegate<String> {
                                   color: Theme.of(context).colorScheme.primary,
                                   fontSize: fontSize,
                                   height: size.height * 0.002);
-                              showModalAvisaDelivery(context,
-                                  idunidade: idunidade,
-                                  localizado: unidade,
-                                  tipoAviso: 2,
-                                  nomeCadastrado: nome_convidado,
-                                  idVisita: idvisita,
-                                  title: 'Visitas');
+                              ConstsFuture.navigatorPush(
+                                  context,
+                                  EmiteAvisosScreen(
+                                      idunidade: idunidade,
+                                      localizado: unidade,
+                                      tipoAviso: 2,
+                                      nomeCadastrado: nome_convidado,
+                                      idVisita: idvisita,
+                                      title: 'Visitas'));
+
+                              // showModalAvisaDelivery(context,
+                              //     idunidade: idunidade,
+                              //     localizado: unidade,
+                              //     tipoAviso: 2,
+                              //     nomeCadastrado: nome_convidado,
+                              //     idVisita: idvisita,
+                              //     title: 'Visitas');
                               // showModalBottomSheet(
                               //   context: context,
                               //   builder: (context) {

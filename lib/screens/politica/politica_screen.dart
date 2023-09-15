@@ -17,7 +17,7 @@ class PoliticaScreen extends StatefulWidget {
 class _PoliticaScreenState extends State<PoliticaScreen> {
   politicaApi() async {
     final url = Uri.parse(
-        '${Consts.apiPortaria}politica_privacidade/?fn=mostrarPolitica&${FuncionarioInfos.idcondominio}');
+        '${Consts.apiPortaria}politica_privacidade/?fn=mostrarPolitica&idcond=${FuncionarioInfos.idcondominio}');
     var resposta = await http.get(url);
 
     if (resposta.statusCode == 200) {
@@ -61,7 +61,9 @@ class _PoliticaScreenState extends State<PoliticaScreen> {
                           Html(
                             data: texto,
                             style: {
-                              'p': Style(fontSize: FontSize(18)),
+                              'p': Style(
+                                  fontSize: FontSize(18),
+                                  color: Theme.of(context).colorScheme.primary),
                               'i': Style(
                                   fontSize: FontSize(18),
                                   fontStyle: FontStyle.italic),

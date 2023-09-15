@@ -1,8 +1,9 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names
 import 'dart:async';
 import 'dart:convert';
+import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/moldals/modal_emite_entrega.dart';
+import 'package:app_porteiro/screens/correspondencias/emite_entrega_screen.dart';
 import 'package:app_porteiro/screens/seach_pages/search_empty.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
@@ -193,17 +194,26 @@ class SearchProtocolos extends SearchDelegate<String> {
                               context, 'Código de Entrega', onPressed: () {
                             // emiteEntrega(listEntregar.join(','));
                             if (isChecked) {
-                              showModalEmiteEntrega(
-                                context,
-                                idunidade: idunidade,
-                                listEntregar: listEntregar.toString(),
-                                protocoloRetirada: protocoloRetirada,
-                                tipoCompara: 'codigo',
-                              );
+                              ConstsFuture.navigatorPush(
+                                  context,
+                                  EmiteEntregaScreen(
+                                    idunidade: idunidade,
+                                    listEntregar: listEntregar.toString(),
+                                    protocoloRetirada: protocoloRetirada,
+                                    tipoCompara: 'codigo',
+                                  ));
+                              // showModalEmiteEntrega(
+                              //   context,
+                              //   idunidade: idunidade,
+                              //   listEntregar: listEntregar.toString(),
+                              //   protocoloRetirada: protocoloRetirada,
+                              //   tipoCompara: 'codigo',
+                              // );
                               listEntregar.clear();
                             } else {
                               buildMinhaSnackBar(context,
                                   title: 'Cuidado',
+                                  hasError: true,
                                   subTitle: 'Selecione pelo menos um item');
                             }
                           }),

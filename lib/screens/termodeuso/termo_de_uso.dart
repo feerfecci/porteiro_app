@@ -17,7 +17,7 @@ class TermoDeUsoScreen extends StatefulWidget {
 class _TermoDeUsoScreenState extends State<TermoDeUsoScreen> {
   termoUsoApi() async {
     final url = Uri.parse(
-        '${Consts.apiPortaria}termo_uso/?fn=mostrarTermo&${FuncionarioInfos.idcondominio}');
+        '${Consts.apiPortaria}termo_uso/?fn=mostrarTermo&idcond=${FuncionarioInfos.idcondominio}');
     var resposta = await http.get(url);
 
     if (resposta.statusCode == 200) {
@@ -57,7 +57,9 @@ class _TermoDeUsoScreenState extends State<TermoDeUsoScreen> {
                         Html(
                           data: texto,
                           style: {
-                            'p': Style(fontSize: FontSize(18)),
+                            'p': Style(
+                                fontSize: FontSize(18),
+                                color: Theme.of(context).colorScheme.primary),
                             'i': Style(
                                 fontSize: FontSize(18),
                                 fontStyle: FontStyle.italic),

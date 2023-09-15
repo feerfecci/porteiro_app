@@ -48,6 +48,16 @@ class _HomePageState extends State<HomePage> {
           'idfuncao': FuncionarioInfos.idfuncao.toString(),
         });
       }
+      OneSignal.shared.setNotificationOpenedHandler((openedResult) {
+        if (openedResult.notification.additionalData!.values.last == 'aviso') {
+          ConstsFuture.navigatorPush(context, QuadroHistoricoNotificScreen());
+        } else if (openedResult.notification.additionalData!.values.last ==
+                'visita' ||
+            openedResult.notification.additionalData!.values.last ==
+                'delivery') {
+          ConstsFuture.navigatorPush(context, HistoricoNotificScreen());
+        }
+      });
     });
   }
 
@@ -202,6 +212,7 @@ class _HomePageState extends State<HomePage> {
             : () {
                 buildMinhaSnackBar(context,
                     title: 'Desculpe',
+                    hasError: true,
                     subTitle: 'Você não tem acesso à essa ação');
               },
         child: MyBoxShadow(
@@ -219,9 +230,9 @@ class _HomePageState extends State<HomePage> {
                       ? HomePage.qntEventos != 0
                       : false,
               title: title == 'Quadro de Avisos'
-                  ? QuadroHistoricoNotificScreen.qntAvisos.length.toString()
-                  : HomePage.qntEventos.toString(),
-              position: badges.BadgePosition.topEnd(top: -20, end: -60),
+                  ? QuadroHistoricoNotificScreen.qntAvisos.length
+                  : HomePage.qntEventos,
+              position: badges.BadgePosition.topEnd(top: -15, end: -55),
 
               child: ConstsWidget.buildFutureImage(
                 context,
@@ -230,22 +241,6 @@ class _HomePageState extends State<HomePage> {
                 width: SplashScreen.isSmall ? 0.13 : 0.14,
               ),
             ),
-            // badges.Badge(
-            //   showBadge: idEspacos ? HomePage.qntEventos != 0 : false,
-            //   badgeAnimation: badges.BadgeAnimation.fade(toAnimate: false),
-            //   badgeContent: ConstsWidget.buildTitleText(context,
-            //       title: HomePage.qntEventos.toString(), color: Colors.white),
-            //   position: badges.BadgePosition.topEnd(top: -20, end: -60),
-            //   badgeStyle: badges.BadgeStyle(
-            //     badgeColor: Consts.kColorRed,
-            //   ),
-            //   child: ConstsWidget.buildFutureImage(
-            //     context,
-            //     iconApi: iconApi,
-            //     height: SplashScreen.isSmall ? 0.065 : 0.059,
-            //     width: SplashScreen.isSmall ? 0.12 : 0.13,
-            //   ),
-            // ),
             SizedBox(
               height: size.height * 0.01,
             ),
@@ -336,6 +331,7 @@ class _HomePageState extends State<HomePage> {
             body: ListView(
               // padding: EdgeInsets.symmetric(horizontal: size.height * 0.005),
               children: [
+                
                 buildGridViewer(children: [
                   buildCard(
                       title: 'Bombeiros',

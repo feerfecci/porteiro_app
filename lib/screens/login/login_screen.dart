@@ -134,7 +134,10 @@ class _LoginScreenState extends State<LoginScreen> {
           ConstsFuture.fazerLogin(
               context, userController.text, senhaController.text);
         } else {
-          buildMinhaSnackBar(context);
+          buildMinhaSnackBar(
+            context,
+            hasError: true,
+          );
         }
       });
     }

@@ -29,6 +29,7 @@ class EncomendasScreen extends StatefulWidget {
 }
 
 bool _isLoading = false;
+bool isLoadingAlertAddCorrep = false;
 setOrientation(Orientation orientation) {
   if (orientation == Orientation.landscape) {
     return SystemChrome.setPreferredOrientations(
@@ -186,8 +187,11 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                                 children: [
                                   ConstsWidget.buildSubTitleText(context,
                                       subTitle: 'Unidade'),
-                                  ConstsWidget.buildTitleText(context,
-                                      fontSize: 18, title: e.ap),
+                                  SizedBox(
+                                    width: size.width * 0.5,
+                                    child: ConstsWidget.buildTitleText(context,
+                                        fontSize: 18, title: e.ap, maxLines: 3),
+                                  ),
                                 ],
                               ),
                               Column(
@@ -288,12 +292,16 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                 )
               ]);
         } else {
-          buildMinhaSnackBar(context, subTitle: value['mensagem']);
+          buildMinhaSnackBar(context,
+              subTitle: value['mensagem'], hasError: true);
         }
       });
     }
 
     alertConfirmaCorresp(dataNow) {
+      setState(() {
+        isLoadingAlertAddCorrep = false;
+      });
       return showAllDialog(context,
           title: ConstsWidget.buildTitleText(context, title: 'Cuidado!!'),
           children: [
@@ -378,7 +386,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                         }
                       } else {
                         buildMinhaSnackBar(context,
-                            subTitle: value['mensagem']);
+                            hasError: true, subTitle: value['mensagem']);
                       }
                     });
                   },
@@ -526,7 +534,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                       buildMyTextFormObrigatorio(context, 'CPF',
                           keyboardType: TextInputType.number,
                           controller: docEntregador,
-                          hintText: "RG, CPF"),
+                          hintText: "CPF"),
                     ],
                   ),
                 ),
@@ -555,13 +563,15 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                       if (widget.idUnidade == null)
                         ConstsWidget.buildPadding001(
                           context,
-                          child: ConstsWidget.buildCustomButton(
-                            context,
-                            'Gravar e Adicionar Entrega',
-                            icon: Icons.add,
+                          child: ConstsWidget.buildLoadingButton(
+                            context, title: 'Gravar e Adicionar Entrega',
+                            isLoading: isLoadingAlertAddCorrep,
+                            // icon: Icons.add,
                             onPressed: () {
                               FocusManager.instance.primaryFocus?.unfocus();
-
+                              setState(() {
+                                isLoadingAlertAddCorrep = true;
+                              });
                               var itemsValid =
                                   itemsInfos.currentState?.validate() ?? false;
                               var entregadorValid =
@@ -580,6 +590,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                               {
                                 buildMinhaSnackBar(context,
                                     title: 'Cuidado!',
+                                    hasError: true,
                                     subTitle:
                                         'Selecione Remetente e Apartamento');
                               }
@@ -614,11 +625,13 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                           } else {
                             return buildMinhaSnackBar(context,
                                 title: 'Cuidado',
+                                hasError: true,
                                 subTitle: 'Termine de adicionar');
                           }
                         } else {
                           return buildMinhaSnackBar(context,
                               title: 'Cuidado',
+                              hasError: true,
                               subTitle: 'Adicione pelo menos um item');
                         }
                       } else {
@@ -627,6 +640,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                         } else {
                           return buildMinhaSnackBar(context,
                               title: 'Cuidado',
+                              hasError: true,
                               subTitle: 'Termine de adicionar');
                         }
                       }

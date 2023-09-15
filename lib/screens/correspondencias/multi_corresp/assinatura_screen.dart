@@ -111,12 +111,15 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
                         } else {
                           buildMinhaSnackBar(context,
                               title: 'Algo Saiu mal!',
+                              hasError: true,
                               subTitle: value['mensagem']);
                         }
                       });
                     } else {
                       buildMinhaSnackBar(context,
-                          title: 'Cuidado!', subTitle: 'Faça uma assinatura');
+                          title: 'Cuidado!',
+                          hasError: true,
+                          subTitle: 'Faça uma assinatura');
                     }
                   },
                 )

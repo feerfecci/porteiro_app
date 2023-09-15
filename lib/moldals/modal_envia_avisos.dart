@@ -174,7 +174,7 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
           ),
           ConstsWidget.buildCustomButton(
             context,
-            'Avisar Apartamento',
+            'Enviar Aviso',
             color: Consts.kColorRed,
             onPressed: dropdownValue != null
                 ? () {
@@ -207,13 +207,16 @@ class _WidgetAvisaDeliveryState extends State<WidgetAvisaDelivery> {
                               subTitle: value['mensagem']);
                         } else {
                           return buildMinhaSnackBar(context,
-                              title: 'Que pena!', subTitle: value['mensagem']);
+                              hasError: true,
+                              title: 'Que pena!',
+                              subTitle: value['mensagem']);
                         }
                       });
                     }
                   }
                 : () {
                     buildMinhaSnackBar(context,
+                        hasError: true,
                         subTitle: 'Escolha um aviso para seguir');
                   },
           )

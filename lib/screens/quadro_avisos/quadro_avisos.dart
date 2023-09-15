@@ -46,22 +46,21 @@ Future apiQuadroAvisos() async {
 Future comparaAvisos(jsonResposta) async {
   List apiAvisos = jsonResposta['avisos'];
   LocalInfos.getLoginDate().then((dateValue) {
-    for (var i = 0; i <= apiAvisos.length - 1; i++) {
+    List apiAvisosList = apiAvisos;
+    apiAvisosList.map((e) {
       if (dateValue != null) {
-        if (DateTime.parse(apiAvisos[i]['datahora'])
-                    .compareTo(DateTime.parse(dateValue)) >
-                0 &&
-            DateTime.parse(apiAvisos[i]['datahora']).compareTo(DateTime.now()) <
-                0) {
-          if (!QuadroHistoricoNotificScreen.qntAvisos
-              .contains(apiAvisos[i]['idaviso'])) {
-            QuadroHistoricoNotificScreen.qntAvisos.add(apiAvisos[i]['idaviso']);
+        if (!QuadroHistoricoNotificScreen.qntAvisos.contains(e['idaviso'])) {
+          if (DateTime.parse(e['datahora'])
+                      .compareTo(DateTime.parse(dateValue)) >
+                  0 &&
+              DateTime.parse(e['datahora']).compareTo(DateTime.now()) < 0) {
+            QuadroHistoricoNotificScreen.qntAvisos.add(e['idaviso']);
           }
         }
       } else {
-        QuadroHistoricoNotificScreen.qntAvisos.add(apiAvisos[i]['idaviso']);
+        QuadroHistoricoNotificScreen.qntAvisos.add(e['idaviso']);
       }
-    }
+    }).toSet();
   });
 }
 

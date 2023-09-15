@@ -96,13 +96,11 @@ class ConstsFuture {
                   }));
         } else {
           ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
-          return buildMinhaSnackBar(
-            context,
-          );
+          return buildMinhaSnackBar(context, hasError: true);
         }
       } else {
         ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
-        return buildMinhaSnackBar(context);
+        return buildMinhaSnackBar(context, hasError: true);
       }
     }
   }

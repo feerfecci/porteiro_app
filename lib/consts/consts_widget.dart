@@ -9,6 +9,7 @@ import '../widgets/shimmer_widget.dart';
 import 'consts.dart';
 import 'consts_future.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ConstsWidget {
   static Widget buildPadding001(BuildContext context,
@@ -134,10 +135,14 @@ class ConstsWidget {
               horizontal: size.width * 0.045, vertical: size.height * 0.025),
           filled: true,
           fillColor: Theme.of(context).canvasColor,
-          label: Text(
-            title,
-            textAlign: center ? null : TextAlign.center,
-          ),
+          label: RichText(
+              text: TextSpan(
+                  text: title,
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary),
+                  children: [
+                TextSpan(text: '*', style: TextStyle(color: Consts.kColorRed))
+              ])),
           hintText: hintText,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -431,36 +436,23 @@ class ConstsWidget {
   static Widget buildFutureImage(BuildContext context,
       {required String iconApi, double? width, double? height}) {
     var size = MediaQuery.of(context).size;
-    return FutureBuilder(
-        future: ConstsFuture.apiImage(iconApi),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return ShimmerWidget(
-                height: SplashScreen.isSmall
-                    ? size.height * 0.06
-                    : size.height * 0.068,
-                width: size.width * 0.15);
-          } else if (snapshot.hasData) {
-            try {
-              return SizedBox(
-                width: width != null ? size.width * width : null,
-                height: height != null ? size.height * height : null,
-                child: Image.network(
-                  iconApi,
-                  fit: BoxFit.fill,
-                ),
-              );
-            } catch (e) {
-              return Image.asset('assets/ico-error.png');
-            }
-          } else {
-            return Image.asset('assets/ico-error.png');
-          }
-        });
+    return CachedNetworkImage(
+      imageUrl: iconApi,
+      height: height != null ? size.height * height : null,
+      width: width != null ? size.width * width : null,
+      fit: BoxFit.fill,
+      fadeInDuration: Duration.zero,
+      fadeOutDuration: Duration.zero,
+      placeholder: (context, url) => ShimmerWidget(
+          height:
+              SplashScreen.isSmall ? size.height * 0.06 : size.height * 0.068,
+          width: size.width * 0.15),
+      errorWidget: (context, url, error) => Image.asset('ico-error.png'),
+    );
   }
 
   static Widget buildBadge(BuildContext context,
-      {String title = '',
+      {int title = 0,
       required bool showBadge,
       required Widget? child,
       BadgePosition? position}) {
@@ -468,7 +460,11 @@ class ConstsWidget {
         showBadge: showBadge,
         badgeAnimation: badges.BadgeAnimation.fade(toAnimate: false),
         badgeContent: Text(
-          title,
+          title > 99
+              ? '+99'
+              : title == 0
+                  ? ''
+                  : title.toString(),
           style: TextStyle(
               color: Theme.of(context).cardColor, fontWeight: FontWeight.bold),
         ),

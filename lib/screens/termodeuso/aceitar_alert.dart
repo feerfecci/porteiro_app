@@ -146,6 +146,7 @@ class _AceitarTermosScreenState extends State<AceitarTermosScreen> {
                                     } else {
                                       buildMinhaSnackBar(context,
                                           title: 'Algo Saiu Mau!',
+                                          hasError: true,
                                           subTitle: value['mensagem']);
                                     }
                                   });

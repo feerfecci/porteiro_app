@@ -138,6 +138,7 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                             correspEntregar.isEmpty
                                 ? buildMinhaSnackBar(context,
                                     title: 'Cuidado!',
+                                    hasError: true,
                                     subTitle: 'Selecione pelo menos um item')
                                 : showDialog(
                                     context: context,

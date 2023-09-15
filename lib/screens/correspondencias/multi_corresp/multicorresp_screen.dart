@@ -246,6 +246,7 @@ class _MultiCartasState extends State<MultiCartas> {
                           if (DropSearchRemet.tituloRemente == null) {
                             buildMinhaSnackBar(context,
                                 title: 'Cuidado',
+                                hasError: true,
                                 subTitle: 'Selecione um Remetente');
                           } else {
                             setState(() {
@@ -268,6 +269,7 @@ class _MultiCartasState extends State<MultiCartas> {
                                 } else {
                                   buildMinhaSnackBar(context,
                                       title: 'Algo Saiu mal',
+                                      hasError: true,
                                       subTitle: value['mensagem']);
                                 }
                               });

@@ -1,9 +1,10 @@
+import 'package:app_porteiro/screens/correspondencias/emite_entrega_screen.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import '../../consts/consts.dart';
 import '../../consts/consts_future.dart';
 import '../../consts/consts_widget.dart';
-import '../../moldals/modal_emite_entrega.dart';
+
 import '../../widgets/my_box_shadow.dart';
 import '../../widgets/page_erro.dart';
 import '../../widgets/page_vazia.dart';
@@ -119,14 +120,21 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
                   onPressed: () {
                     if (idMorador != 0) {
                       Navigator.of(context).pop();
+                      ConstsFuture.navigatorPush(
+                          context,
+                          EmiteEntregaScreen(
+                              idunidade: widget.idunidade,
+                              idMorador: idMorador,
+                              tipoCompara: 'senha',
+                              listEntregar: widget.listEntregar));
 
-                      showModalEmiteEntrega(context,
-                          idunidade: widget.idunidade,
-                          idMorador: idMorador,
-                          tipoCompara: 'senha',
-                          listEntregar: widget.listEntregar);
+                      // showModalEmiteEntrega(context,
+                      //     idunidade: widget.idunidade,
+                      //     idMorador: idMorador,
+                      //     tipoCompara: 'senha',
+                      //     listEntregar: widget.listEntregar);
                     } else {
-                      buildMinhaSnackBar(context);
+                      buildMinhaSnackBar(context, hasError: true);
                     }
                   },
                   style: ElevatedButton.styleFrom(

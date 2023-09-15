@@ -76,7 +76,7 @@ class _AddAvisosState extends State<AddAvisos> {
                       } else {
                         // ignore: use_build_context_synchronously
                         buildMinhaSnackBar(context,
-                            title: 'Cuidado!',
+                            title: 'Cuidado!',hasError: true,
                             subTitle: 'Permitido apenas um arquivo');
                       }
                     }
@@ -135,7 +135,7 @@ class _AddAvisosState extends State<AddAvisos> {
                             title: 'Muito Obrigado!',
                             subTitle: value['mensagem']);
                       } else {
-                        buildMinhaSnackBar(context);
+                        buildMinhaSnackBar(context,hasError: true,);
                       }
                     });
                   }

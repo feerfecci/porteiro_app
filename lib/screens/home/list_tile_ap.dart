@@ -2,6 +2,7 @@
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/screens/avisos/emite_avisos_screen.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
@@ -54,6 +55,7 @@ class _ListTileApState extends State<ListTileAp> {
               : () {
                   buildMinhaSnackBar(context,
                       title: 'Desculpe',
+                      hasError: true,
                       subTitle: 'Você não tem acesso à essa ação');
                 },
           child: Column(
@@ -140,30 +142,44 @@ class _ListTileApState extends State<ListTileAp> {
                       avisa: FuncionarioInfos.avisa_visita,
                       iconApi: '${Consts.iconApiPort}visitas.png',
                       titleModal: 'Visitas',
-                      onPressed: () {
-                        showModalAvisaDelivery(
-                          context,
-                          title: 'Visitas',
-                          idunidade: widget.idunidade,
-                          localizado: widget.bloco,
-                          tipoAviso: 2,
-                          // nome_moradores: widget.nome_moradores,
-                        );
-                      }),
+                      pageRoute: EmiteAvisosScreen(
+                        title: 'Visitas',
+                        idunidade: widget.idunidade,
+                        localizado: widget.bloco,
+                        tipoAviso: 2,
+                      )
+
+                      // onPressed: () {
+                      //   showModalAvisaDelivery(
+                      //     context,
+                      //     title: 'Visitas',
+                      //     idunidade: widget.idunidade,
+                      //     localizado: widget.bloco,
+                      //     tipoAviso: 2,
+                      //     // nome_moradores: widget.nome_moradores,
+                      //   );
+                      // }
+                      ),
                 if (FuncionarioInfos.avisa_delivery)
                   buildActionIcon(
                       titleModal: 'Delivery',
                       avisa: FuncionarioInfos.avisa_delivery,
                       iconApi: '${Consts.iconApiPort}delivery.png',
-                      onPressed: () {
-                        showModalAvisaDelivery(context,
-                            title: 'Delivery',
-                            idunidade: widget.idunidade,
-                            localizado: widget.bloco,
-                            tipoAviso: 1
-                            // nome_moradores: widget.nome_moradores,
-                            );
-                      }),
+                      pageRoute: EmiteAvisosScreen(
+                          title: 'Delivery',
+                          idunidade: widget.idunidade,
+                          localizado: widget.bloco,
+                          tipoAviso: 1)
+                      // onPressed: () {
+                      // showModalAvisaDelivery(context,
+                      //     title: 'Delivery',
+                      //     idunidade: widget.idunidade,
+                      //     localizado: widget.bloco,
+                      //     tipoAviso: 1
+                      //     // nome_moradores: widget.nome_moradores,
+                      //     );
+                      // }
+                      ),
               ],
             ),
           ],

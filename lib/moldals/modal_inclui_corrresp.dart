@@ -90,7 +90,9 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
         setState(() {
           loadingRetirada = !loadingRetirada;
           buildMinhaSnackBar(context,
-              title: 'Algo Saiu Mau!', subTitle: value['mensagem']);
+              hasError: true,
+              title: 'Algo Saiu Mau!',
+              subTitle: value['mensagem']);
         });
       }
     });
@@ -264,9 +266,7 @@ class _WidgetCusttCorrespState extends State<WidgetModalCorresp> {
                 // print(
                 //     'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataInclusaoText&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText&idmsg=$dropRemetente');
               } else {
-                buildMinhaSnackBar(
-                  context,
-                );
+                buildMinhaSnackBar(context, hasError: true);
               }
             },
           )
