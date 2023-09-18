@@ -61,7 +61,7 @@ class _ListTileApState extends State<ListTileAp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ConstsWidget.buildFutureImage(
+              ConstsWidget.buildCachedImage(
                 context,
                 iconApi: iconApi,
                 width: SplashScreen.isSmall ? 0.16 : 0.15,

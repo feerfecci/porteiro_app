@@ -234,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                   : HomePage.qntEventos,
               position: badges.BadgePosition.topEnd(top: -15, end: -55),
 
-              child: ConstsWidget.buildFutureImage(
+              child: ConstsWidget.buildCachedImage(
                 context,
                 iconApi: iconApi,
                 height: SplashScreen.isSmall ? 0.06 : 0.065,
@@ -310,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                     bottom: size.height * 0.01,
                   ),
                   child: Center(
-                    child: ConstsWidget.buildFutureImage(
+                    child: ConstsWidget.buildCachedImage(
                       context,
                       iconApi:
                           'https://a.portariaapp.com/img/logo_vermelho.png',
@@ -331,7 +331,6 @@ class _HomePageState extends State<HomePage> {
             body: ListView(
               // padding: EdgeInsets.symmetric(horizontal: size.height * 0.005),
               children: [
-                
                 buildGridViewer(children: [
                   buildCard(
                       title: 'Bombeiros',
