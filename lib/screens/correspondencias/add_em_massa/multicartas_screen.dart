@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../../../consts/consts.dart';
 import '../../../consts/consts_future.dart';
-import 'encomendas_screen.dart';
+import 'caixas/encomendas_screen.dart';
 
 class MultiCartas extends StatefulWidget {
   const MultiCartas({super.key});
@@ -129,6 +129,8 @@ class _MultiCartasState extends State<MultiCartas> {
                             return ConstsWidget.buildPadding001(
                               context,
                               child: Container(
+                                padding:
+                                    EdgeInsets.only(bottom: size.height * 0.01),
                                 decoration: UnderlineTabIndicator(
                                     borderSide: BorderSide(
                                         color: Theme.of(context)
@@ -138,6 +140,8 @@ class _MultiCartasState extends State<MultiCartas> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     ConstsWidget.buildTitleText(context,
+                                        sizedWidth: 0.6,
+                                        overflow: null,
                                         title: eSelec.toString()),
                                     IconButton(
                                         onPressed: () {
@@ -162,18 +166,18 @@ class _MultiCartasState extends State<MultiCartas> {
                           }).toList(),
                         );
                       },
-                      clearButtonProps: ClearButtonProps(
-                        isVisible: true,
-                        color: Theme.of(context).colorScheme.primary,
-                        onPressed: () {
-                          dropDownKey.currentState?.clear();
-                          setState(() {
-                            setState(() {
-                              listUnidade.clear();
-                            });
-                          });
-                        },
-                      ),
+                      // clearButtonProps: ClearButtonProps(
+                      //   isVisible: true,
+                      //   color: Theme.of(context).textTheme.bodyLarge!.color,
+                      //   onPressed: () {
+                      //     dropDownKey.currentState?.clear();
+                      //     setState(() {
+                      //       setState(() {
+                      //         listUnidade.clear();
+                      //       });
+                      //     });
+                      //   },
+                      // ),
                       dropdownDecoratorProps:
                           DecorationDropSearch.dropdownDecoratorProps(context),
                       dropdownButtonProps:
@@ -242,6 +246,7 @@ class _MultiCartasState extends State<MultiCartas> {
                         context,
                         isLoading: isLoading,
                         title: 'Gravar e Avisar',
+                        color: Consts.kColorRed,
                         onPressed: () {
                           if (DropSearchRemet.tituloRemente == null) {
                             buildMinhaSnackBar(context,

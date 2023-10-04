@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
+// import 'package:localization/localization.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +35,15 @@ class MyApp extends StatelessWidget {
           darkTheme: themeDark(context),
           home: SplashScreen(),
           initialRoute: '/splashScreen',
+          localizationsDelegates: [
+            // GlobalMaterialLocalizations.delegate,
+            // GlobalWidgetsLocalizations.delegate,
+            // GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', 'USA'), // English, UK
+            Locale('pt', 'BR'), // Arabic, UAE
+          ],
           routes: {
             '/splashScreen': (context) => SplashScreen(),
             '/homePage': (context) => HomePage(),

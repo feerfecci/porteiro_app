@@ -90,8 +90,10 @@ class _AceitarTermosScreenState extends State<AceitarTermosScreen> {
                               style: {
                                 'p': Style(
                                     fontSize: FontSize(16),
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color),
                                 'i': Style(
                                     fontSize: FontSize(16),
                                     fontStyle: FontStyle.italic),
@@ -145,7 +147,7 @@ class _AceitarTermosScreenState extends State<AceitarTermosScreen> {
                                           context, HomePage());
                                     } else {
                                       buildMinhaSnackBar(context,
-                                          title: 'Algo Saiu Mau!',
+                                          title: 'algo saiu mal!',
                                           hasError: true,
                                           subTitle: value['mensagem']);
                                     }

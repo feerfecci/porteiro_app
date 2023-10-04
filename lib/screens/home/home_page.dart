@@ -2,7 +2,7 @@
 
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/avisos/historico_notific.dart';
-import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
+import 'package:app_porteiro/screens/correspondencias/add_em_massa/caixas/encomendas_screen.dart';
 import 'package:app_porteiro/screens/quadro_avisos/quadro_avisos.dart';
 import 'package:app_porteiro/screens/reservas_espacos/espacos_screen.dart';
 import 'package:app_porteiro/screens/seach_pages/search_protocolo.dart';
@@ -20,7 +20,8 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../consts/consts.dart';
 import '../../consts/consts_future.dart';
-import '../correspondencias/multi_corresp/multicorresp_screen.dart';
+import '../../widgets/seach_bar.dart';
+import '../correspondencias/add_em_massa/multicartas_screen.dart';
 import '../seach_pages/search_unidades.dart';
 import '../../widgets/custom_drawer/custom_drawer.dart';
 import '../../widgets/snack_bar.dart';
@@ -38,23 +39,40 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DateTime timeBackPressed = DateTime.now();
   Future oneSignalNotification() async {
-    OneSignal.shared.setAppId("5993cb79-853a-412e-94a1-f995c9797692");
+    OneSignal.shared.setAppId('d75e42a6-49bd-4c8d-b13f-51e054634942');
+    OneSignal.shared.deleteTags([
+      'idcond',
+      'idfuncionario',
+      'idfuncao',
+    ]);
     OneSignal.shared.promptUserForPushNotificationPermission().then((value) {
       // OneSignal.shared.setExternalUserId('34');
-      if (value) {
-        OneSignal.shared.sendTags({
-          'idfuncionario': FuncionarioInfos.idFuncionario.toString(),
-          'idcond': FuncionarioInfos.idcondominio.toString(),
-          'idfuncao': FuncionarioInfos.idfuncao.toString(),
-        });
-      }
+      OneSignal.shared.deleteTags([
+        'idcond${FuncionarioInfos.idcondominio.toString()}',
+        'idfuncionario${FuncionarioInfos.idFuncionario.toString()}',
+        'idfuncao${FuncionarioInfos.idfuncao.toString()}'
+      ]);
+      OneSignal.shared.sendTags({
+        'idcond${FuncionarioInfos.idcondominio.toString()}':
+            FuncionarioInfos.idcondominio.toString(),
+        'idfuncionario${FuncionarioInfos.idFuncionario.toString()}':
+            FuncionarioInfos.idFuncionario.toString(),
+        'idfuncao${FuncionarioInfos.idfuncao.toString()}':
+            FuncionarioInfos.idfuncao.toString(),
+      });
+      OneSignal.shared.setOnDidDisplayInAppMessageHandler((message) {
+        message.messageId;
+      });
+
       OneSignal.shared.setNotificationOpenedHandler((openedResult) {
-        if (openedResult.notification.additionalData!.values.last == 'aviso') {
+        if (openedResult.notification.additionalData!['rota'] == 'aviso') {
           ConstsFuture.navigatorPush(context, QuadroHistoricoNotificScreen());
-        } else if (openedResult.notification.additionalData!.values.last ==
+        } else if (openedResult.notification.additionalData!['rota'] ==
                 'visita' ||
-            openedResult.notification.additionalData!.values.last ==
-                'delivery') {
+            openedResult.notification.additionalData!['rota'] == 'delivery') {
+          ConstsFuture.navigatorPush(context, HistoricoNotificScreen());
+        } else if (openedResult.notification.additionalData!['rota'] ==
+            'respostas') {
           ConstsFuture.navigatorPush(context, HistoricoNotificScreen());
         }
       });
@@ -63,8 +81,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    super.initState();
     oneSignalNotification();
+    super.initState();
   }
 
   @override
@@ -98,8 +116,8 @@ class _HomePageState extends State<HomePage> {
               ],
             )
           ],
-          title:
-              ConstsWidget.buildTitleText(context, title: 'Escolha um modo'));
+          title: ConstsWidget.buildTitleText(context,
+              title: 'Escolha uma Opção', fontSize: 18));
     }
 
     alertInformeSindico() {
@@ -194,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                 })
           ],
           title: ConstsWidget.buildTitleText(context,
-              title: 'Escolha um contato', fontSize: 20));
+              title: 'Escolha um contato', fontSize: 18));
     }
 
     Widget buildCard({
@@ -219,6 +237,9 @@ class _HomePageState extends State<HomePage> {
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Spacer(
+              flex: 2,
+            ),
             ConstsWidget.buildBadge(
               context,
               // QuadroHistoricoNotificScreen.qntAvisos.isNotEmpty,
@@ -232,20 +253,24 @@ class _HomePageState extends State<HomePage> {
               title: title == 'Quadro de Avisos'
                   ? QuadroHistoricoNotificScreen.qntAvisos.length
                   : HomePage.qntEventos,
-              position: badges.BadgePosition.topEnd(top: -15, end: -55),
+              position: badges.BadgePosition.topEnd(
+                  top: SplashScreen.isSmall ? -9 : -15,
+                  end: SplashScreen.isSmall ? -45 : -55),
 
               child: ConstsWidget.buildCachedImage(
                 context,
                 iconApi: iconApi,
-                height: SplashScreen.isSmall ? 0.06 : 0.065,
-                width: SplashScreen.isSmall ? 0.13 : 0.14,
+                height: SplashScreen.isSmall ? 0.07 : 0.065,
+                width: SplashScreen.isSmall ? 0.12 : 0.14,
               ),
             ),
+            Spacer(),
+            ConstsWidget.buildTitleText(context,
+                title: title, fontSize: SplashScreen.isSmall ? 15 : 17),
             SizedBox(
               height: size.height * 0.01,
             ),
-            ConstsWidget.buildTitleText(context,
-                title: title, fontSize: SplashScreen.isSmall ? 15 : 17),
+            // Spacer(),
           ],
         )),
       );
@@ -262,7 +287,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisSpacing: 5,
             mainAxisSpacing: SplashScreen.isSmall ? 0.2 : 0.1,
             crossAxisCount: 2,
-            childAspectRatio: SplashScreen.isSmall ? 1.65 : 1.55,
+            childAspectRatio: SplashScreen.isSmall ? 1.7 : 1.55,
             children: children),
       );
     }
@@ -298,8 +323,8 @@ class _HomePageState extends State<HomePage> {
               centerTitle: true,
               title: ConstsWidget.buildTitleText(context,
                   title: FuncionarioInfos.nome_condominio!, fontSize: 20),
-              iconTheme:
-                  IconThemeData(color: Theme.of(context).colorScheme.primary),
+              iconTheme: IconThemeData(
+                  color: Theme.of(context).textTheme.bodyLarge!.color),
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               elevation: 0,
               leadingWidth: size.width * 0.13,
@@ -392,114 +417,20 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ]),
-                ConstsWidget.buildPadding001(
-                  context,
-                  vertical: 0,
-                  horizontal: 0.01,
-                  child: GestureDetector(
-                    onTap: () => showSearch(
-                        context: context, delegate: SearchProtocolos()),
-                    child: ConstsWidget.buildPadding001(
-                      context,
-                      horizontal: 0.01,
-                      child: Container(
-                        height: size.height * 0.085,
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            border: Border.all(
-                                color: Color.fromARGB(255, 39, 211, 104),
-                                width: size.width * 0.007),
-                            borderRadius: BorderRadius.circular(16)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Spacer(flex: 3),
-                            ConstsWidget.buildTitleText(context,
-                                title: 'Pesquisar Protocolos',
-                                textAlign: TextAlign.center),
-                            Spacer(
-                              flex: 2,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.04),
-                              child: Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.1,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color.fromARGB(255, 39, 211, 104),
-                                ),
-                                child: Icon(
-                                  Icons.search,
-                                  color: Colors.white,
-                                  fill: 1,
-                                ),
-                              ),
-                            ),
-                            // Spacer(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                SeachBar(
+                  title: 'Pesquisar Protocolos',
+                  color: Color.fromARGB(255, 39, 211, 104),
+                  delegate: SearchProtocolos(),
                 ),
-                ConstsWidget.buildPadding001(
-                  context,
-                  vertical: 0,
-                  horizontal: 0.01,
-                  child: GestureDetector(
-                    onTap: () => showSearch(
-                        context: context, delegate: SearchUnidades()),
-                    child: ConstsWidget.buildPadding001(
-                      context,
-                      horizontal: 0.01,
-                      child: Container(
-                        height: size.height * 0.085,
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            border: Border.all(
-                                color: Consts.kColorRed,
-                                width: size.width * 0.007),
-                            borderRadius: BorderRadius.circular(16)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Spacer(flex: 3),
-                            ConstsWidget.buildTitleText(context,
-                                title: 'Localizar e Avisar a Unidade ',
-                                textAlign: TextAlign.center),
-                            Spacer(),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.04),
-                              child: Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.1,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Consts.kColorRed,
-                                ),
-                                child: Icon(
-                                  Icons.search,
-                                  color: Colors.white,
-                                  fill: 1,
-                                ),
-                              ),
-                            ),
-                            // Spacer(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                SeachBar(
+                  title: 'Cartas, caixas, visitas e delivery',
+                  color: Consts.kColorRed,
+                  delegate: SearchUnidades(),
                 ),
                 buildGridViewer(
                   children: [
                     buildCard(
-                      title: 'Notificações',
+                      title: 'Histórico',
                       onTap: () {
                         ConstsFuture.navigatorPush(
                             context, HistoricoNotificScreen());

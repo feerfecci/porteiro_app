@@ -66,14 +66,14 @@ class SearchVeiculo extends SearchDelegate<String> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ConstsWidget.buildSubTitleText(context, subTitle: '$title1:'),
+                ConstsWidget.buildSubTitleText(context, subTitle: title1),
                 ConstsWidget.buildTitleText(context, title: subTitle1),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ConstsWidget.buildSubTitleText(context, subTitle: '$title2:'),
+                ConstsWidget.buildSubTitleText(context, subTitle: title2),
                 ConstsWidget.buildTitleText(context, title: subTitle2),
               ],
             )
@@ -83,7 +83,8 @@ class SearchVeiculo extends SearchDelegate<String> {
     }
 
     if (query.isEmpty) {
-      return buildNoQuerySearch(context, mesagem: 'Procure um veículo');
+      return buildNoQuerySearch(context,
+          mesagem: 'Digite uma Placa para\n Procurar um Veículo');
     } else {
       return FutureBuilder(
         future: sugestoesVeiculos(),
@@ -103,6 +104,7 @@ class SearchVeiculo extends SearchDelegate<String> {
                   int idveiculo = apiVeiculos['idveiculo'];
                   int idcond = apiVeiculos['idcond'];
                   int idunidade = apiVeiculos['idunidade'];
+                  String numero = apiVeiculos['numero'];
                   String tipo = apiVeiculos['tipo'];
                   String marca = apiVeiculos['marca'];
                   String modelo = apiVeiculos['modelo'];
@@ -112,6 +114,9 @@ class SearchVeiculo extends SearchDelegate<String> {
                   return MyBoxShadow(
                       child: Column(
                     children: [
+                      ConstsWidget.buildPadding001(context,
+                          child: ConstsWidget.buildTitleText(context,
+                              fontSize: 20, title: numero)),
                       buildDescricaoCarro(
                           title1: 'Tipo',
                           subTitle1: tipo,

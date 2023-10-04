@@ -11,11 +11,14 @@ class ProcuraProtocolo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SeachBar(
-        label: 'Pesquise',
-        hintText: 'a0x1',
-        delegate:
-            SearchProtocolos(/*idunidade: idunidade, tipoAviso: tipoAviso*/),
+      child: Column(
+        children: [
+          SeachBar(
+            title: 'Pesquisar Protocolos',
+            color: Color.fromARGB(255, 39, 211, 104),
+            delegate: SearchProtocolos(),
+          ),
+        ],
       ),
     );
   }

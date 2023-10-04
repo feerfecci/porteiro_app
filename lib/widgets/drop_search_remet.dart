@@ -134,7 +134,10 @@ class DecorationDropSearch {
         ),
         alignment: Alignment.center,
         color: Theme.of(context).colorScheme.primary,
-        icon: Icon(Icons.arrow_downward));
+        icon: Icon(Icons.arrow_downward,
+            color:
+                //  Colors.red
+                Theme.of(context).textTheme.bodyLarge!.color));
   }
 
   static searchFieldProps(BuildContext context) {
@@ -144,7 +147,7 @@ class DecorationDropSearch {
           color: Theme.of(context).colorScheme.primary),
       decoration: InputDecoration(
         filled: true,
-        fillColor: Theme.of(context).scaffoldBackgroundColor,
+        fillColor: Theme.of(context).canvasColor,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
           borderRadius: BorderRadius.all(Radius.circular(16)),

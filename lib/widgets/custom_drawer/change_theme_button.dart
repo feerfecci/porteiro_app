@@ -20,7 +20,7 @@ class _ChangeThemeButtonState extends State<ChangeThemeButton> {
         themeProvider.isDarkMode ? 'Ativar Modo Claro' : 'Ativar Modo Escuro';
     bool isOn = themeProvider.isDarkMode;
     return ListTile(
-      title: ConstsWidget.buildTitleText(context, title: title),
+      title: ConstsWidget.buildTitleText(context, title: title, fontSize: 16),
       iconColor: Theme.of(context).iconTheme.color,
       leading: isOn
           ? Icon(
@@ -28,7 +28,7 @@ class _ChangeThemeButtonState extends State<ChangeThemeButton> {
               size: SplashScreen.isSmall ? 20 : 25,
             )
           : Icon(
-              Icons.dark_mode_rounded,
+              Icons.dark_mode_outlined,
               size: SplashScreen.isSmall ? 20 : 25,
             ),
       trailing: Switch.adaptive(

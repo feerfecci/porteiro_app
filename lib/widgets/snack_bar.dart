@@ -1,3 +1,4 @@
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import '../consts/consts.dart';
 import '../consts/consts_widget.dart';
@@ -42,10 +43,20 @@ buildMinhaSnackBar(BuildContext context,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ConstsWidget.buildTitleText(context,
-                    title: title, color: Colors.white),
-                ConstsWidget.buildSubTitleText(context,
-                    subTitle: subTitle, color: Colors.white)
+                SizedBox(
+                  width: SplashScreen.isSmall
+                      ? size.width * 0.5
+                      : size.width * 0.65,
+                  child: ConstsWidget.buildTitleText(context,
+                      maxLines: 5, title: title, color: Colors.white),
+                ),
+                SizedBox(
+                  width: SplashScreen.isSmall
+                      ? size.width * 0.5
+                      : size.width * 0.65,
+                  child: ConstsWidget.buildSubTitleText(context,
+                      maxLines: 5, subTitle: subTitle, color: Colors.white),
+                )
               ],
             ),
           ],

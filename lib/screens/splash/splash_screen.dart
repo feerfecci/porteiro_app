@@ -80,7 +80,8 @@ class _SplashScreenState extends State<SplashScreen> {
               child: ConstsWidget.buildCustomButton(
                 context,
                 'Autenticar Biometria',
-                icon: Icons.lock_open_outlined,
+                // icon: Icons.lock_open_outlined,
+                textColor: Colors.white,
                 onPressed: () {
                   startLogin();
                 },

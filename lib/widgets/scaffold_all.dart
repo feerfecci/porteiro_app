@@ -36,9 +36,10 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
         centerTitle: true,
         title: ConstsWidget.buildTitleText(context,
             title: widget.title ?? '',
-            fontSize: SplashScreen.isSmall ? (widget.fontSize - 4) : 20),
+            fontSize: SplashScreen.isSmall ? 18 : 22),
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+        iconTheme:
+            IconThemeData(color: Theme.of(context).textTheme.bodyLarge!.color),
         elevation: 0,
       ),
       endDrawer: widget.hasDrawer ? CustomDrawer() : null,

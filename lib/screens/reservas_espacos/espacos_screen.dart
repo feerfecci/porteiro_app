@@ -6,6 +6,7 @@ import 'package:app_porteiro/widgets/page_erro.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/shimmer_widget.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../consts/consts_widget.dart';
@@ -73,6 +74,7 @@ class _EspacosScreenState extends State<EspacosScreen> {
                       itemBuilder: (context, index) {
                         var apiReservas =
                             snapshot.data['reserva_espacos'][index];
+                        bool isToday = false;
 
                         int idreserva = apiReservas['idreserva'];
                         int status = apiReservas['status'];
@@ -88,39 +90,62 @@ class _EspacosScreenState extends State<EspacosScreen> {
                         String data_reserva = apiReservas['data_reserva'];
                         String datahora = apiReservas['datahora'];
 
+                        DateTime now = DateTime.now();
+                        int difference =
+                            DateTime(DateTime.parse(data_reserva).day)
+                                .difference(DateTime(now.day))
+                                .inDays;
+
+                        if (difference == 0) {
+                          isToday = true;
+                        }
+
                         return MyBoxShadow(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                            child: Stack(
+                          alignment: Alignment.center,
                           children: [
-                            Column(
-                              children: [
-                                ConstsWidget.buildSubTitleText(context,
-                                    subTitle: 'Reservado por: '),
-                                ConstsWidget.buildTitleText(context,
-                                    title: nome_morador),
-                              ],
-                            ),
-                            ConstsWidget.buildPadding001(
+                            ConstsWidget.buildBadge(
                               context,
+                              showBadge: isToday,
+                              position:
+                                  BadgePosition.topEnd(end: -size.width * 0.28),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  ConstsWidget.buildSubTitleText(context,
-                                      subTitle: 'Local Reservado: '),
-                                  ConstsWidget.buildTitleText(context,
-                                      title: nome_espaco),
-                                ],
-                              ),
-                            ),
-                            ConstsWidget.buildPadding001(
-                              context,
-                              child: Column(
-                                children: [
-                                  ConstsWidget.buildSubTitleText(context,
-                                      subTitle: 'Inicio da reserva:'),
-                                  ConstsWidget.buildTitleText(context,
-                                      title: DateFormat('dd/MM/yyyy HH:mm')
-                                          .format(
-                                              DateTime.parse(data_reserva))),
+                                  Column(
+                                    children: [
+                                      ConstsWidget.buildSubTitleText(context,
+                                          subTitle: 'Reservado por: '),
+                                      ConstsWidget.buildTitleText(context,
+                                          title: nome_morador),
+                                    ],
+                                  ),
+                                  ConstsWidget.buildPadding001(
+                                    context,
+                                    child: Column(
+                                      children: [
+                                        ConstsWidget.buildSubTitleText(context,
+                                            subTitle: 'Local Reservado: '),
+                                        ConstsWidget.buildTitleText(context,
+                                            title: nome_espaco),
+                                      ],
+                                    ),
+                                  ),
+                                  ConstsWidget.buildPadding001(
+                                    context,
+                                    child: Column(
+                                      children: [
+                                        ConstsWidget.buildSubTitleText(context,
+                                            subTitle: 'Inicio da reserva:'),
+                                        ConstsWidget.buildTitleText(context,
+                                            title:
+                                                DateFormat('dd/MM/yyyy HH:mm')
+                                                    .format(DateTime.parse(
+                                                        data_reserva))),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

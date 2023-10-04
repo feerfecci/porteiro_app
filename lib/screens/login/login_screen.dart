@@ -1,5 +1,6 @@
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:validatorless/validatorless.dart';
@@ -28,10 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
         keyboardType: TextInputType.emailAddress,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: userController, autofillHints: const [AutofillHints.email],
-        validator: Validatorless.multiple([
-          Validatorless.required('Usuário é obrigatório'),
-          // Validatorless.email('Preencha com um email Válido')
-        ]),
+
+        validator: Validatorless.multiple(
+            [Validatorless.required('Preencha com seu login')]),
         // autofillHints: [AutofillHints.email],
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
             borderSide: BorderSide(color: Colors.black26),
           ),
         ),
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        // style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color,.colorScheme.primary),
       );
     }
 
@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
             // autofillHints: [AutofillHints.password],
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: Validatorless.multiple([
-              Validatorless.required('Senha é obrigatório'),
+              Validatorless.required('Preencha com sua senha de acesso'),
               Validatorless.min(6, 'Mínimo de 6 caracteres')
             ]),
             onEditingComplete: () => TextInput.finishAutofillContext(),
@@ -97,16 +97,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     : Icon(Icons.visibility_outlined),
               ),
             ),
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            // style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
-          StatefulBuilder(builder: (context, setState) {
-            return ConstsWidget.buildCheckBox(context, isChecked: isChecked,
-                onChanged: (bool? value) {
-              setState(() {
-                isChecked = value!;
-              });
-            }, title: 'Mantenha-me conectado');
-          })
+          ConstsWidget.buildPadding001(
+            context,
+            child: StatefulBuilder(builder: (context, setState) {
+              return ConstsWidget.buildCheckBox(context, isChecked: isChecked,
+                  onChanged: (bool? value) {
+                setState(() {
+                  isChecked = value!;
+                });
+                FocusManager.instance.primaryFocus!.unfocus();
+              }, title: 'Mantenha-me conectado');
+            }),
+          )
         ],
       );
     }
@@ -146,48 +150,36 @@ class _LoginScreenState extends State<LoginScreen> {
       body: AutofillGroup(
         child: Form(
           key: _formKeyLogin,
-          child: Center(
-            child: Wrap(
+          child: ConstsWidget.buildPadding001(
+            context,
+            horizontal: 0.02,
+            vertical: 0.03,
+            child: ListView(
               children: [
+                Center(
+                  child: ConstsWidget.buildCachedImage(context,
+                      height: 0.27,
+                      width: SplashScreen.isSmall ? 0.5 : 0.55,
+                      iconApi:
+                          'https://a.portariaapp.com/img/logo_vermelho.png'),
+                ),
                 Padding(
                   padding: EdgeInsets.only(
-                      left: size.width * 0.05,
-                      right: size.width * 0.05,
-                      bottom: size.height * 0.15),
-                  child: Column(
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.only(left: 8.0),
-                          child: FutureBuilder(
-                            future: ConstsFuture.apiImage(
-                                'https://a.portariaapp.com/img/logo_vermelho.png'),
-                            builder: (context, snapshot) {
-                              return SizedBox(
-                                height: size.height * 0.2,
-                                width: size.width * 0.5,
-                                child: snapshot.data,
-                              );
-                            },
-                          )),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            bottom: size.height * 0.035,
-                            top: size.height * 0.025),
-                        child: ConstsWidget.buildTitleText(context,
-                            title: 'Portaria App | Portaria', fontSize: 19),
-                      ),
-                      buildTextFormEmail(),
-                      SizedBox(
-                        height: size.height * 0.03,
-                      ),
-                      buildTextFormSenha(),
-                      ConstsWidget.buildLoadingButton(context, fontSize: 18,
-                          onPressed: () async {
-                        starLogin();
-                      }, isLoading: isLoading, title: 'Entrar'),
-                    ],
-                  ),
+                      bottom: size.height * 0.035, top: size.height * 0.025),
+                  child: ConstsWidget.buildTitleText(context,
+                      textAlign: TextAlign.center,
+                      title: 'Portaria App | Portaria',
+                      fontSize: 19),
                 ),
+                buildTextFormEmail(),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+                buildTextFormSenha(),
+                ConstsWidget.buildLoadingButton(context, fontSize: 18,
+                    onPressed: () async {
+                  starLogin();
+                }, isLoading: isLoading, title: 'Entrar'),
               ],
             ),
           ),

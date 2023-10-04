@@ -59,7 +59,10 @@ class _TermoDeUsoScreenState extends State<TermoDeUsoScreen> {
                           style: {
                             'p': Style(
                                 fontSize: FontSize(18),
-                                color: Theme.of(context).colorScheme.primary),
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color),
                             'i': Style(
                                 fontSize: FontSize(18),
                                 fontStyle: FontStyle.italic),

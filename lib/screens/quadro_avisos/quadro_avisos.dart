@@ -90,8 +90,9 @@ class _QuadroHistoricoNotificScreenState
                   horizontal: 0.02,
                   child: ConstsWidget.buildCustomButton(
                     context,
-                    'Adicionar Aviso',
-                    icon: Icons.add,
+                    'Enviar Aviso',
+                    // icon: Icons.add,
+                    color: Consts.kColorRed,
                     onPressed: () {
                       ConstsFuture.navigatorPush(context, AddAvisos());
                     },
@@ -164,61 +165,85 @@ class _QuadroHistoricoNotificScreenState
                                   data: Theme.of(context).copyWith(
                                       dividerColor: Colors.transparent),
                                   child: ExpansionTile(
+                                      // expandedCrossAxisAlignment:
+                                      //     CrossAxisAlignment.start,
+
                                       onExpansionChanged: (value) {
                                         showBolinha = false;
                                         QuadroHistoricoNotificScreen.qntAvisos
                                             .remove(idaviso);
                                       },
-                                      title: SizedBox(
-                                        width: size.width * 0.65,
-                                        child: ConstsWidget.buildTitleText(
-                                            context,
-                                            fontSize: 18,
-                                            title: titulo,
-                                            textAlign: TextAlign.center),
-                                      ),
+                                      title: ConstsWidget.buildTitleText(
+                                          context,
+                                          fontSize: 18,
+                                          title: titulo,
+                                          textAlign: TextAlign.start),
                                       children: [
                                         SizedBox(
                                           height: size.height * 0.01,
                                         ),
-                                        ConstsWidget.buildTitleText(context,
+                                        ConstsWidget.buildSubTitleText(context,
+                                            subTitle: texto,
                                             maxLines: 10,
-                                            title: texto,
-                                            textAlign: TextAlign.center),
+                                            textAlign: TextAlign.start),
                                         SizedBox(
                                           height: size.height * 0.01,
                                         ),
                                         if (arquivo != '')
-                                          OutlinedButton(
-                                            style: OutlinedButton.styleFrom(
-                                              side: BorderSide(
-                                                  width: size.width * 0.005,
-                                                  color: Colors.blue),
-                                              shape: StadiumBorder(),
-                                            ),
-                                            onPressed: () {
-                                              launchUrl(Uri.parse(arquivo),
-                                                  mode: LaunchMode
-                                                      .externalNonBrowserApplication);
-                                            },
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical:
-                                                      size.height * 0.023),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  ConstsWidget
-                                                      .buildSubTitleText(
-                                                    context,
-                                                    subTitle: 'Ver Anexo',
-                                                    fontSize: 18,
-                                                    color: Colors.blue,
-                                                  ),
-                                                ],
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              SizedBox(
+                                                height: size.height * 0.01,
                                               ),
-                                            ),
+                                              SizedBox(
+                                                width: size.width * 0.3,
+                                                child: ConstsWidget
+                                                    .buildOutlinedButton(
+                                                  context,
+                                                  title: 'Ver Anexo',
+                                                  onPressed: () {
+                                                    launchUrl(
+                                                        Uri.parse(arquivo),
+                                                        mode: LaunchMode
+                                                            .externalNonBrowserApplication);
+                                                  },
+                                                ),
+                                              ),
+                                              // OutlinedButton(
+                                              //   style: OutlinedButton.styleFrom(
+                                              //     side: BorderSide(
+                                              //         width: size.width * 0.005,
+                                              //         color: Colors.blue),
+                                              //     shape: StadiumBorder(),
+                                              //   ),
+                                              //   onPressed: () {
+                                              //     launchUrl(Uri.parse(arquivo),
+                                              //         mode: LaunchMode
+                                              //             .externalNonBrowserApplication);
+                                              //   },
+                                              //   child: Padding(
+                                              //     padding: EdgeInsets.symmetric(
+                                              //         vertical:
+                                              //             size.height * 0.023),
+                                              //     child: Row(
+                                              //       mainAxisAlignment:
+                                              //           MainAxisAlignment
+                                              //               .center,
+                                              //       children: [
+                                              //         ConstsWidget
+                                              //             .buildSubTitleText(
+                                              //           context,
+                                              //           subTitle: 'Ver Anexo',
+                                              //           fontSize: 18,
+                                              //           color: Colors.blue,
+                                              //         ),
+                                              //       ],
+                                              //     ),
+                                              //   ),
+                                              // ),
+                                            ],
                                           ),
                                       ]),
                                 ),

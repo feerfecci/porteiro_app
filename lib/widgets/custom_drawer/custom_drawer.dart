@@ -25,24 +25,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
     Widget buidListTile(
         {required String title,
+        IconData trailing = Icons.keyboard_arrow_right_outlined,
         required IconData leading,
         void Function()? onPressed}) {
-      return GestureDetector(
-        onTap: onPressed,
-        child: ConstsWidget.buildPadding001(
-          context,
+      return ConstsWidget.buildPadding001(
+        context,
+        child: GestureDetector(
+          onTap: onPressed,
           child: ListTile(
             iconColor: Theme.of(context).iconTheme.color,
             leading: Icon(
               leading,
-              size: 25,
+              size: SplashScreen.isSmall ? 25 : 30,
             ),
             title: ConstsWidget.buildTitleText(context,
                 title: title, fontSize: 16),
             trailing: Icon(
-              size: 25,
-              color: Theme.of(context).iconTheme.color,
-              Icons.keyboard_arrow_right_outlined,
+              size: SplashScreen.isSmall ? 25 : 30,
+              trailing,
             ),
           ),
         ),
@@ -51,18 +51,20 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
     return SafeArea(
       child: SizedBox(
-        height: size.height * 0.9,
+        height: size.height * 0.95,
+        // width: size.width * 0.9,
         child: Drawer(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   bottomLeft: Radius.circular(30))),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
+          child: ListView(
+            // mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
                 height: SplashScreen.isSmall
-                    ? size.height * 0.1
+                    ? size.height * 0.12
                     : size.height * 0.08,
                 width: double.maxFinite,
                 child: DrawerHeader(
@@ -116,16 +118,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
               buidListTile(
                 title: 'Termos de uso',
-                leading: Icons.supervised_user_circle,
+                leading: Icons.assignment_outlined,
                 onPressed: () =>
                     ConstsFuture.navigatorPush(context, TermoDeUsoScreen()),
-              ),
-              buidListTile(
-                title: 'Central de Ajuda',
-                leading: Icons.support,
-                onPressed: () => launchUrl(
-                    Uri.parse('https://www.portariaapp.com/central-de-ajuda'),
-                    mode: LaunchMode.externalNonBrowserApplication),
               ),
               buidListTile(
                 title: 'Indicar para amigos',
@@ -136,6 +131,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     mode: LaunchMode.externalNonBrowserApplication),
               ),
               buidListTile(
+                title: 'Central de Ajuda',
+                leading: Icons.support,
+                onPressed: () => launchUrl(
+                    Uri.parse('https://www.portariaapp.com/central-de-ajuda'),
+                    mode: LaunchMode.externalNonBrowserApplication),
+              ),
+              buidListTile(
                 title: 'Efetuar logoff',
                 leading: Icons.logout_outlined,
                 onPressed: () {
@@ -143,19 +145,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
                 },
               ),
-              ChangeThemeButton(),
-              Spacer(),
+              ConstsWidget.buildPadding001(context, child: ChangeThemeButton()),
+              // Spacer(),
               Padding(
-                padding: EdgeInsets.all(size.height * 0.01),
-                child: ConstsWidget.buildCustomButton(
-                  context,
-                  'Fechar Menu',
-                  color: Color.fromARGB(255, 251, 80, 93),
+                padding: EdgeInsets.only(
+                    top: SplashScreen.isSmall
+                        ? size.height * 0.01
+                        : size.height * 0.16,
+                    right: size.width * 0.02,
+                    left: size.width * 0.02),
+                child: ConstsWidget.buildOutlinedButton(
+                  context, title: 'Fechar Menu',
+                  // icon: Icons.logout_outlined,
                   onPressed: () {
                     Navigator.pop(context);
                   },
                 ),
-              ),
+              )
             ],
           ),
         ),

@@ -7,7 +7,7 @@ import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/widgets/alertdialog_all.dart';
 import 'package:app_porteiro/widgets/drop_search_remet.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
-import 'package:app_porteiro/widgets/my_textform_field.dart';
+
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -44,7 +44,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
   final TextEditingController nomeEntregador = TextEditingController();
   final TextEditingController docEntregador = TextEditingController();
   final TextEditingController apCtrl = TextEditingController();
-  final TextEditingController qntCtrl = TextEditingController();
+  final TextEditingController qntCtrl = TextEditingController(text: '1');
 
   final entregadorInfos = GlobalKey<FormState>();
   final itemsInfos = GlobalKey<FormState>();
@@ -188,7 +188,9 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                                   ConstsWidget.buildSubTitleText(context,
                                       subTitle: 'Unidade'),
                                   SizedBox(
-                                    width: size.width * 0.5,
+                                    width: SplashScreen.isSmall
+                                        ? size.width * 0.4
+                                        : size.width * 0.6,
                                     child: ConstsWidget.buildTitleText(context,
                                         fontSize: 18, title: e.ap, maxLines: 3),
                                   ),
@@ -198,7 +200,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ConstsWidget.buildSubTitleText(context,
-                                      subTitle: 'Quantidade'),
+                                      subTitle: 'Qtd'),
                                   ConstsWidget.buildTitleText(context,
                                       title: e.qnt),
                                 ],
@@ -221,11 +223,11 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
               ConstsWidget.buildPadding001(
                 context,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     StatefulBuilder(builder: (context, setState) {
                       return ConstsWidget.buildTitleText(context,
-                          textAlign: TextAlign.right,
+                          textAlign: TextAlign.center,
                           fontSize: 18,
                           title: 'Quantidade total: $totalQnt');
                     }),
@@ -245,7 +247,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
         if (!value['erro']) {
           showAllDialog(context,
               title: ConstsWidget.buildTitleText(context,
-                  title: 'Emissão do Recibo'),
+                  title: 'Emissão do Recibo', fontSize: 18),
               children: [
                 SizedBox(
                   height: height,
@@ -278,6 +280,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                   child: ConstsWidget.buildCustomButton(
                     context,
                     'Assinar',
+                    color: Consts.kColorRed,
                     onPressed: () {
                       setOrientation(Orientation.landscape);
                       ConstsFuture.navigatorPush(
@@ -303,13 +306,16 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
         isLoadingAlertAddCorrep = false;
       });
       return showAllDialog(context,
-          title: ConstsWidget.buildTitleText(context, title: 'Cuidado!!'),
+          title: ConstsWidget.buildTitleText(context,
+              title: 'Cuidado!!', fontSize: 18),
           children: [
             RichText(
+              textAlign: TextAlign.center,
               text: TextSpan(
                 text: 'Ao continuar você enviará um aviso para a unidade ',
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary, fontSize: 16),
+                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                    fontSize: 16),
                 children: [
                   TextSpan(
                       text: nomeApto,
@@ -320,7 +326,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                   TextSpan(
                     text: ' com ',
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
                         fontSize: 16),
                   ),
                   TextSpan(
@@ -332,7 +338,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                   TextSpan(
                     text: ' itens',
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
                         fontSize: 16),
                   ),
                 ],
@@ -346,15 +352,17 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
               children: [
                 ConstsWidget.buildOutlinedButton(
                   context,
-                  title: '    Cancelar    ',
+                  title: 'Cancelar',
+                  rowSpacing: 0.04,
                   onPressed: () {
                     Navigator.pop(context);
                   },
                 ),
                 ConstsWidget.buildLoadingButton(
                   context,
-                  title: '          Continuar          ',
+                  title: 'Continuar',
                   isLoading: _isLoading,
+                  rowSpacing: 0.07,
                   color: Consts.kColorRed,
                   onPressed: () {
                     setState(() {
@@ -379,7 +387,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                             setState(() {
                               itemsMulti.add(MultiItem(nomeApto, qntCtrl.text));
                               totalQnt = totalQnt + int.parse(qntCtrl.text);
-                              qntCtrl.clear();
+                              qntCtrl.text = '1';
                             });
                             Navigator.pop(context);
                           }
@@ -401,123 +409,15 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
         title: 'Entregas',
         body: Column(
           children: [
-            // Form(
-            //   key: entregadorInfos,
-            //   child: MyBoxShadow(
-            //     child: Padding(
-            //       padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
-            //       child: Column(
-            //         children: [
-            //           /*    ConstsWidget.buildPadding001(
-            //             context,
-            //             vertical: 0.01,
-            //             child: ConstsWidget.buildTitleText(context,
-            //                 title: 'Informações para o recibo'),
-            //           ),
-            //           Column(
-            //             children: [
-            //               Row(
-            //                 children: [
-            //                   ConstsWidget.buildTitleText(context, title: 'Eu'),
-            //                   SizedBox(
-            //                     width: size.width * 0.02,
-            //                   ),
-            //                   SizedBox(
-            //                       width: size.width * 0.76,
-            //                       child: buildMyTextFormObrigatorio(
-            //                           context, 'Nome completo do entregador',
-            //                           controller: nomeEntregador))
-            //                 ],
-            //               ),
-            //               Row(
-            //                 children: [
-            //                   ConstsWidget.buildSubTitleText(context,
-            //                       fontSize: 16, subTitle: 'documento'),
-            //                   SizedBox(
-            //                     width: size.width * 0.03,
-            //                   ),
-            //                   SizedBox(
-            //                       width: size.width * 0.4,
-            //                       child: buildMyTextFormObrigatorio(
-            //                           context, 'CPF',
-            //                           controller: docEntregador,
-            //                           hintText: "RG, CPF")),
-            //                   ConstsWidget.buildSubTitleText(context,
-            //                       fontSize: 16, subTitle: '   , declaro'),
-            //                 ],
-            //               ),
-            //               ConstsWidget.buildPadding001(
-            //                 context,
-            //                 child: Row(
-            //                   children: [
-            //                     ConstsWidget.buildSubTitleText(context,
-            //                         fontSize: 16, subTitle: 'ter entregue'),
-            //                     SizedBox(
-            //                       width: size.width * 0.02,
-            //                     ),
-            //                     StatefulBuilder(builder: (context, setState) {
-            //                       return Container(
-            //                           alignment: Alignment.center,
-            //                           width: size.width * 0.08,
-            //                           child: ConstsWidget.buildTitleText(
-            //                               context,
-            //                               title: '$totalQnt'));
-            //                     }),
-            //                     SizedBox(
-            //                       width: size.width * 0.02,
-            //                     ),
-            //                     ConstsWidget.buildSubTitleText(context,
-            //                         fontSize: 16, subTitle: 'items para as'),
-            //                   ],
-            //                 ),
-            //               ),
-            //               ConstsWidget.buildPadding001(
-            //                 context,
-            //                 child: Row(
-            //                   children: [
-            //                     ConstsWidget.buildSubTitleText(context,
-            //                         fontSize: 16,
-            //                         subTitle: 'unidades do condomínio '),
-            //                     SizedBox(
-            //                       width: size.width * 0.37,
-            //                       child: ConstsWidget.buildTitleText(context,
-            //                           fontSize: 17,
-            //                           title: FuncionarioInfos.nome_condominio),
-            //                     )
-            //                   ],
-            //                 ),
-            //               ),
-            //               ConstsWidget.buildPadding001(
-            //                 context,
-            //                 child: Row(
-            //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //                   children: [
-            //                     ConstsWidget.buildSubTitleText(context,
-            //                         fontSize: 16, subTitle: 'em: '),
-            //                     ConstsWidget.buildTitleText(context,
-            //                         fontSize: 18,
-            //                         title: DateFormat('dd/MM/yy')
-            //                             .format(DateTime.now())),
-            //                     ConstsWidget.buildSubTitleText(context,
-            //                         fontSize: 16, subTitle: 'as:'),
-            //                     ConstsWidget.buildTitleText(context,
-            //                         fontSize: 18,
-            //                         title: DateFormat('HH:mm')
-            //                             .format(DateTime.now())),
-            //                   ],
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         */
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
             MyBoxShadow(
                 child: Column(
               children: [
+                ConstsWidget.buildPadding001(
+                  context,
+                  child: ConstsWidget.buildSubTitleText(context,
+                      subTitle: '(*) Campo Obrigatório',
+                      color: Consts.kColorRed),
+                ),
                 Form(
                   key: entregadorInfos,
                   child: Column(
@@ -528,10 +428,10 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                         child: ConstsWidget.buildTitleText(context,
                             title: 'Informações para o Recibo'),
                       ),
-                      buildMyTextFormObrigatorio(
+                      ConstsWidget.buildMyTextFormObrigatorio(
                           context, 'Nome Completo do Entregador',
                           controller: nomeEntregador),
-                      buildMyTextFormObrigatorio(context, 'CPF',
+                      ConstsWidget.buildMyTextFormObrigatorio(context, 'CPF',
                           keyboardType: TextInputType.number,
                           controller: docEntregador,
                           hintText: "CPF"),
@@ -555,23 +455,94 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                               ),
                             ),
                       SizedBox(
-                        height: size.height * 0.01,
+                        height: SplashScreen.isSmall
+                            ? size.height * 0.03
+                            : size.height * 0.02,
                       ),
-                      buildMyTextFormObrigatorio(context, 'Quantidade',
-                          keyboardType: TextInputType.number,
-                          controller: qntCtrl),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                backgroundColor: Consts.kColorApp),
+                            onPressed: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              if (qntCtrl.text != '') {
+                                if (int.parse(qntCtrl.text) > 1) {
+                                  setState(() {
+                                    qntCtrl.text =
+                                        '${int.parse(qntCtrl.text) - 1}';
+                                  });
+                                }
+                              } else {
+                                setState(() {
+                                  qntCtrl.text == '1';
+                                });
+                              }
+                            },
+                            child: Text(
+                              '-',
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width * 0.3,
+                            child:
+                                // MyBoxShadow(
+                                //     child:
+                                //     Column(
+                                //   children: [
+                                //     ConstsWidget.buildSubTitleText(context,
+                                //         subTitle: 'Quantidade'),
+                                //     SizedBox(height: size.height * 0.01),
+                                //     ConstsWidget.buildTitleText(context,
+                                //         title: qntCtrl.text,
+                                //         textAlign: TextAlign.center),
+                                //   ],
+                                // )
+
+                                // ),
+
+                                ConstsWidget.buildMyTextFormObrigatorio(
+                                    context, 'Quantidade',
+                                    keyboardType: TextInputType.number,
+                                    // initialValue: qntCtrl.text
+                                    controller: qntCtrl),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                backgroundColor: Consts.kColorApp),
+                            onPressed: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              if (qntCtrl.text != '') {
+                                if (int.parse(qntCtrl.text) >= 1) {
+                                  setState(() {
+                                    qntCtrl.text =
+                                        '${int.parse(qntCtrl.text) + 1}';
+                                  });
+                                }
+                              } else {
+                                setState(() {
+                                  qntCtrl.text = '1';
+                                });
+                              }
+                            },
+                            child: Icon(Icons.add),
+                          ),
+                        ],
+                      ),
                       if (widget.idUnidade == null)
                         ConstsWidget.buildPadding001(
                           context,
                           child: ConstsWidget.buildLoadingButton(
                             context, title: 'Gravar e Adicionar Entrega',
-                            isLoading: isLoadingAlertAddCorrep,
+                            isLoading: isLoadingAlertAddCorrep, fontSize: 16,
+                            color: Consts.kColorVerde,
                             // icon: Icons.add,
                             onPressed: () {
                               FocusManager.instance.primaryFocus?.unfocus();
-                              setState(() {
-                                isLoadingAlertAddCorrep = true;
-                              });
+
                               var itemsValid =
                                   itemsInfos.currentState?.validate() ?? false;
                               var entregadorValid =
@@ -582,6 +553,9 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                                   selectedItemAP == nomeApto &&
                                   !_apConfirmado &&
                                   DropSearchRemet.tituloRemente != '') {
+                                setState(() {
+                                  isLoadingAlertAddCorrep = true;
+                                });
                                 alertConfirmaCorresp(dataNow);
                               } else
                               /* if (nomeApto == '' ||
@@ -606,6 +580,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                   child: ConstsWidget.buildCustomButton(
                     context,
                     'Emitir Recibo',
+                    fontSize: 16,
                     onPressed: () async {
                       if (widget.idUnidade != null) {
                         var entregadorValid =
@@ -645,7 +620,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                         }
                       }
                     },
-                    icon: Icons.edit_document,
+                    // icon: Icons.edit_document,
                     color: Consts.kColorRed,
                   ),
                 )

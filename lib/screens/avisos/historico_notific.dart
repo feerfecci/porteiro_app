@@ -3,6 +3,7 @@
 import 'package:app_porteiro/consts/consts.dart';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/page_erro.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
@@ -43,9 +44,14 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                     ConstsWidget.buildOutlinedButton(
                       context,
                       title: 'Enviados',
+                      rowSpacing: SplashScreen.isSmall ? 0.07 : 0.09,
                       fontSize: 18,
-                      backgroundColor: filtrar == 0 ? Colors.grey[300] : null,
-                      icon: Icons.mobile_friendly_sharp,
+                      backgroundColor: filtrar == 0 ? Consts.kColorVerde : null,
+                      colorText: filtrar == 0 ? Colors.white : Consts.kColorApp,
+                      colorBorder:
+                          filtrar == 0 ? Consts.kColorVerde : Consts.kColorApp,
+                      colorIcon: filtrar == 0 ? Colors.white : Consts.kColorApp,
+                      // icon: Icons.mobile_friendly_sharp,
                       onPressed: () {
                         setState(() {
                           filtrar = 0;
@@ -53,11 +59,15 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                       },
                     ),
                     ConstsWidget.buildOutlinedButton(
-                      context,
+                      context, rowSpacing: SplashScreen.isSmall ? 0.07 : 0.09,
                       title: 'Recebidos',
                       fontSize: 18,
-                      icon: Icons.install_mobile_rounded,
-                      backgroundColor: filtrar == 1 ? Colors.grey[300] : null,
+                      // icon: Icons.install_mobile_rounded,
+                      colorText: filtrar == 1 ? Colors.white : Consts.kColorApp,
+                      colorBorder:
+                          filtrar == 1 ? Consts.kColorRed : Consts.kColorApp,
+                      colorIcon: filtrar == 1 ? Colors.white : Consts.kColorApp,
+                      backgroundColor: filtrar == 1 ? Consts.kColorRed : null,
                       onPressed: () {
                         setState(() {
                           filtrar = 1;
@@ -151,12 +161,8 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ConstsWidget.buildSubTitleText(
-                                      context,
-                                      subTitle: 'Mensagem',
-                                    ),
                                     SizedBox(
-                                      height: size.height * 0.005,
+                                      height: size.height * 0.01,
                                     ),
                                     SizedBox(
                                       width: size.width * 0.9,

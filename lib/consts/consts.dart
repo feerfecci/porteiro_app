@@ -27,8 +27,8 @@ class Consts {
   static const String iconApiPort = 'https://a.portariaapp.com/img/ico-';
 
   static const kBackPageColor = Color.fromARGB(255, 245, 245, 255);
-  // static const kButtonColor = Color.fromARGB(255, 0, 134, 252);
-  static const kButtonColor = kColorApp;
+  static const kButtonColor = Color.fromARGB(255, 0, 134, 252);
+  // static const kButtonColor = kColorApp;
   static const kColorApp = Color.fromARGB(255, 75, 132, 255);
   static const kColorRed = Color.fromARGB(255, 251, 80, 93);
   static const kColorVerde = Color.fromARGB(255, 44, 201, 104);

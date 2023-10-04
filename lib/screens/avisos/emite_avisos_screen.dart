@@ -1,8 +1,5 @@
 import 'dart:convert';
-
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/moldals/modal_all.dart';
-import 'package:app_porteiro/widgets/my_textform_field.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +27,8 @@ class EmiteAvisosScreen extends StatefulWidget {
   @override
   State<EmiteAvisosScreen> createState() => _EmiteAvisosScreenState();
 }
+
+bool isLoading = false;
 
 class _EmiteAvisosScreenState extends State<EmiteAvisosScreen> {
   final keyFormField = GlobalKey<FormState>();
@@ -107,7 +106,7 @@ class _EmiteAvisosScreenState extends State<EmiteAvisosScreen> {
                   borderRadius: BorderRadius.circular(16),
                   hint: Text('Selecione Um Aviso'),
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
                       fontWeight: FontWeight.w400,
                       fontSize: 18),
                 ),
@@ -128,6 +127,9 @@ class _EmiteAvisosScreenState extends State<EmiteAvisosScreen> {
           child: Column(
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              ConstsWidget.buildCamposObrigatorios(
+                context,
+              ),
               ConstsWidget.buildPadding001(
                 context,
                 vertical: 0.02,
@@ -140,7 +142,7 @@ class _EmiteAvisosScreenState extends State<EmiteAvisosScreen> {
               //     child: ConstsWidget.buildTitleText(context,
               //         title: widget.nome_moradores)),
               buildDropButtonAvisos(),
-              buildMyTextFormObrigatorio(
+              ConstsWidget.buildMyTextFormObrigatorio(
                 context,
                 widget.tipoAviso == 1
                     ? 'Nome Restaurante'
@@ -153,12 +155,16 @@ class _EmiteAvisosScreenState extends State<EmiteAvisosScreen> {
               SizedBox(
                 height: size.height * 0.01,
               ),
-              ConstsWidget.buildCustomButton(
+              ConstsWidget.buildLoadingButton(
                 context,
-                'Enviar Aviso',
+                title: 'Enviar Aviso',
+                isLoading: isLoading,
                 color: Consts.kColorRed,
                 onPressed: dropdownValue != null
                     ? () {
+                        setState(() {
+                          isLoading = true;
+                        });
                         var validForm = keyFormField.currentState!.validate();
                         if (validForm) {
                           keyFormField.currentState!.save();
@@ -174,10 +180,14 @@ class _EmiteAvisosScreenState extends State<EmiteAvisosScreen> {
                           } else {
                             respostaTipo = 8;
                           }
+                          FocusManager.instance.primaryFocus!.unfocus();
                           ConstsFuture.launchGetApi(context,
                                   'msgsprontas/index.php?fn=enviarMensagem&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&idmsg=$dropdownValue&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&nome_visitante=${widget.idVisita == null ? nomeVisitante : widget.nomeCadastrado}&tipo=$respostaTipo')
                               .then((value) {
                             if (!value['erro']) {
+                              setState(() {
+                                isLoading = false;
+                              });
                               Navigator.pop(context);
                               if (widget.idVisita != null) {
                                 ConstsFuture.launchGetApi(context,

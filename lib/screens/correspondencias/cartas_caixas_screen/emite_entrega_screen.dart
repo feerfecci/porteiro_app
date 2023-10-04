@@ -9,12 +9,12 @@ import 'package:flutter/src/widgets/placeholder.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:validatorless/validatorless.dart';
-import '../../consts/consts.dart';
-import '../../consts/consts_future.dart';
-import '../../consts/consts_widget.dart';
-import '../../widgets/my_textform_field.dart';
-import '../../widgets/snack_bar.dart';
-import '../home/home_page.dart';
+import '../../../consts/consts.dart';
+import '../../../consts/consts_future.dart';
+import '../../../consts/consts_widget.dart';
+import '../../../widgets/snack_bar.dart';
+import '../../home/home_page.dart';
+import '../../splash/splash_screen.dart';
 
 class EmiteEntregaScreen extends StatefulWidget {
   final int? idunidade;
@@ -131,6 +131,12 @@ class _EmiteEntregaScreenState extends State<EmiteEntregaScreen> {
             key: _formKey,
             child: Column(
               children: [
+                ConstsWidget.buildCamposObrigatorios(
+                  context,
+                ),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
                 // ConstsWidget.buildClosePop(context, title: 'Confirmar entrega'),
                 // if (widget.tipoCompara == 2)
                 // buildFuture(),
@@ -167,12 +173,23 @@ class _EmiteEntregaScreenState extends State<EmiteEntregaScreen> {
                         borderRadius: BorderRadius.circular(16)),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.black26),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.primary),
                     ),
-                    label: Text(
-                      widget.idMorador != null
-                          ? 'Senha Retirada'
-                          : 'Código de confirmação',
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ConstsWidget.buildSubTitleText(
+                          context,
+                          subTitle: widget.idMorador != null
+                              ? 'Senha Retirada'
+                              : 'Código de confirmação',
+                        ),
+                        Text(
+                          ' *',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
                     ),
                     hintText: widget.idMorador != null
                         ? 'Senha Retirada'
@@ -184,12 +201,19 @@ class _EmiteEntregaScreenState extends State<EmiteEntregaScreen> {
                         });
                       }),
                       child: obscure
-                          ? Icon(Icons.visibility_off_outlined)
-                          : Icon(Icons.visibility_outlined),
+                          ? Icon(
+                              Icons.visibility_off_outlined,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
+                            )
+                          : Icon(Icons.visibility_outlined,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.primary),
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                      fontSize: 16),
                 ),
                 ConstsWidget.buildPadding001(
                   context,
@@ -207,12 +231,12 @@ class _EmiteEntregaScreenState extends State<EmiteEntregaScreen> {
                     children: [
                       ConstsWidget.buildPadding001(
                         context,
-                        child: buildMyTextFormObrigatorio(
+                        child: ConstsWidget.buildMyTextFormObrigatorio(
                             context, 'Nome Portador',
                             controller: nome_portadorCrtl),
                       ),
                       ConstsWidget.buildPadding001(context,
-                          child: buildMyTextFormObrigatorio(
+                          child: ConstsWidget.buildMyTextFormObrigatorio(
                               context, 'Documento',
                               controller: documento_portadorCrtl,
                               keyboardType: TextInputType.number)),
@@ -224,7 +248,10 @@ class _EmiteEntregaScreenState extends State<EmiteEntregaScreen> {
                     _formKey.currentState!.save();
                     loadingConfirmacao();
                   }
-                }, isLoading: isLoading, title: 'Confirmar Entrega'),
+                },
+                    isLoading: isLoading,
+                    title: 'Confirmar Entrega',
+                    color: Consts.kColorRed),
               ],
             ),
           ),

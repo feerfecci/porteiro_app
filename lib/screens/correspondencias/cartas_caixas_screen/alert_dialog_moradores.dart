@@ -1,13 +1,14 @@
-import 'package:app_porteiro/screens/correspondencias/emite_entrega_screen.dart';
+import 'package:app_porteiro/screens/correspondencias/cartas_caixas_screen/emite_entrega_screen.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
-import '../../consts/consts.dart';
-import '../../consts/consts_future.dart';
-import '../../consts/consts_widget.dart';
+import '../../../consts/consts.dart';
+import '../../../consts/consts_future.dart';
+import '../../../consts/consts_widget.dart';
 
-import '../../widgets/my_box_shadow.dart';
-import '../../widgets/page_erro.dart';
-import '../../widgets/page_vazia.dart';
+import '../../../widgets/my_box_shadow.dart';
+import '../../../widgets/page_erro.dart';
+import '../../../widgets/page_vazia.dart';
 
 class AlertListMoradores extends StatefulWidget {
   final int idunidade;
@@ -71,81 +72,84 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
                   children: [
                     ConstsWidget.buildClosePop(context,
                         paddingX: 0.02, title: 'Quem está retirando'),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data['morador'].length,
-                      itemBuilder: (context, index) {
-                        return StatefulBuilder(builder: (context, setState) {
-                          return MyBoxShadow(
-                            child: ConstsWidget.buildCheckBox(context,
-                                isChecked: isChecked, onChanged: (value) {
-                              setState(
-                                () {
-                                  isChecked = value!;
-                                  if (value) {
-                                    idMorador = snapshot.data['morador'][index]
-                                        ['idmorador'];
-                                  } else {
-                                    idMorador = 0;
-                                  }
-                                },
-                              );
-                            },
-                                title: snapshot.data['morador'][index]
-                                    ['nome_morador']),
-                          );
-                        });
-                      },
+                    SizedBox(
+                      height: snapshot.data['morador'].length <= 3
+                          ? SplashScreen.isSmall
+                              ? size.height * 0.45
+                              : size.height * 0.3
+                          : size.height * 0.6,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data['morador'].length,
+                        itemBuilder: (context, index) {
+                          return StatefulBuilder(builder: (context, setState) {
+                            return MyBoxShadow(
+                              child: ConstsWidget.buildCheckBox(context,
+                                  isChecked: isChecked, onChanged: (value) {
+                                setState(
+                                  () {
+                                    isChecked = value!;
+                                    if (value) {
+                                      idMorador = snapshot.data['morador']
+                                          [index]['idmorador'];
+                                    } else {
+                                      idMorador = 0;
+                                    }
+                                  },
+                                );
+                              },
+                                  title: snapshot.data['morador'][index]
+                                      ['nome_morador']),
+                            );
+                          });
+                        },
+                      ),
                     ),
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ConstsWidget.buildOutlinedButton(
+                          context,
+                          title: "Cancelar",
+                          rowSpacing: 0.08,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        ConstsWidget.buildCustomButton(
+                          context,
+                          "Continuar",
+                          rowSpacing: 0.06,
+                          onPressed: () {
+                            if (idMorador != 0) {
+                              Navigator.of(context).pop();
+                              ConstsFuture.navigatorPush(
+                                  context,
+                                  EmiteEntregaScreen(
+                                      idunidade: widget.idunidade,
+                                      idMorador: idMorador,
+                                      tipoCompara: 'senha',
+                                      listEntregar: widget.listEntregar));
+
+                              // showModalEmiteEntrega(context,
+                              //     idunidade: widget.idunidade,
+                              //     idMorador: idMorador,
+                              //     tipoCompara: 'senha',
+                              //     listEntregar: widget.listEntregar);
+                            } else {
+                              buildMinhaSnackBar(context, hasError: true);
+                            }
+                          },
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(0, 220, 19, 19),
-                    ),
-                    child: Text(
-                      "Cancelar",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (idMorador != 0) {
-                      Navigator.of(context).pop();
-                      ConstsFuture.navigatorPush(
-                          context,
-                          EmiteEntregaScreen(
-                              idunidade: widget.idunidade,
-                              idMorador: idMorador,
-                              tipoCompara: 'senha',
-                              listEntregar: widget.listEntregar));
-
-                      // showModalEmiteEntrega(context,
-                      //     idunidade: widget.idunidade,
-                      //     idMorador: idMorador,
-                      //     tipoCompara: 'senha',
-                      //     listEntregar: widget.listEntregar);
-                    } else {
-                      buildMinhaSnackBar(context, hasError: true);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Consts.kColorRed,
-                  ),
-                  child: Text(
-                    "Continuar",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
+              actions: [],
             );
           } else {
             return AlertDialog(

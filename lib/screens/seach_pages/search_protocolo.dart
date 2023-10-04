@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/screens/correspondencias/emite_entrega_screen.dart';
+import 'package:app_porteiro/screens/correspondencias/cartas_caixas_screen/emite_entrega_screen.dart';
 import 'package:app_porteiro/screens/seach_pages/search_empty.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';

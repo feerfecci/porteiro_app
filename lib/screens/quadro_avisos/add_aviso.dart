@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:app_porteiro/screens/quadro_avisos/quadro_avisos.dart';
-import 'package:app_porteiro/widgets/my_textform_field.dart';
+
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,7 +31,7 @@ class _AddAvisosState extends State<AddAvisos> {
     var size = MediaQuery.of(context).size;
     return StatefulBuilder(builder: (context, setState) {
       return ScaffoldAll(
-        title: 'Adicionar Avisos',
+        title: 'Enviar Aviso',
         body: Form(
           key: _keyForm,
           child: Padding(
@@ -40,14 +40,18 @@ class _AddAvisosState extends State<AddAvisos> {
               shrinkWrap: true,
               physics: ClampingScrollPhysics(),
               children: [
-                buildMyTextFormObrigatorio(context, 'Título',
-                    hintText: 'Exemplo: ',
+                ConstsWidget.buildCamposObrigatorios(
+                  context,
+                ),
+                ConstsWidget.buildMyTextFormObrigatorio(context, 'Título',
+                    hintText: 'Exemplo: Manutenção do elevador do bloco C',
                     textCapitalization: TextCapitalization.words,
                     maxLength: 70,
                     controller: tituloCntl),
                 ConstsWidget.buildPadding001(
                   context,
-                  child: buildMyTextFormObrigatorio(context, 'Descrição',
+                  child: ConstsWidget.buildMyTextFormObrigatorio(
+                      context, 'Descrição',
                       textCapitalization: TextCapitalization.sentences,
                       minLines: 8,
                       maxLines: 8,
@@ -55,6 +59,9 @@ class _AddAvisosState extends State<AddAvisos> {
                           'Exemplo: Será realizada a manutenção do elevador do bloco C a partir de amanhã (21/06) as 14h. Por favor, utilize as escadarias',
                       maxLength: 1000,
                       controller: textoCntl),
+                ),
+                SizedBox(
+                  height: size.height * 0.01,
                 ),
                 ConstsWidget.buildOutlinedButton(
                   context,
@@ -76,7 +83,8 @@ class _AddAvisosState extends State<AddAvisos> {
                       } else {
                         // ignore: use_build_context_synchronously
                         buildMinhaSnackBar(context,
-                            title: 'Cuidado!',hasError: true,
+                            title: 'Cuidado!',
+                            hasError: true,
                             subTitle: 'Permitido apenas um arquivo');
                       }
                     }
@@ -135,7 +143,10 @@ class _AddAvisosState extends State<AddAvisos> {
                             title: 'Muito Obrigado!',
                             subTitle: value['mensagem']);
                       } else {
-                        buildMinhaSnackBar(context,hasError: true,);
+                        buildMinhaSnackBar(
+                          context,
+                          hasError: true,
+                        );
                       }
                     });
                   }

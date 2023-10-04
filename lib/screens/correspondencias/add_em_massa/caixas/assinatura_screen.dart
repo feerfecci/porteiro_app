@@ -4,16 +4,18 @@ import 'dart:io';
 
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
 import 'package:app_porteiro/screens/home/home_page.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:signature/signature.dart';
-import '../../../consts/consts.dart';
+import '../../../../consts/consts.dart';
 import 'package:http/http.dart' as http;
+
+import 'encomendas_screen.dart';
 
 class AssinaturaScreen extends StatefulWidget {
   final String nomeEntregador;
@@ -49,7 +51,8 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
           children: [
             Signature(
               controller: controllerAssinatura,
-              height: size.height * 0.6,
+              height:
+                  SplashScreen.isSmall ? size.height * 0.5 : size.height * 0.6,
               width: size.width * 0.9,
               backgroundColor: Colors.white,
             ),
@@ -62,14 +65,19 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
                 ConstsWidget.buildOutlinedButton(
                   context,
                   title: 'Voltar',
+                  rowSpacing: 0.04,
+                  altura: 0.04,
                   onPressed: () {
                     controllerAssinatura.clear();
                     Navigator.pop(context);
+                    setOrientation(Orientation.portrait);
                   },
                 ),
                 ConstsWidget.buildCustomButton(
                   context,
                   'Limpar',
+                  altura: 0.04,
+                  rowSpacing: 0.04,
                   onPressed: () {
                     setState(() {
                       controllerAssinatura.clear();
@@ -79,6 +87,8 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
                 ConstsWidget.buildLoadingButton(
                   context,
                   title: 'Salvar',
+                  rowSpacing: 0.06,
+                  height: 0.045,
                   isLoading: _isLoading,
                   color: Consts.kColorRed,
                   onPressed: () async {

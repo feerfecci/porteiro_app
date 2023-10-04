@@ -2,19 +2,19 @@
 import 'dart:convert';
 import 'package:app_porteiro/consts/consts_future.dart';
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/screens/correspondencias/alert_dialog_moradores.dart';
-import 'package:app_porteiro/screens/correspondencias/multi_corresp/encomendas_screen.dart';
+import 'package:app_porteiro/screens/correspondencias/cartas_caixas_screen/alert_dialog_moradores.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import '../../consts/consts.dart';
-import '../../moldals/modal_inclui_corrresp.dart';
-import '../../widgets/listview_all.dart';
-import '../../widgets/page_erro.dart';
-import '../../widgets/page_vazia.dart';
+import '../../../consts/consts.dart';
+import '../../../widgets/listview_all.dart';
+import '../../../widgets/page_erro.dart';
+import '../../../widgets/page_vazia.dart';
+import '../add_em_massa/caixas/encomendas_screen.dart';
+import 'add_corrresp_screen.dart';
 
 class CorrespondenciasScreen extends StatefulWidget {
   final int? idunidade;
@@ -77,15 +77,17 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
           horizontal: 0.01,
           child: ConstsWidget.buildCustomButton(
             context,
-            widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
-            icon: Icons.add,
+            widget.tipoAviso == 3 ? 'Adicionar Cartas' : 'Adicionar Caixas',
+            // icon: Icons.add,
             onPressed: widget.tipoAviso == 3
                 ? () {
-                    showModalIncluiCorresp(context,
-                        title: widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
-                        idunidade: widget.idunidade!,
-                        tipoAviso: widget.tipoAviso!,
-                        localizado: widget.localizado!);
+                    ConstsFuture.navigatorPush(
+                        context,
+                        AddCorrespScreen(
+                            title: widget.tipoAviso == 3 ? 'Cartas' : 'Caixas',
+                            idunidade: widget.idunidade!,
+                            tipoAviso: widget.tipoAviso!,
+                            localizado: widget.localizado!));
                   }
                 : () {
                     ConstsFuture.navigatorPush(
@@ -225,22 +227,22 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                                           SizedBox(
                                             height: size.height * 0.01,
                                           ),
-                                          if (quantidade != '1')
-                                            Row(
-                                              children: [
-                                                ConstsWidget.buildSubTitleText(
-                                                    context,
-                                                    fontSize: 16,
-                                                    subTitle: 'Quantidade - '),
-                                                SizedBox(
-                                                  height: size.height * 0.01,
-                                                ),
-                                                ConstsWidget.buildTitleText(
-                                                    context,
-                                                    title: quantidade,
-                                                    fontSize: 18),
-                                              ],
-                                            )
+                                          // if (quantidade != '1')
+                                          Row(
+                                            children: [
+                                              ConstsWidget.buildSubTitleText(
+                                                  context,
+                                                  fontSize: 16,
+                                                  subTitle: 'Quantidade: '),
+                                              SizedBox(
+                                                height: size.height * 0.01,
+                                              ),
+                                              ConstsWidget.buildTitleText(
+                                                  context,
+                                                  title: quantidade,
+                                                  fontSize: 18),
+                                            ],
+                                          )
                                         ],
                                       ),
                                     ),

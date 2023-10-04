@@ -164,12 +164,12 @@
 //                                   double? fontSize = 18;
 //                                   TextStyle styleBold = TextStyle(
 //                                       color:
-//                                           Theme.of(context).colorScheme.primary,
+//                                           Theme.of(context).textTheme.bodyLarge!.color,
 //                                       fontWeight: FontWeight.bold,
 //                                       fontSize: 19);
 //                                   TextStyle style = TextStyle(
 //                                       color:
-//                                           Theme.of(context).colorScheme.primary,
+//                                           Theme.of(context).textTheme.bodyLarge!.color,
 //                                       fontSize: fontSize,
 //                                       height: size.height * 0.002);
 //                                   showAllDialog(context,

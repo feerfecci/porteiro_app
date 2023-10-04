@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 import 'package:app_porteiro/consts/consts_future.dart';
-import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
 import 'package:app_porteiro/screens/seach_pages/search_empty.dart';
 import 'package:app_porteiro/widgets/page_vazia.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +15,7 @@ import '../avisos/emite_avisos_screen.dart';
 
 class SearchVisitante extends SearchDelegate<String> {
   @override
-  String get searchFieldLabel => 'ex: RG, CPF';
+  String get searchFieldLabel => 'ex: CPF';
   Future sugestoesVisitantes() async {
     var url = Uri.parse(
         '${Consts.apiPortaria}lista_visitantes/?fn=listarVisitantes&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&palavra=$query');
@@ -60,7 +59,7 @@ class SearchVisitante extends SearchDelegate<String> {
 
     if (query.isEmpty) {
       return buildNoQuerySearch(context,
-          mesagem: 'Digite um documento\n para localizar o visitante');
+          mesagem: 'Digite um Documento\n Para Localizar o Visitante');
     } else {
       return StatefulBuilder(builder: (context, setState) {
         return FutureBuilder(
@@ -183,11 +182,17 @@ class SearchVisitante extends SearchDelegate<String> {
                             onPressed: () {
                               double? fontSize = 18;
                               TextStyle styleBold = TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 19);
                               TextStyle style = TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
                                   fontSize: fontSize,
                                   height: size.height * 0.002);
                               ConstsFuture.navigatorPush(

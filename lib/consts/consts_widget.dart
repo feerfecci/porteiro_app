@@ -27,9 +27,10 @@ class ConstsWidget {
   static Widget buildTitleText(
     BuildContext context, {
     Color? color,
-    double fontSize = 16,
+    double fontSize = 18,
     TextAlign? textAlign,
     double? sizedWidth,
+    TextOverflow? overflow = TextOverflow.ellipsis,
     required String title,
     int? maxLines,
   }) {
@@ -40,11 +41,11 @@ class ConstsWidget {
         title,
         textAlign: textAlign,
         maxLines: maxLines,
-        overflow: TextOverflow.ellipsis,
+        overflow: overflow,
         style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: SplashScreen.isSmall ? (fontSize - 3) : fontSize,
-            color: color ?? Theme.of(context).colorScheme.primary),
+            fontSize: SplashScreen.isSmall ? (fontSize - 4) : fontSize,
+            color: color ?? Theme.of(context).textTheme.bodyLarge!.color),
       ),
     );
   }
@@ -52,14 +53,20 @@ class ConstsWidget {
   static Widget buildSubTitleText(
     BuildContext context, {
     Color? color,
-    double? fontSize = 14,
+    double? fontSize = 16,
     required String subTitle,
+    TextOverflow? overflow = TextOverflow.ellipsis,
+    TextAlign? textAlign,
+    int? maxLines,
   }) {
     return Text(
       subTitle,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
       style: TextStyle(
           fontSize: SplashScreen.isSmall ? (fontSize! - 2) : fontSize,
-          color: color ?? Theme.of(context).colorScheme.primary),
+          color: color ?? Theme.of(context).textTheme.bodyLarge!.color),
     );
   }
 
@@ -68,6 +75,7 @@ class ConstsWidget {
       String? mask,
       TextInputType? keyboardType,
       List<TextInputFormatter>? inputFormatters,
+      TextEditingController? controller,
       String? hintText,
       String? initialValue,
       final void Function(String? text)? onSaved}) {
@@ -75,30 +83,18 @@ class ConstsWidget {
     return ConstsWidget.buildPadding001(
       context,
       child: TextFormField(
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
         autovalidateMode: AutovalidateMode.onUserInteraction,
         inputFormatters: [MaskTextInputFormatter(mask: mask)],
         initialValue: initialValue,
         onSaved: onSaved,
+        controller: controller,
         textAlign: TextAlign.start,
         textInputAction: TextInputAction.next,
         keyboardType: keyboardType,
         maxLines: 5,
         minLines: 1,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: size.width * 0.04),
-          filled: true,
-          fillColor: Theme.of(context).canvasColor,
-          label: Text(title),
-          hintText: hintText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Colors.black26),
-          ),
-        ),
+        decoration:
+            buildTextFieldDecoration(context, title: title, hintText: hintText),
       ),
     );
   }
@@ -112,57 +108,118 @@ class ConstsWidget {
       TextEditingController? controller,
       TextInputType? keyboardType,
       bool center = false,
+      int? maxLength,
+      int? maxLines,
+      int? minLines,
+      TextAlign textAlign = TextAlign.start,
+      TextCapitalization textCapitalization = TextCapitalization.none,
       bool obscureText = false,
       final void Function(String? text)? onSaved}) {
     var size = MediaQuery.of(context).size;
     return ConstsWidget.buildPadding001(
       context,
       child: TextFormField(
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
-        initialValue: initialValue,
-        controller: controller,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        textAlign: TextAlign.start,
-        obscureText: obscureText,
-        textInputAction: TextInputAction.next,
-        keyboardType: keyboardType,
-        onSaved: onSaved,
-        inputFormatters: inputFormatters,
-        validator: validator ??
-            Validatorless.multiple([Validatorless.required(mensagem)]),
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(
-              horizontal: size.width * 0.045, vertical: size.height * 0.025),
-          filled: true,
-          fillColor: Theme.of(context).canvasColor,
-          label: RichText(
-              text: TextSpan(
-                  text: title,
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.primary),
-                  children: [
-                TextSpan(text: '*', style: TextStyle(color: Consts.kColorRed))
-              ])),
-          hintText: hintText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+          // style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          initialValue: initialValue,
+          controller: controller,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          textAlign: textAlign,
+          obscureText: obscureText,
+          maxLength: maxLength,
+          minLines: minLines,
+          textInputAction: TextInputAction.next,
+          keyboardType: keyboardType,
+          onSaved: onSaved,
+          maxLines: maxLines,
+          inputFormatters: inputFormatters,
+          textCapitalization: textCapitalization,
+          validator: validator ??
+              Validatorless.multiple([Validatorless.required(mensagem)]),
+          decoration: buildTextFieldDecoration(context,
+              title: title, hintText: hintText, isobrigatorio: true)
+          // InputDecoration(
+          //   contentPadding: EdgeInsets.symmetric(
+          //       horizontal: size.width * 0.045, vertical: size.height * 0.025),
+          //   filled: true,
+          //   fillColor: Theme.of(context).canvasColor,
+          //   label: RichText(
+          //       text: TextSpan(
+          //           text: title,
+          //           style: TextStyle(
+          //               color: Theme.of(context).textTheme.bodyLarge!.color,
+          //               fontSize: 16),
+          //           children: [
+          //         TextSpan(text: ' *', style: TextStyle(color: Consts.kColorRed))
+          //       ])),
+          //   hintText: hintText,
+          //   border: OutlineInputBorder(
+          //     borderRadius: BorderRadius.circular(16),
+          //   ),
+          //   enabledBorder: OutlineInputBorder(
+          //     borderRadius: BorderRadius.circular(16),
+          //     borderSide:
+          //         BorderSide(color: Theme.of(context).colorScheme.primary),
+          //   ),
+          // ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Colors.black26),
-          ),
-        ),
+    );
+  }
+
+  static InputDecoration buildTextFieldDecoration(BuildContext context,
+      {required String title,
+      String? hintText,
+      bool isobrigatorio = false,
+      Widget? suffixIcon}) {
+    var size = MediaQuery.of(context).size;
+    return InputDecoration(
+      suffixIcon: suffixIcon,
+      contentPadding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.035, vertical: size.height * 0.025),
+      filled: true,
+      fillColor: Theme.of(context).canvasColor,
+      label: isobrigatorio
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ConstsWidget.buildSubTitleText(
+                  context,
+                  subTitle: title,
+                  fontSize: SplashScreen.isSmall ? 14 : 16,
+                ),
+                // Text(
+                //   title,
+                //   style: TextStyle(fontSize: SplashScreen.isSmall ? 14 : 16),
+                // ),
+                Text(
+                  ' *',
+                  style: TextStyle(
+                      fontSize: SplashScreen.isSmall ? 14 : 16,
+                      color: Consts.kColorRed),
+                ),
+              ],
+            )
+          : ConstsWidget.buildTitleText(
+              context,
+              title: title,
+              fontSize: SplashScreen.isSmall ? 14 : 16,
+            ),
+      hintText: hintText,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
       ),
     );
   }
 
   static Widget buildCustomButton(BuildContext context, String title,
-      {IconData? icon,
-      double? altura,
-      double fontSize = 16,
+      {double altura = 0.028,
+      double fontSize = 18,
+      double rowSpacing = 0.0,
       Color? color = Consts.kButtonColor,
       Color? textColor = Colors.white,
-      Color? iconColor = Colors.white,
       required void Function()? onPressed}) {
     var size = MediaQuery.of(context).size;
     return ElevatedButton(
@@ -173,16 +230,14 @@ class ConstsWidget {
       onPressed: onPressed,
       child: ConstsWidget.buildPadding001(
         context,
-        vertical: 0.023,
+        vertical: SplashScreen.isSmall ? altura + 0.01 : altura,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            if (icon != null) Icon(size: 18, icon, color: iconColor),
-            if (icon != null)
-              SizedBox(
-                width: size.width * 0.015,
-              ),
+            SizedBox(
+              width: size.width * rowSpacing,
+            ),
             Text(
               title,
               style: TextStyle(
@@ -192,10 +247,117 @@ class ConstsWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            SizedBox(
+              width: size.width * rowSpacing,
+            ),
           ],
         ),
       ),
     );
+  }
+
+  static Widget buildOutlinedButton(BuildContext context,
+      {required String title,
+      required void Function()? onPressed,
+      double fontSize = 16,
+      double altura = 0.025,
+      double rowSpacing = 0,
+      Color colorBorder = Consts.kButtonColor,
+      Color colorText = Consts.kButtonColor,
+      Color colorIcon = Consts.kButtonColor,
+      Color? backgroundColor = Colors.transparent}) {
+    var size = MediaQuery.of(context).size;
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        alignment: Alignment.center,
+        backgroundColor: backgroundColor,
+        side: BorderSide(width: size.width * 0.005, color: colorBorder),
+        shape: StadiumBorder(),
+      ),
+      onPressed: onPressed,
+      child: buildPadding001(
+        context,
+        vertical: SplashScreen.isSmall ? altura + 0.004 : altura,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(
+              width: size.width * rowSpacing,
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                overflow: TextOverflow.ellipsis,
+                color: colorText,
+                fontSize: SplashScreen.isSmall ? 14 : 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(
+              width: size.width * rowSpacing,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget buildLoadingButton(BuildContext context,
+      {required void Function()? onPressed,
+      required bool isLoading,
+      required String title,
+      color = Consts.kColorApp,
+      double rowSpacing = 0.0,
+      double height = 0.028,
+      double fontSize = 16}) {
+    var size = MediaQuery.of(context).size;
+
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(
+                vertical: SplashScreen.isSmall
+                    ? size.height * height + 0.007
+                    : size.height * height),
+            backgroundColor: color,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Consts.borderButton))),
+        onPressed: isLoading ? () {} : onPressed,
+        child: isLoading == false
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: size.width * rowSpacing,
+                  ),
+                  Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: SplashScreen.isSmall ? 16 : 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(
+                    width: size.width * rowSpacing,
+                  ),
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    height: size.height * 0.025,
+                    width: size.width * 0.05,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ));
   }
 
   static Widget buildAtivoInativo(
@@ -237,53 +399,6 @@ class ConstsWidget {
     );
   }
 
-  static Widget buildLoadingButton(BuildContext context,
-      {required void Function()? onPressed,
-      required bool isLoading,
-      required String title,
-      color = Consts.kColorApp,
-      double fontSize = 14}) {
-    var size = MediaQuery.of(context).size;
-
-    return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.025),
-            backgroundColor: color,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(Consts.borderButton))),
-        onPressed: isLoading ? () {} : onPressed,
-        child: isLoading == false
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    title,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: fontSize,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    height: size.height * 0.025,
-                    width: size.width * 0.05,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ));
-  }
-
   static Widget buildDropButtonAvisos(BuildContext context,
       {required List categoryItem, required Object? dropdownValue}) {
     var size = MediaQuery.of(context).size;
@@ -317,7 +432,8 @@ class ConstsWidget {
                             ConstsWidget.buildSubTitleText(context,
                                 subTitle: e['texto'])
                             // ListTile(
-                            //   textColor: Theme.of(context).colorScheme.primary,
+                            //   textColor: Theme.of(context)
+                            // ,
                             //   title: Text(e['titulo']),
                             //   subtitle: Text(e['texto']),
                             // ),
@@ -338,7 +454,7 @@ class ConstsWidget {
                   borderRadius: BorderRadius.circular(16),
                   hint: Text('Selecione Um Aviso'),
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
                       fontWeight: FontWeight.w400,
                       fontSize: 18),
                 ),
@@ -363,60 +479,15 @@ class ConstsWidget {
         children: [
           buildTitleText(context, title: title),
           Transform.scale(
-            scale: 1.3,
+            scale: 1,
             child: Checkbox(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
+              // shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(15)),
               value: isChecked,
               onChanged: onChanged,
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  static Widget buildOutlinedButton(BuildContext context,
-      {required String title,
-      required void Function()? onPressed,
-      double fontSize = 16,
-      IconData? icon,
-      double? altura,
-      Color color = Consts.kButtonColor,
-      Color? backgroundColor = Colors.transparent}) {
-    var size = MediaQuery.of(context).size;
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        alignment: Alignment.center,
-        backgroundColor: backgroundColor,
-        side: BorderSide(width: size.width * 0.005, color: color),
-        shape: StadiumBorder(),
-      ),
-      onPressed: onPressed,
-      child: buildPadding001(
-        context,
-        vertical: 0.023,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            if (icon != null)
-              Icon(size: SplashScreen.isSmall ? 16 : 18, icon, color: color),
-            if (icon != null)
-              SizedBox(
-                width: size.width * 0.015,
-              ),
-            Text(
-              title,
-              style: TextStyle(
-                overflow: TextOverflow.ellipsis,
-                color: Consts.kButtonColor,
-                fontSize: SplashScreen.isSmall ? (fontSize - 2) : fontSize,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -466,12 +537,30 @@ class ConstsWidget {
                   ? ''
                   : title.toString(),
           style: TextStyle(
-              color: Theme.of(context).cardColor, fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: title >= 10
+                  ? SplashScreen.isSmall
+                      ? 12
+                      : 14
+                  : SplashScreen.isSmall
+                      ? 14
+                      : 16),
         ),
         position: position,
         badgeStyle: badges.BadgeStyle(
           badgeColor: Consts.kColorRed,
         ),
         child: child);
+  }
+
+  static Widget buildCamposObrigatorios(BuildContext context) {
+    return ConstsWidget.buildPadding001(
+      context,
+      child: Center(
+        child: buildSubTitleText(context,
+            subTitle: '(*) Campo Obrigatório', color: Consts.kColorRed),
+      ),
+    );
   }
 }

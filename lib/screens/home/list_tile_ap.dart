@@ -5,10 +5,9 @@ import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/avisos/emite_avisos_screen.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
-import 'package:app_porteiro/moldals/modal_envia_avisos.dart';
 import 'package:flutter/material.dart';
 
-import '../correspondencias/scafffold_item.dart';
+import '../correspondencias/cartas_caixas_screen/scafffold_item.dart';
 import '../splash/splash_screen.dart';
 
 class ListTileAp extends StatefulWidget {
