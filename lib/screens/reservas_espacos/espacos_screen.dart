@@ -116,9 +116,11 @@ class _EspacosScreenState extends State<EspacosScreen> {
                                   Column(
                                     children: [
                                       ConstsWidget.buildSubTitleText(context,
-                                          subTitle: 'Reservado por: '),
+                                          subTitle: 'Reservado por'),
                                       ConstsWidget.buildTitleText(context,
-                                          title: nome_morador),
+                                          sizedWidth: size.height * 0.9,
+                                          textAlign: TextAlign.center,
+                                          title: '$nome_morador - $unidade'),
                                     ],
                                   ),
                                   ConstsWidget.buildPadding001(
@@ -126,7 +128,7 @@ class _EspacosScreenState extends State<EspacosScreen> {
                                     child: Column(
                                       children: [
                                         ConstsWidget.buildSubTitleText(context,
-                                            subTitle: 'Local Reservado: '),
+                                            subTitle: 'Local Reservado'),
                                         ConstsWidget.buildTitleText(context,
                                             title: nome_espaco),
                                       ],
@@ -137,7 +139,7 @@ class _EspacosScreenState extends State<EspacosScreen> {
                                     child: Column(
                                       children: [
                                         ConstsWidget.buildSubTitleText(context,
-                                            subTitle: 'Inicio da reserva:'),
+                                            subTitle: 'Inicio da reserva'),
                                         ConstsWidget.buildTitleText(context,
                                             title:
                                                 DateFormat('dd/MM/yyyy HH:mm')

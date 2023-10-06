@@ -36,6 +36,7 @@ class _ScaffoldAllState extends State<ScaffoldAll> {
         centerTitle: true,
         title: ConstsWidget.buildTitleText(context,
             title: widget.title ?? '',
+            maxLines: 3,
             fontSize: SplashScreen.isSmall ? 18 : 22),
         backgroundColor: Colors.transparent,
         iconTheme:

@@ -13,6 +13,7 @@ import 'package:app_porteiro/widgets/shimmer_widget.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../repositories/shared_preferences.dart';
 
@@ -167,84 +168,83 @@ class _QuadroHistoricoNotificScreenState
                                   child: ExpansionTile(
                                       // expandedCrossAxisAlignment:
                                       //     CrossAxisAlignment.start,
-
+                                      childrenPadding: EdgeInsets.symmetric(
+                                          horizontal: size.width * 0.02),
+                                      expandedCrossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       onExpansionChanged: (value) {
                                         showBolinha = false;
                                         QuadroHistoricoNotificScreen.qntAvisos
                                             .remove(idaviso);
                                       },
-                                      title: ConstsWidget.buildTitleText(
-                                          context,
-                                          fontSize: 18,
-                                          title: titulo,
-                                          textAlign: TextAlign.start),
+                                      title: Column(
+                                        children: [
+                                          ConstsWidget.buildTitleText(context,
+                                              title: titulo,
+                                              // width: 0.65,
+                                              maxLines: 5,
+                                              textAlign: TextAlign.center,
+                                              fontSize: 18),
+                                          SizedBox(
+                                            height: size.height * 0.005,
+                                          ),
+                                          ConstsWidget.buildSubTitleText(
+                                              context,
+                                              subTitle: DateFormat(
+                                                      'dd/MM/yyyy - HH:mm')
+                                                  .format(
+                                                      DateTime.parse(datahora)),
+                                              textAlign: TextAlign.center),
+                                        ],
+                                      ),
+
+                                      // ConstsWidget.buildTitleText(
+                                      //     context,
+                                      //     fontSize: 18,
+                                      //     title: titulo,
+                                      //     textAlign: TextAlign.start),
                                       children: [
-                                        SizedBox(
-                                          height: size.height * 0.01,
-                                        ),
-                                        ConstsWidget.buildSubTitleText(context,
-                                            subTitle: texto,
-                                            maxLines: 10,
-                                            textAlign: TextAlign.start),
-                                        SizedBox(
-                                          height: size.height * 0.01,
-                                        ),
-                                        if (arquivo != '')
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              right: size.width * 0.06),
+                                          child: Column(
                                             children: [
                                               SizedBox(
                                                 height: size.height * 0.01,
                                               ),
-                                              SizedBox(
-                                                width: size.width * 0.3,
-                                                child: ConstsWidget
-                                                    .buildOutlinedButton(
+                                              ConstsWidget.buildSubTitleText(
                                                   context,
-                                                  title: 'Ver Anexo',
-                                                  onPressed: () {
-                                                    launchUrl(
-                                                        Uri.parse(arquivo),
-                                                        mode: LaunchMode
-                                                            .externalNonBrowserApplication);
-                                                  },
-                                                ),
+                                                  subTitle: texto,
+                                                  maxLines: 10,
+                                                  textAlign: TextAlign.start),
+                                              SizedBox(
+                                                height: size.height * 0.01,
                                               ),
-                                              // OutlinedButton(
-                                              //   style: OutlinedButton.styleFrom(
-                                              //     side: BorderSide(
-                                              //         width: size.width * 0.005,
-                                              //         color: Colors.blue),
-                                              //     shape: StadiumBorder(),
-                                              //   ),
-                                              //   onPressed: () {
-                                              //     launchUrl(Uri.parse(arquivo),
-                                              //         mode: LaunchMode
-                                              //             .externalNonBrowserApplication);
-                                              //   },
-                                              //   child: Padding(
-                                              //     padding: EdgeInsets.symmetric(
-                                              //         vertical:
-                                              //             size.height * 0.023),
-                                              //     child: Row(
-                                              //       mainAxisAlignment:
-                                              //           MainAxisAlignment
-                                              //               .center,
-                                              //       children: [
-                                              //         ConstsWidget
-                                              //             .buildSubTitleText(
-                                              //           context,
-                                              //           subTitle: 'Ver Anexo',
-                                              //           fontSize: 18,
-                                              //           color: Colors.blue,
-                                              //         ),
-                                              //       ],
-                                              //     ),
-                                              //   ),
-                                              // ),
+                                              if (arquivo != '')
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    SizedBox(
+                                                      height:
+                                                          size.height * 0.01,
+                                                    ),
+                                                    ConstsWidget
+                                                        .buildOutlinedButton(
+                                                      context,
+                                                      title: 'Ver Anexo',
+                                                      onPressed: () {
+                                                        launchUrl(
+                                                            Uri.parse(arquivo),
+                                                            mode: LaunchMode
+                                                                .externalNonBrowserApplication);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
                                             ],
                                           ),
+                                        )
                                       ]),
                                 ),
                               ),

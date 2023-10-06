@@ -61,20 +61,25 @@ class SearchVeiculo extends SearchDelegate<String> {
       return ConstsWidget.buildPadding001(
         context,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ConstsWidget.buildSubTitleText(context, subTitle: title1),
-                ConstsWidget.buildTitleText(context, title: subTitle1),
+                ConstsWidget.buildSubTitleText(
+                  context,
+                  subTitle: title1,
+                ),
+                ConstsWidget.buildTitleText(context,
+                    title: subTitle1, sizedWidth: 0.4),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ConstsWidget.buildSubTitleText(context, subTitle: title2),
-                ConstsWidget.buildTitleText(context, title: subTitle2),
+                ConstsWidget.buildTitleText(context,
+                    title: subTitle2, sizedWidth: 0.3),
               ],
             )
           ],

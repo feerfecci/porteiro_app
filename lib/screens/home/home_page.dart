@@ -322,7 +322,10 @@ class _HomePageState extends State<HomePage> {
             appBar: AppBar(
               centerTitle: true,
               title: ConstsWidget.buildTitleText(context,
-                  title: FuncionarioInfos.nome_condominio!, fontSize: 20),
+                  maxLines: 3,
+                  textAlign: TextAlign.center,
+                  title: FuncionarioInfos.nome_condominio!,
+                  fontSize: 20),
               iconTheme: IconThemeData(
                   color: Theme.of(context).textTheme.bodyLarge!.color),
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,

@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import 'assinatura_screen.dart';
 
@@ -487,27 +488,15 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                           ),
                           SizedBox(
                             width: size.width * 0.3,
-                            child:
-                                // MyBoxShadow(
-                                //     child:
-                                //     Column(
-                                //   children: [
-                                //     ConstsWidget.buildSubTitleText(context,
-                                //         subTitle: 'Quantidade'),
-                                //     SizedBox(height: size.height * 0.01),
-                                //     ConstsWidget.buildTitleText(context,
-                                //         title: qntCtrl.text,
-                                //         textAlign: TextAlign.center),
-                                //   ],
-                                // )
+                            child: ConstsWidget.buildMyTextFormObrigatorio(
+                                context, 'Quantidade',
+                                inputFormatters: [
+                                  MaskTextInputFormatter(mask: '###')
+                                ],
+                                keyboardType: TextInputType.number,
 
-                                // ),
-
-                                ConstsWidget.buildMyTextFormObrigatorio(
-                                    context, 'Quantidade',
-                                    keyboardType: TextInputType.number,
-                                    // initialValue: qntCtrl.text
-                                    controller: qntCtrl),
+                                // initialValue: qntCtrl.text
+                                controller: qntCtrl),
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -516,7 +505,8 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                             onPressed: () {
                               FocusManager.instance.primaryFocus?.unfocus();
                               if (qntCtrl.text != '') {
-                                if (int.parse(qntCtrl.text) >= 1) {
+                                if (int.parse(qntCtrl.text) >= 1 &&
+                                    int.parse(qntCtrl.text) < 999) {
                                   setState(() {
                                     qntCtrl.text =
                                         '${int.parse(qntCtrl.text) + 1}';
@@ -537,7 +527,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                           context,
                           child: ConstsWidget.buildLoadingButton(
                             context, title: 'Gravar e Adicionar Entrega',
-                            isLoading: isLoadingAlertAddCorrep, fontSize: 16,
+                            isLoading: isLoadingAlertAddCorrep,
                             color: Consts.kColorVerde,
                             // icon: Icons.add,
                             onPressed: () {
@@ -580,7 +570,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                   child: ConstsWidget.buildCustomButton(
                     context,
                     'Emitir Recibo',
-                    fontSize: 16,
+                    // fontSize: 16,
                     onPressed: () async {
                       if (widget.idUnidade != null) {
                         var entregadorValid =
