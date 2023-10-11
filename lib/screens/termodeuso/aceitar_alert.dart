@@ -139,7 +139,7 @@ class _AceitarTermosScreenState extends State<AceitarTermosScreen> {
                           color: isChecked ? Consts.kColorRed : Colors.grey,
                           onPressed: isChecked
                               ? () {
-                                  ConstsFuture.launchGetApi(context,
+                                  ConstsFuture.launchGetApi(
                                           'termo_uso/?fn=aceitaTermo&idfuncionario=${FuncionarioInfos.idFuncionario}')
                                       .then((value) {
                                     if (!value['erro']) {

@@ -32,7 +32,7 @@
 //           hasDrawer: true,
 //           title: 'Visitas Agendadas',
 //           body: FutureBuilder<dynamic>(
-//               future: ConstsFuture.launchGetApi(context,
+//               future: launchGetApi(
 //                   'lista_visitantes/?fn=listarVisitantes&idcond=${FuncionarioInfos.idcondominio}'),
 //               builder: (context, snapshot) {
 //                 if (snapshot.connectionState == ConnectionState.waiting) {

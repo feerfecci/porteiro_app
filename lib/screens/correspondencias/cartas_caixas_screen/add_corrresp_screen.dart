@@ -6,31 +6,10 @@ import 'package:app_porteiro/widgets/drop_search_remet.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../../consts/consts.dart';
 import '../../../consts/consts_widget.dart';
-
-// showModalIncluiCorresp(BuildContext context,
-//     {required String title,
-//     required int idunidade,
-//     required int tipoAviso,
-//     required String? localizado}) {
-//   // var size = MediaQuery.of(context).size;
-
-//   buildModalAll(
-//     context,
-//     title: title,
-//     hasDrawer: false,
-//     child: AddCorrespScreen(
-//       title: title,
-//       idunidade: idunidade,
-//       tipoAviso: tipoAviso,
-//       localizado: localizado,
-//     ),
-//   );
-// }
 
 class AddCorrespScreen extends StatefulWidget {
   final String title;
@@ -65,7 +44,7 @@ class _WidgetCusttCorrespState extends State<AddCorrespScreen> {
     });
 
     var seIdmsgs = remetenteText == null ? DropSearchRemet.idRemet : null;
-    ConstsFuture.launchGetApi(context,
+    ConstsFuture.launchGetApi(
             'correspondencias/?fn=incluirCorrespondencias&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=${MyDatePicker.dataSelected}&tipo=${widget.tipoAviso}&remetente=$remetenteText&descricao=$descricaoText${seIdmsgs != null ? '&idmsg=$seIdmsgs' : ''}&qtd=${qtdCartas.text}')
         .then((value) {
       if (!value['erro']) {
@@ -118,63 +97,6 @@ class _WidgetCusttCorrespState extends State<AddCorrespScreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    /*   Widget builDropButtonRemetentes() {
-      return ConstsWidget.buildPadding001(
-        context,
-        vertical: 0.005,
-        child: Container(
-          width: double.infinity,
-          height: size.height * 0.07,
-          decoration: BoxDecoration(
-            color: Theme.of(context).canvasColor,
-            border: Border.all(color: Colors.black26),
-            borderRadius: BorderRadius.all(Radius.circular(16)),
-          ),
-          child: ConstsWidget.buildPadding001(
-            context,
-            child: DropdownButtonHideUnderline(
-              child: ButtonTheme(
-                alignedDropdown: true,
-                child: DropdownButton(
-                  value: dropRemetente,
-                  items: listaRementes.map((e) {
-                    return DropdownMenuItem(
-                        value: e['idmsg'],
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ConstsWidget.buildTitleText(context,
-                                title: e['titulo']),
-                            ConstsWidget.buildSubTitleText(context,
-                                subTitle: e['texto']),
-                          ],
-                        ));
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      dropRemetente = value;
-                    });
-                  },
-                  elevation: 24,
-                  isExpanded: true,
-                  icon: Icon(
-                    Icons.arrow_downward,
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  hint: Text('Selecione Um Aviso'),
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-*/
     return ScaffoldAll(
       title: widget.title,
       body: Form(
@@ -210,45 +132,46 @@ class _WidgetCusttCorrespState extends State<AddCorrespScreen> {
                         descricaoText = text;
                       },
                     ),
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
                   ],
                 ),
-              ConstsWidget.buildPadding001(
-                context,
-                vertical: 0.015,
-                child: ConstsWidget.buildCustomButton(
-                    context, preencheMao ? 'Usar Padrão' : 'Personalizar',
-                    onPressed: () {
-                  setState(() {
-                    preencheMao = !preencheMao;
-                  });
-                }),
-              ),
+              ConstsWidget.buildCustomButton(
+                  context, preencheMao ? 'Usar Padrão' : 'Personalizar',
+                  onPressed: () {
+                setState(() {
+                  preencheMao = !preencheMao;
+                });
+              }),
 
-              ConstsWidget.buildPadding001(context, child: MyDatePicker()),
+              ConstsWidget.buildPadding001(context,
+                  vertical: 0.02, child: MyDatePicker()),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: CircleBorder(),
-                        backgroundColor: Consts.kColorApp),
-                    onPressed: () {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      if (qtdCartas.text != '') {
-                        if (int.parse(qtdCartas.text) > 1) {
+                      style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          backgroundColor: Consts.kColorApp),
+                      onPressed: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        if (qtdCartas.text != '') {
+                          if (int.parse(qtdCartas.text) > 1) {
+                            setState(() {
+                              qtdCartas.text =
+                                  '${int.parse(qtdCartas.text) - 1}';
+                            });
+                          }
+                        } else {
                           setState(() {
-                            qtdCartas.text = '${int.parse(qtdCartas.text) - 1}';
+                            qtdCartas.text == '1';
                           });
                         }
-                      } else {
-                        setState(() {
-                          qtdCartas.text == '1';
-                        });
-                      }
-                    },
-                    child: Text(
-                      '-',
-                    ),
+                      },
+                      child: Icon(Icons.remove)),
+                  SizedBox(
+                    height: size.height * 0.1,
                   ),
                   SizedBox(
                     width: size.width * 0.3,
@@ -288,33 +211,27 @@ class _WidgetCusttCorrespState extends State<AddCorrespScreen> {
                   ),
                 ],
               ),
-              //  ConstsWidget.buildMyTextFormObrigatorio(
-              //     context, 'Quantidade',
-              //     controller: qtdCartas,
-              //     keyboardType: TextInputType.number),
-
-              SizedBox(
-                height: size.height * 0.015,
-              ),
-              ConstsWidget.buildLoadingButton(
+              ConstsWidget.buildPadding001(
                 context,
-                fontSize: 16,
-                isLoading: loadingRetirada,
-                color: Consts.kColorRed,
-                title: 'Salvar e avisar',
-                onPressed: () {
-                  if (_formKey.currentState!.validate() &&
-                      ((remetenteText != null &&
-                              DropSearchRemet.idRemet == null) ||
-                          (DropSearchRemet.idRemet != null))) {
-                    _formKey.currentState!.save();
+                child: ConstsWidget.buildLoadingButton(
+                  context,
+                  isLoading: loadingRetirada,
+                  color: Consts.kColorRed,
+                  title: 'Salvar e avisar',
+                  onPressed: () {
+                    if (_formKey.currentState!.validate() &&
+                        ((remetenteText != null &&
+                                DropSearchRemet.idRemet == null) ||
+                            (DropSearchRemet.idRemet != null))) {
+                      _formKey.currentState!.save();
 
-                    carregandoRetirada();
-                  } else {
-                    buildMinhaSnackBar(context,
-                        hasError: true, subTitle: 'Preencha todos os campos');
-                  }
-                },
+                      carregandoRetirada();
+                    } else {
+                      buildMinhaSnackBar(context,
+                          hasError: true, subTitle: 'Preencha todos os campos');
+                    }
+                  },
+                ),
               )
             ],
           ),

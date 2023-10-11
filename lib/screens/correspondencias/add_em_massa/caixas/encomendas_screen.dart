@@ -7,7 +7,6 @@ import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/widgets/alertdialog_all.dart';
 import 'package:app_porteiro/widgets/drop_search_remet.dart';
 import 'package:app_porteiro/widgets/my_box_shadow.dart';
-
 import 'package:app_porteiro/widgets/scaffold_all.dart';
 import 'package:app_porteiro/widgets/snack_bar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -16,8 +15,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
+import '../../../../consts/consts_decoration_drop.dart';
+import '../../../../widgets/add_remove.dart';
 import 'assinatura_screen.dart';
 
 class EncomendasScreen extends StatefulWidget {
@@ -132,10 +131,12 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
           }
         },
         popupProps: PopupProps.menu(
+          menuProps: DecorationDropSearch.menuProps(context),
           itemBuilder: (context, item, isSelected) {
             return DecorationDropSearch.itemBuilder(context, item.toString());
           },
-          searchFieldProps: DecorationDropSearch.searchFieldProps(context),
+          searchFieldProps: DecorationDropSearch.searchFieldProps(context,
+              hintText: 'Procure por uma Unidade'),
           showSearchBox: true,
           errorBuilder: (context, searchEntry, exception) {
             return DecorationDropSearch.errorBuilder(context);
@@ -165,84 +166,80 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
 
     Widget buildListCorrep() {
       return MyBoxShadow(
-        child: ConstsWidget.buildPadding001(
-          context,
-          horizontal: 0.01,
-          child: Column(
-            children: [
-              ListView(
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                children: itemsMulti.map((e) {
-                  return ConstsWidget.buildPadding001(
-                    context,
-                    child: Container(
-                      key: ValueKey(e),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ConstsWidget.buildSubTitleText(context,
-                                      subTitle: 'Unidade'),
-                                  SizedBox(
-                                    width: SplashScreen.isSmall
-                                        ? size.width * 0.4
-                                        : size.width * 0.6,
-                                    child: ConstsWidget.buildTitleText(context,
-                                        fontSize: 18, title: e.ap, maxLines: 3),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ConstsWidget.buildSubTitleText(context,
-                                      subTitle: 'Qtd'),
-                                  ConstsWidget.buildTitleText(context,
-                                      title: e.qnt),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: size.height * 0.01,
-                          ),
-                          Container(
-                            color: Colors.grey[300],
-                            height: 1,
-                          )
-                        ],
-                      ),
+        child: Column(
+          children: [
+            ListView(
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              children: itemsMulti.map((e) {
+                return ConstsWidget.buildPadding001(
+                  context,
+                  child: Container(
+                    key: ValueKey(e),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ConstsWidget.buildSubTitleText(context,
+                                    subTitle: 'Unidade'),
+                                SizedBox(
+                                  width: SplashScreen.isSmall
+                                      ? size.width * 0.4
+                                      : size.width * 0.6,
+                                  child: ConstsWidget.buildTitleText(context,
+                                      fontSize: 18, title: e.ap, maxLines: 3),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ConstsWidget.buildSubTitleText(context,
+                                    subTitle: 'Qtd'),
+                                ConstsWidget.buildTitleText(context,
+                                    title: e.qnt),
+                              ],
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
+                        Container(
+                          color: Colors.grey[300],
+                          height: 1,
+                        )
+                      ],
                     ),
-                  );
-                }).toList(),
+                  ),
+                );
+              }).toList(),
+            ),
+            ConstsWidget.buildPadding001(
+              context,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StatefulBuilder(builder: (context, setState) {
+                    return ConstsWidget.buildTitleText(context,
+                        textAlign: TextAlign.center,
+                        fontSize: 18,
+                        title: 'Quantidade total: $totalQnt');
+                  }),
+                ],
               ),
-              ConstsWidget.buildPadding001(
-                context,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    StatefulBuilder(builder: (context, setState) {
-                      return ConstsWidget.buildTitleText(context,
-                          textAlign: TextAlign.center,
-                          fontSize: 18,
-                          title: 'Quantidade total: $totalQnt');
-                    }),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     }
 
     alertRecibo() {
-      ConstsFuture.launchGetApi(context,
+      ConstsFuture.launchGetApi(
               'txt_recibo/index.php?fn=mostrarRecibo&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&nome_entregador=${nomeEntregador.text}&documento_entregador=${docEntregador.text}&total_itens=$totalQnt&nome_remetente=${DropSearchRemet.tituloRemente}&descricao=${DropSearchRemet.textoRemente}')
           .then((value) {
         if (!value['erro']) {
@@ -268,10 +265,25 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                 //   //  Text(value['Recibo'][0]
                 //   //     ['txt_recibo_preenchido']),
                 // ),
+                SizedBox(
+                  height: size.height * 0.01,
+                ),
+                if (itemsMulti.length >= 3)
+                  SizedBox(
+                    // height: 1,
+                    child: Icon(
+                      Icons.arrow_circle_down_rounded,
+                    ),
+                    // decoration: BoxDecoration(
+                    //     border: Border.all(
+                    //         color: Theme.of(context).colorScheme.primary)),
+                  ),
                 Html(
                   data: value['Recibo'][0]['txt_recibo_preenchido'],
                   style: {
                     'b': Style(
+                      height: Height(1.5),
+                      alignment: Alignment.center,
                       fontWeight: FontWeight.bold,
                     ),
                   },
@@ -363,14 +375,13 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                   context,
                   title: 'Continuar',
                   isLoading: _isLoading,
-                  rowSpacing: 0.07,
+                  rowSpacing: SplashScreen.isSmall ? 0.04 : 0.06,
                   color: Consts.kColorRed,
                   onPressed: () {
                     setState(() {
                       _isLoading == true;
                     });
                     ConstsFuture.launchGetApi(
-                            context,
                             // ignore: prefer_if_null_operators
                             'correspondencias/?fn=incluirCorrespondenciasMulti&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idUnidade == null ? idApto : widget.idUnidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataNow&tipo=4&remetente=${DropSearchRemet.tituloRemente}&descricao=${DropSearchRemet.textoRemente}&nome_entregador=${nomeEntregador.text}&doc_entregador=${docEntregador.text}&qtd=${qntCtrl.text}')
                         .then((value) {
@@ -415,20 +426,17 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
               children: [
                 ConstsWidget.buildPadding001(
                   context,
-                  child: ConstsWidget.buildSubTitleText(context,
-                      subTitle: '(*) Campo Obrigatório',
-                      color: Consts.kColorRed),
+                  vertical: 0.01,
+                  child: ConstsWidget.buildTitleText(context,
+                      title: 'Informações para o Recibo'),
+                ),
+                ConstsWidget.buildCamposObrigatorios(
+                  context,
                 ),
                 Form(
                   key: entregadorInfos,
                   child: Column(
                     children: [
-                      ConstsWidget.buildPadding001(
-                        context,
-                        vertical: 0.02,
-                        child: ConstsWidget.buildTitleText(context,
-                            title: 'Informações para o Recibo'),
-                      ),
                       ConstsWidget.buildMyTextFormObrigatorio(
                           context, 'Nome Completo do Entregador',
                           controller: nomeEntregador),
@@ -439,16 +447,27 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                     ],
                   ),
                 ),
-                DropSearchRemet(tipoAviso: 4),
+                DropSearchRemet(tipoAviso: 4, vertical: 0.01),
                 Form(
                   key: itemsInfos,
                   child: Column(
                     children: [
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
                       widget.idUnidade == null
                           ? buildDropSearchAp()
-                          : MyBoxShadow(
+                          : Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    width: 1,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  )),
                               child: ConstsWidget.buildPadding001(
                                 context,
+                                vertical: 0.02,
                                 child: Center(
                                   child: ConstsWidget.buildTitleText(context,
                                       title: widget.localizado!),
@@ -460,68 +479,70 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                             ? size.height * 0.03
                             : size.height * 0.02,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(),
-                                backgroundColor: Consts.kColorApp),
-                            onPressed: () {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              if (qntCtrl.text != '') {
-                                if (int.parse(qntCtrl.text) > 1) {
-                                  setState(() {
-                                    qntCtrl.text =
-                                        '${int.parse(qntCtrl.text) - 1}';
-                                  });
-                                }
-                              } else {
-                                setState(() {
-                                  qntCtrl.text == '1';
-                                });
-                              }
-                            },
-                            child: Text(
-                              '-',
-                            ),
-                          ),
-                          SizedBox(
-                            width: size.width * 0.3,
-                            child: ConstsWidget.buildMyTextFormObrigatorio(
-                                context, 'Quantidade',
-                                inputFormatters: [
-                                  MaskTextInputFormatter(mask: '###')
-                                ],
-                                keyboardType: TextInputType.number,
+                      AddRemoveFild(qntCtrl: qntCtrl),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     ElevatedButton(
+                      //       style: ElevatedButton.styleFrom(
+                      //           shape: CircleBorder(),
+                      //           backgroundColor: Consts.kColorApp),
+                      //       onPressed: () {
+                      //         FocusManager.instance.primaryFocus?.unfocus();
+                      //         if (qntCtrl.text != '') {
+                      //           if (int.parse(qntCtrl.text) > 1) {
+                      //             setState(() {
+                      //               qntCtrl.text =
+                      //                   '${int.parse(qntCtrl.text) - 1}';
+                      //             });
+                      //           }
+                      //         } else {
+                      //           setState(() {
+                      //             qntCtrl.text == '1';
+                      //           });
+                      //         }
+                      //       },
+                      //       child: Icon(
+                      //         Icons.remove,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //     SizedBox(
+                      //       width: size.width * 0.3,
+                      //       child: ConstsWidget.buildMyTextFormObrigatorio(
+                      //           context, 'Quantidade',
+                      //           inputFormatters: [
+                      //             MaskTextInputFormatter(mask: '###')
+                      //           ],
+                      //           keyboardType: TextInputType.number,
 
-                                // initialValue: qntCtrl.text
-                                controller: qntCtrl),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(),
-                                backgroundColor: Consts.kColorApp),
-                            onPressed: () {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              if (qntCtrl.text != '') {
-                                if (int.parse(qntCtrl.text) >= 1 &&
-                                    int.parse(qntCtrl.text) < 999) {
-                                  setState(() {
-                                    qntCtrl.text =
-                                        '${int.parse(qntCtrl.text) + 1}';
-                                  });
-                                }
-                              } else {
-                                setState(() {
-                                  qntCtrl.text = '1';
-                                });
-                              }
-                            },
-                            child: Icon(Icons.add),
-                          ),
-                        ],
-                      ),
+                      //           // initialValue: qntCtrl.text
+                      //           controller: qntCtrl),
+                      //     ),
+                      //     ElevatedButton(
+                      //       style: ElevatedButton.styleFrom(
+                      //           shape: CircleBorder(),
+                      //           backgroundColor: Consts.kColorApp),
+                      //       onPressed: () {
+                      //         FocusManager.instance.primaryFocus?.unfocus();
+                      //         if (qntCtrl.text != '') {
+                      //           if (int.parse(qntCtrl.text) >= 1 &&
+                      //               int.parse(qntCtrl.text) < 999) {
+                      //             setState(() {
+                      //               qntCtrl.text =
+                      //                   '${int.parse(qntCtrl.text) + 1}';
+                      //             });
+                      //           }
+                      //         } else {
+                      //           setState(() {
+                      //             qntCtrl.text = '1';
+                      //           });
+                      //         }
+                      //       },
+                      //       child: Icon(Icons.add),
+                      //     ),
+                      //   ],
+                      // ),
                       if (widget.idUnidade == null)
                         ConstsWidget.buildPadding001(
                           context,
@@ -561,6 +582,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                             },
                           ),
                         ),
+
                       if (widget.idUnidade == null) buildListCorrep()
                     ],
                   ),
@@ -613,7 +635,10 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                     // icon: Icons.edit_document,
                     color: Consts.kColorRed,
                   ),
-                )
+                ),
+                SizedBox(
+                  height: size.height * 0.005,
+                ),
               ],
             ))
           ],

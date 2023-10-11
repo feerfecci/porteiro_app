@@ -30,7 +30,7 @@ class _EspacosScreenState extends State<EspacosScreen> {
       child: ScaffoldAll(
           title: 'Espaços Reservados',
           body: FutureBuilder<dynamic>(
-              future: ConstsFuture.launchGetApi(context,
+              future: ConstsFuture.launchGetApi(
                   'reserva_espacos/?fn=listarReservas&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&ativo=1'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -115,13 +115,22 @@ class _EspacosScreenState extends State<EspacosScreen> {
                                 children: [
                                   Column(
                                     children: [
+                                      SizedBox(
+                                        height: size.height * 0.01,
+                                      ),
                                       ConstsWidget.buildSubTitleText(context,
                                           subTitle: 'Reservado por'),
+                                      SizedBox(
+                                        height: size.height * 0.005,
+                                      ),
                                       ConstsWidget.buildTitleText(context,
                                           sizedWidth: size.height * 0.9,
                                           textAlign: TextAlign.center,
                                           title: '$nome_morador - $unidade'),
                                     ],
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.01,
                                   ),
                                   ConstsWidget.buildPadding001(
                                     context,
@@ -129,6 +138,9 @@ class _EspacosScreenState extends State<EspacosScreen> {
                                       children: [
                                         ConstsWidget.buildSubTitleText(context,
                                             subTitle: 'Local Reservado'),
+                                        SizedBox(
+                                          height: size.height * 0.005,
+                                        ),
                                         ConstsWidget.buildTitleText(context,
                                             title: nome_espaco),
                                       ],
@@ -139,10 +151,13 @@ class _EspacosScreenState extends State<EspacosScreen> {
                                     child: Column(
                                       children: [
                                         ConstsWidget.buildSubTitleText(context,
-                                            subTitle: 'Inicio da reserva'),
+                                            subTitle: 'Inicio da Reserva'),
+                                        SizedBox(
+                                          height: size.height * 0.005,
+                                        ),
                                         ConstsWidget.buildTitleText(context,
                                             title:
-                                                DateFormat('dd/MM/yyyy HH:mm')
+                                                DateFormat('dd/MM/yyyy • HH:mm')
                                                     .format(DateTime.parse(
                                                         data_reserva))),
                                       ],

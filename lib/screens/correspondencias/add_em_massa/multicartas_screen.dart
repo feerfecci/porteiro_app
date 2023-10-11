@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../../../consts/consts.dart';
+import '../../../consts/consts_decoration_drop.dart';
 import '../../../consts/consts_future.dart';
 import 'caixas/encomendas_screen.dart';
 
@@ -122,49 +123,45 @@ class _MultiCartasState extends State<MultiCartas> {
                     ),
                     DropdownSearch.multiSelection(
                       key: dropDownKey,
+                      // selectedItems: const ['Selecione unidades se preciso'],
                       dropdownBuilder: (context, selectedItems) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: selectedItems.map((eSelec) {
-                            return ConstsWidget.buildPadding001(
-                              context,
-                              child: Container(
-                                padding:
-                                    EdgeInsets.only(bottom: size.height * 0.01),
-                                decoration: UnderlineTabIndicator(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary)),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ConstsWidget.buildTitleText(context,
-                                        sizedWidth: 0.6,
-                                        overflow: null,
-                                        title: eSelec.toString()),
-                                    IconButton(
-                                        onPressed: () {
-                                          itemsModelApto.map((e) {
-                                            if (e.nomeUnidade == eSelec) {
-                                              setState(() {
-                                                listUnidade.remove(e.idap);
-                                                selectedItems.remove(eSelec);
-                                              });
-                                            }
-                                          }).toString();
-                                        },
-                                        icon: Icon(
-                                          Icons.close,
-                                          color:
-                                              Theme.of(context).iconTheme.color,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        );
+                        if (selectedItems.isEmpty) {
+                          return Center(
+                              child: Text('Selecione unidades se preciso'));
+                        } else {
+                          return Column(
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            children: selectedItems.map((eSelec) {
+                              return Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ConstsWidget.buildTitleText(context,
+                                      sizedWidth: 0.6,
+                                      overflow: null,
+                                      title: eSelec.toString()),
+                                  IconButton(
+                                      onPressed: () {
+                                        itemsModelApto.map((e) {
+                                          if (e.nomeUnidade == eSelec) {
+                                            setState(() {
+                                              listUnidade.remove(e.idap);
+                                              selectedItems.remove(eSelec);
+                                            });
+                                          }
+                                        }).toString();
+                                      },
+                                      icon: Icon(
+                                        Icons.close,
+                                        color:
+                                            Theme.of(context).iconTheme.color,
+                                      )),
+                                ],
+                              );
+                            }).toList(),
+                          );
+                        }
                       },
                       // clearButtonProps: ClearButtonProps(
                       //   isVisible: true,
@@ -183,17 +180,23 @@ class _MultiCartasState extends State<MultiCartas> {
                       dropdownButtonProps:
                           DecorationDropSearch.dropdownButtonProps(context),
                       popupProps: PopupPropsMultiSelection.menu(
+                        menuProps: DecorationDropSearch.menuProps(context),
                         selectionWidget: (context, item, isSelected) {
-                          return Transform.scale(
-                            scale: 1.3,
-                            child: Checkbox(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                          return ConstsWidget.buildPadding001(
+                            context,
+                            child: Center(
+                              child: Transform.scale(
+                                scale: 1,
+                                child: Checkbox(
+                                  // shape: RoundedRectangleBorder(
+                                  //   borderRadius: BorderRadius.circular(15),
+                                  // ),
+                                  value: isSelected,
+                                  onChanged: (value) {
+                                    isSelected == value;
+                                  },
+                                ),
                               ),
-                              value: isSelected,
-                              onChanged: (value) {
-                                isSelected == value;
-                              },
                             ),
                           );
                         },
@@ -205,7 +208,8 @@ class _MultiCartasState extends State<MultiCartas> {
                         },
                         itemBuilder: (context, item, isSelected) {
                           return DecorationDropSearch.itemBuilder(
-                              context, item.toString());
+                              context, item.toString(),
+                              divisor: false);
                         },
                         onItemRemoved: (selectedItems, removedItem) {
                           itemsModelApto.map((e) {
@@ -228,10 +232,11 @@ class _MultiCartasState extends State<MultiCartas> {
                         },
                         showSearchBox: true,
                         containerBuilder: (context, popupWidget) {
-                          return MyBoxShadow(child: popupWidget);
+                          return popupWidget;
                         },
-                        searchFieldProps:
-                            DecorationDropSearch.searchFieldProps(context),
+                        searchFieldProps: DecorationDropSearch.searchFieldProps(
+                            context,
+                            hintText: 'Procure por uma Unidade'),
                       ),
                       items: itemsModelApto.map((ModelApto e) {
                         return e.nomeUnidade;
@@ -259,7 +264,7 @@ class _MultiCartasState extends State<MultiCartas> {
                             });
                             enviarNotifc().then((valueList) async {
                               // $qtdCartas
-                              ConstsFuture.launchGetApi(context,
+                              ConstsFuture.launchGetApi(
                                       'correspondencias/?fn=incluirCorrespondenciasMultiLista&idcond=${FuncionarioInfos.idcondominio}&listaunidades=${valueList.join(',')}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$now&tipo=3&remetente=${DropSearchRemet.tituloRemente}&descricao=${DropSearchRemet.textoRemente}')
                                   .then((value) {
                                 setState(() {

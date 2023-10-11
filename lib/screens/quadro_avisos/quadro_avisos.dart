@@ -100,7 +100,7 @@ class _QuadroHistoricoNotificScreenState
                   ),
                 ),
               FutureBuilder<dynamic>(
-                  future: ConstsFuture.launchGetApi(context,
+                  future: ConstsFuture.launchGetApi(
                       'quadro_avisos/?fn=listarAvisos&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}'),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -191,7 +191,7 @@ class _QuadroHistoricoNotificScreenState
                                           ConstsWidget.buildSubTitleText(
                                               context,
                                               subTitle: DateFormat(
-                                                      'dd/MM/yyyy - HH:mm')
+                                                      'dd/MM/yyyy • HH:mm')
                                                   .format(
                                                       DateTime.parse(datahora)),
                                               textAlign: TextAlign.center),

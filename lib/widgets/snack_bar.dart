@@ -15,7 +15,7 @@ buildMinhaSnackBar(BuildContext context,
     SnackBar(
         showCloseIcon: true,
         closeIconColor: Colors.white,
-        dismissDirection: DismissDirection.startToEnd,
+        dismissDirection: DismissDirection.endToStart,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         // action: SnackBarAction(
         //     label: 'Entendi',
@@ -42,6 +42,7 @@ buildMinhaSnackBar(BuildContext context,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
                   width: SplashScreen.isSmall

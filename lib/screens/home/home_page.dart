@@ -2,18 +2,12 @@
 
 import 'package:app_porteiro/consts/consts_widget.dart';
 import 'package:app_porteiro/screens/avisos/historico_notific.dart';
-import 'package:app_porteiro/screens/correspondencias/add_em_massa/caixas/encomendas_screen.dart';
 import 'package:app_porteiro/screens/quadro_avisos/quadro_avisos.dart';
 import 'package:app_porteiro/screens/reservas_espacos/espacos_screen.dart';
 import 'package:app_porteiro/screens/seach_pages/search_protocolo.dart';
 import 'package:app_porteiro/screens/seach_pages/search_visitante.dart';
-import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:app_porteiro/screens/seach_pages/search_veiculo.dart';
-import 'package:app_porteiro/widgets/alertdialog_all.dart';
-import 'package:app_porteiro/widgets/my_box_shadow.dart';
-import 'package:app_porteiro/widgets/page_erro.dart';
-import 'package:app_porteiro/widgets/page_vazia.dart';
-import 'package:app_porteiro/widgets/shimmer_widget.dart';
+import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -21,12 +15,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../consts/consts.dart';
 import '../../consts/consts_future.dart';
 import '../../widgets/seach_bar.dart';
-import '../correspondencias/add_em_massa/multicartas_screen.dart';
 import '../seach_pages/search_unidades.dart';
 import '../../widgets/custom_drawer/custom_drawer.dart';
-import '../../widgets/snack_bar.dart';
-
-import 'package:badges/badges.dart' as badges;
+import 'alerts_home.dart';
+import 'build_gradeview.dart';
+import 'card_home.dart';
 
 class HomePage extends StatefulWidget {
   static int qntEventos = 0;
@@ -88,209 +81,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    alertMultiCorresp() {
-      showAllDialog(context,
-          children: [
-            Column(
-              children: [
-                ConstsWidget.buildOutlinedButton(
-                  context,
-                  title: 'Várias Caixas',
-                  onPressed: () {
-                    ConstsFuture.navigatorPush(context, EncomendasScreen());
-                  },
-                ),
-                SizedBox(
-                  height: size.height * 0.02,
-                ),
-                ConstsWidget.buildOutlinedButton(
-                  context,
-                  title: 'Várias Cartas',
-                  onPressed: () {
-                    ConstsFuture.navigatorPush(
-                      context,
-                      MultiCartas(),
-                    );
-                  },
-                ),
-              ],
-            )
-          ],
-          title: ConstsWidget.buildTitleText(context,
-              title: 'Escolha uma Opção', fontSize: 18));
-    }
 
-    alertInformeSindico() {
-      showAllDialog(context,
-          children: [
-            FutureBuilder<dynamic>(
-                future: ConstsFuture.launchGetApi(context,
-                    'contato_sindicos/?fn=telefonesSindicos&idcond=${FuncionarioInfos.idcondominio}'),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return MyBoxShadow(
-                        child: Column(
-                      children: const [ShimmerWidget(height: 40)],
-                    ));
-                  } else if (snapshot.hasData) {
-                    if (!snapshot.data['erro']) {
-                      return ListView.builder(
-                        itemCount: snapshot.data['telefonesSindicos'].length,
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          var apiContatos =
-                              snapshot.data['telefonesSindicos'][index];
-                          var idfuncionario = apiContatos['idfuncionario'];
-                          var idcond = apiContatos['idcond'];
-                          var nome_funcionario =
-                              apiContatos['nome_funcionario'];
-                          var telefone = apiContatos['telefone'];
-                          var whatsapp = apiContatos['whatsapp'];
-                          return ConstsWidget.buildPadding001(
-                            context,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    width: 1,
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                              ),
-                              child: ConstsWidget.buildPadding001(
-                                context,
-                                horizontal: 0.02,
-                                vertical: 0.015,
-                                child: Row(
-                                  children: [
-                                    ConstsWidget.buildTitleText(context,
-                                        sizedWidth: 0.4,
-                                        title: nome_funcionario),
-                                    // Column(
-                                    //   crossAxisAlignment:
-                                    //       CrossAxisAlignment.start,
-                                    //   children: [
-                                    //     ConstsWidget.buildSubTitleText(context,
-                                    //         subTitle: nome_funcionario),
-                                    //     ConstsWidget.buildTitleText(context,
-                                    //         title: telefone),
-                                    //   ],
-                                    // ),
-                                    Spacer(
-                                      flex: 3,
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        launchNumber(telefone);
-                                      },
-                                      icon: Icon(Icons.phone),
-                                    ),
-                                    if (whatsapp != '') Spacer(),
-                                    if (whatsapp != '')
-                                      IconButton(
-                                          onPressed: () {
-                                            launchUrl(
-                                                Uri.parse(
-                                                    'https://wa.me/+55$whatsapp'),
-                                                mode: LaunchMode
-                                                    .externalApplication);
-                                          },
-                                          icon: Icon(Icons.chat)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      return PageVazia(title: snapshot.data['mensagem']);
-                    }
-                  } else {
-                    return PageErro();
-                  }
-                })
-          ],
-          title: ConstsWidget.buildTitleText(context,
-              title: 'Escolha um contato', fontSize: 18));
-    }
-
-    Widget buildCard({
-      required String title,
-      required String iconApi,
-      bool avisa = true,
-      bool isWhatss = false,
-      bool isSearchVeiculo = false,
-      bool idEspacos = false,
-      void Function()? onTap,
-    }) {
-      return GestureDetector(
-        onTap: avisa
-            ? onTap
-            : () {
-                buildMinhaSnackBar(context,
-                    title: 'Desculpe',
-                    hasError: true,
-                    subTitle: 'Você não tem acesso à essa ação');
-              },
-        child: MyBoxShadow(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Spacer(
-              flex: 2,
-            ),
-            ConstsWidget.buildBadge(
-              context,
-              // QuadroHistoricoNotificScreen.qntAvisos.isNotEmpty,
-
-              showBadge: title == 'Quadro de Avisos' &&
-                      QuadroHistoricoNotificScreen.qntAvisos.isNotEmpty
-                  ? true
-                  : idEspacos
-                      ? HomePage.qntEventos != 0
-                      : false,
-              title: title == 'Quadro de Avisos'
-                  ? QuadroHistoricoNotificScreen.qntAvisos.length
-                  : HomePage.qntEventos,
-              position: badges.BadgePosition.topEnd(
-                  top: SplashScreen.isSmall ? -9 : -15,
-                  end: SplashScreen.isSmall ? -45 : -55),
-
-              child: ConstsWidget.buildCachedImage(
-                context,
-                iconApi: iconApi,
-                height: SplashScreen.isSmall ? 0.07 : 0.065,
-                width: SplashScreen.isSmall ? 0.12 : 0.14,
-              ),
-            ),
-            Spacer(),
-            ConstsWidget.buildTitleText(context,
-                title: title, fontSize: SplashScreen.isSmall ? 15 : 17),
-            SizedBox(
-              height: size.height * 0.01,
-            ),
-            // Spacer(),
-          ],
-        )),
-      );
-    }
-
-    Widget buildGridViewer({required List<Widget> children}) {
-      return ConstsWidget.buildPadding001(
-        context,
-        vertical: 0,
-        horizontal: SplashScreen.isSmall ? 0.015 : 0.005,
-        child: GridView.count(
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            crossAxisSpacing: 5,
-            mainAxisSpacing: SplashScreen.isSmall ? 0.2 : 0.1,
-            crossAxisCount: 2,
-            childAspectRatio: SplashScreen.isSmall ? 1.7 : 1.55,
-            children: children),
-      );
-    }
+    int lenghtNumeroSindico = 0;
 
     return WillPopScope(
       onWillPop: () async {
@@ -325,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                   maxLines: 3,
                   textAlign: TextAlign.center,
                   title: FuncionarioInfos.nome_condominio!,
-                  fontSize: 20),
+                  fontSize: SplashScreen.isSmall ? 18 : 20),
               iconTheme: IconThemeData(
                   color: Theme.of(context).textTheme.bodyLarge!.color),
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -359,32 +151,23 @@ class _HomePageState extends State<HomePage> {
             body: ListView(
               // padding: EdgeInsets.symmetric(horizontal: size.height * 0.005),
               children: [
-                buildGridViewer(children: [
-                  buildCard(
-                      title: 'Bombeiros',
+                buildGridViewer(context, children: [
+                  buildCard(context, title: 'Bombeiros', onTap: () {
+                    launchNumber('193');
+                  }, iconApi: 'bombeiro.png', isWhatss: true),
+                  buildCard(context, title: 'Samu', iconApi: 'ambulancia.png',
                       onTap: () {
-                        launchNumber('193');
-                      },
-                      iconApi: '${Consts.iconApiPort}bombeiro.png',
-                      isWhatss: true),
-                  buildCard(
-                      title: 'Samu',
-                      iconApi: '${Consts.iconApiPort}ambulancia.png',
+                    launchNumber('192');
+                  }, isWhatss: true),
+                  buildCard(context, title: 'Polícia', iconApi: 'policia.png',
                       onTap: () {
-                        launchNumber('192');
-                      },
-                      isWhatss: true),
-                  buildCard(
-                      title: 'Polícia',
-                      iconApi: '${Consts.iconApiPort}policia.png',
-                      onTap: () {
-                        launchNumber('190');
-                      },
-                      isWhatss: true),
+                    launchNumber('190');
+                  }, isWhatss: true),
 
                   buildCard(
+                    context,
                     title: 'Quadro de Avisos',
-                    iconApi: '${Consts.iconApiPort}quadrodeavisos.png',
+                    iconApi: 'quadrodeavisos.png',
                     onTap: () {
                       ConstsFuture.navigatorPush(
                           context, QuadroHistoricoNotificScreen());
@@ -404,16 +187,18 @@ class _HomePageState extends State<HomePage> {
                   //   child:
                   // ),
                   buildCard(
+                    context,
                     title: 'Espaços Reservados',
                     idEspacos: true,
-                    iconApi: '${Consts.iconApiPort}reservas-solicitadas.png',
+                    iconApi: 'reservas-solicitadas.png',
                     onTap: () {
                       ConstsFuture.navigatorPush(context, EspacosScreen());
                     },
                   ),
                   buildCard(
+                    context,
                     title: 'Visitas Cadastradas',
-                    iconApi: '${Consts.iconApiPort}visitas.png',
+                    iconApi: 'visitas.png',
                     onTap: () {
                       showSearch(context: context, delegate: SearchVisitante());
                       // ConstsFuture.navigatorPush(context, VisitasScreen());
@@ -426,44 +211,39 @@ class _HomePageState extends State<HomePage> {
                   delegate: SearchProtocolos(),
                 ),
                 SeachBar(
-                  title: 'Cartas, caixas, visitas e delivery',
+                  title: 'Cartas, Caixas, Visitas e Delivery',
                   color: Consts.kColorRed,
                   delegate: SearchUnidades(),
                 ),
                 buildGridViewer(
+                  context,
                   children: [
                     buildCard(
+                      context,
                       title: 'Histórico',
                       onTap: () {
                         ConstsFuture.navigatorPush(
                             context, HistoricoNotificScreen());
                       },
-                      iconApi:
-                          '${Consts.iconApiPort}historico-notificacoes.png',
+                      iconApi: 'historico-notificacoes.png',
                     ),
-                    buildCard(
+                    buildCard(context,
                         title: 'Procurar Veículos',
-                        iconApi: '${Consts.iconApiPort}pesquisa-veiculos.png',
-                        onTap: () {
-                          showSearch(
-                              context: context, delegate: SearchVeiculo());
-                        },
-                        isSearchVeiculo: true),
+                        iconApi: 'pesquisa-veiculos.png', onTap: () {
+                      showSearch(context: context, delegate: SearchVeiculo());
+                    }, isSearchVeiculo: true),
                     buildCard(
+                      context,
                       title: 'Avisar em Massa',
-                      iconApi: '${Consts.iconApiPort}multi.png',
+                      iconApi: 'multi.png',
                       avisa: FuncionarioInfos.avisa_corresp,
                       onTap: () {
-                        alertMultiCorresp();
+                        alertMultiCorresp(context);
                       },
                     ),
-                    buildCard(
-                        title: 'Informe o Síndico',
-                        onTap: () {
-                          alertInformeSindico();
-                        },
-                        isWhatss: true,
-                        iconApi: '${Consts.iconApiPort}informe-sindico.png'),
+                    buildCard(context, title: 'Informe o Síndico', onTap: () {
+                      alertInformeSindico(context);
+                    }, isWhatss: true, iconApi: 'informe-sindico.png'),
                   ],
                 ),
               ],
@@ -472,7 +252,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  launchNumber(number) async {
+  static launchNumber(number) async {
     await launchUrl(Uri.parse('tel:$number'));
   }
 }

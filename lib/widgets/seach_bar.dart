@@ -1,10 +1,6 @@
 // ignore_for_file: must_be_immutable
 import 'package:app_porteiro/consts/consts_widget.dart';
-import 'package:app_porteiro/widgets/my_box_shadow.dart';
-
 import 'package:flutter/material.dart';
-
-import '../screens/seach_pages/search_protocolo.dart';
 import '../screens/splash/splash_screen.dart';
 
 class SeachBar extends StatelessWidget {

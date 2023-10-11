@@ -25,7 +25,7 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
   int idMorador = 0;
   @override
   void initState() {
-    ConstsFuture.launchGetApi(context,
+    ConstsFuture.launchGetApi(
         'moradores/index.php?fn=listarMoradores&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&idunidade=${widget.idunidade}');
 
     super.initState();
@@ -51,7 +51,7 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
         //   children: [
         //     ConstsWidget.buildTitleText(context, title: 'Quem está retirando'),
         FutureBuilder(
-      future: ConstsFuture.launchGetApi(context,
+      future: ConstsFuture.launchGetApi(
           'moradores/index.php?fn=listarMoradores&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}'),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -149,7 +149,6 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
                   ],
                 ),
               ),
-              actions: [],
             );
           } else {
             return AlertDialog(

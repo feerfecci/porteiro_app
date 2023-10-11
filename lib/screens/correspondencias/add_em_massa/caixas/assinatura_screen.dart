@@ -117,12 +117,12 @@ class _AssinaturaScreenState extends State<AssinaturaScreen> {
                               context, HomePage());
                           buildMinhaSnackBar(context,
                               title: 'Tudo Certo!',
-                              subTitle: value['mensagem']);
+                              subTitle: 'Cadastrado com Sucesso!');
                         } else {
                           buildMinhaSnackBar(context,
                               title: 'Algo Saiu mal!',
                               hasError: true,
-                              subTitle: value['mensagem']);
+                              subTitle: 'Tente Novamente');
                         }
                       });
                     } else {

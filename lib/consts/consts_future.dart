@@ -11,7 +11,7 @@ import '../screens/home/home_page.dart';
 import '../screens/quadro_avisos/quadro_avisos.dart';
 
 class ConstsFuture {
-  static Future<dynamic> launchGetApi(BuildContext context, apiPortaria) async {
+  static Future<dynamic> launchGetApi(apiPortaria) async {
     var url = Uri.parse('${Consts.apiPortaria}$apiPortaria');
     var resposta = await http.get(url);
     if (resposta.statusCode == 200) {
@@ -57,6 +57,8 @@ class ConstsFuture {
         ));
   }
 
+  static bool pageRouteFinished = false;
+
   static fazerLogin(BuildContext context, String usuario, String senha) async {
     var senhaCripto = md5.convert(utf8.encode(senha)).toString();
     var url = Uri.parse(
@@ -84,9 +86,9 @@ class ConstsFuture {
           FuncionarioInfos.envia_avisos = loginInfos['envia_avisos'];
           // Navigator.pop(context);
           apiTotalResarvaHoje(context)
-              .then((value) => apiQuadroAvisos().whenComplete(() {
+              .then((value) => apiQuadroAvisos().whenComplete(() async {
                     if (!FuncionarioInfos.aceitou_termos) {
-                      showDialogAceitar(
+                      await showDialogAceitar(
                         context,
                       );
                     } else {
@@ -95,11 +97,11 @@ class ConstsFuture {
                     }
                   }));
         } else {
-          ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
+          await ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
           return buildMinhaSnackBar(context, hasError: true);
         }
       } else {
-        ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
+        await ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
         return buildMinhaSnackBar(context, hasError: true);
       }
     }
@@ -107,7 +109,7 @@ class ConstsFuture {
 
   static Future apiTotalResarvaHoje(BuildContext context) {
     List<int> listIdReserva = <int>[];
-    return ConstsFuture.launchGetApi(context,
+    return launchGetApi(
             'reserva_espacos/?fn=listarReservas&idcond=${FuncionarioInfos.idcondominio}&ativo=1')
         .then((value) {
       if (!value['erro']) {
@@ -156,7 +158,7 @@ class ConstsFuture {
   //   required Widget widgetWaiting,
   // }) {
   //   return FutureBuilder<dynamic>(
-  //       future: ConstsFuture.launchGetApi(context, api),
+  //       future: launchGetApi( api),
   //       builder: (context, snapshot) {
   //         snapShotFora = snapshot;
   //         if (snapshot.connectionState == ConnectionState.waiting) {

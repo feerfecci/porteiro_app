@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:validatorless/validatorless.dart';
-
 import '../screens/splash/splash_screen.dart';
 import '../widgets/shimmer_widget.dart';
 import 'consts.dart';
-import 'consts_future.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -79,7 +77,7 @@ class ConstsWidget {
       String? hintText,
       String? initialValue,
       final void Function(String? text)? onSaved}) {
-    var size = MediaQuery.of(context).size;
+    // var size = MediaQuery.of(context).size;
     return ConstsWidget.buildPadding001(
       context,
       child: TextFormField(
@@ -114,8 +112,9 @@ class ConstsWidget {
       TextAlign textAlign = TextAlign.start,
       TextCapitalization textCapitalization = TextCapitalization.none,
       bool obscureText = false,
+      Iterable<String>? autofillHints,
       final void Function(String? text)? onSaved}) {
-    var size = MediaQuery.of(context).size;
+    // var size = MediaQuery.of(context).size;
     return ConstsWidget.buildPadding001(
       context,
       child: TextFormField(
@@ -132,6 +131,7 @@ class ConstsWidget {
           onSaved: onSaved,
           maxLines: maxLines,
           inputFormatters: inputFormatters,
+          autofillHints: autofillHints,
           textCapitalization: textCapitalization,
           validator: validator ??
               Validatorless.multiple([Validatorless.required(mensagem)]),
@@ -310,7 +310,7 @@ class ConstsWidget {
       color = Consts.kColorApp,
       double rowSpacing = 0.0,
       double height = 0.025,
-      double fontSize = 16}) {
+      double fontSize = 18}) {
     var size = MediaQuery.of(context).size;
 
     return ElevatedButton(
@@ -508,13 +508,26 @@ class ConstsWidget {
         child: child);
   }
 
-  static Widget buildCachedImage(BuildContext context,
-      {required String iconApi, double? width, double? height}) {
+  static Widget buildCachedImage(
+    BuildContext context, {
+    required String iconApi,
+    double? width,
+    double? height,
+    bool iconQuadrado = false,
+  }) {
     var size = MediaQuery.of(context).size;
     return CachedNetworkImage(
       imageUrl: iconApi,
-      height: height != null ? size.height * height : null,
-      width: width != null ? size.width * width : null,
+      height: !iconQuadrado
+          ? height != null
+              ? size.height * height
+              : null
+          : width,
+      width: !iconQuadrado
+          ? width != null
+              ? size.width * width
+              : null
+          : width,
       fit: BoxFit.fill,
       fadeInDuration: Duration.zero,
       fadeOutDuration: Duration.zero,
@@ -562,8 +575,8 @@ class ConstsWidget {
     return ConstsWidget.buildPadding001(
       context,
       child: Center(
-        child: buildSubTitleText(context,
-            subTitle: '(*) Campo Obrigatório', color: Consts.kColorRed),
+        child: buildTitleText(context,
+            title: '(*) Campos Obrigatórios', color: Consts.kColorRed),
       ),
     );
   }

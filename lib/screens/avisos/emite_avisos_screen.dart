@@ -181,7 +181,7 @@ class _EmiteAvisosScreenState extends State<EmiteAvisosScreen> {
                             respostaTipo = 8;
                           }
                           FocusManager.instance.primaryFocus!.unfocus();
-                          ConstsFuture.launchGetApi(context,
+                          ConstsFuture.launchGetApi(
                                   'msgsprontas/index.php?fn=enviarMensagem&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&idmsg=$dropdownValue&idunidade=${widget.idunidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&nome_visitante=${widget.idVisita == null ? nomeVisitante : widget.nomeCadastrado}&tipo=$respostaTipo')
                               .then((value) {
                             if (!value['erro']) {
@@ -190,7 +190,7 @@ class _EmiteAvisosScreenState extends State<EmiteAvisosScreen> {
                               });
                               Navigator.pop(context);
                               if (widget.idVisita != null) {
-                                ConstsFuture.launchGetApi(context,
+                                ConstsFuture.launchGetApi(
                                     'lista_visitantes/?fn=compareceuVisitante&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&idvisita=${widget.idVisita}');
                               }
                               return buildMinhaSnackBar(context,

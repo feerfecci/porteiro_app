@@ -7,6 +7,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
+import 'package:flutter_localizations/flutter_localizations.dart';
+// ignore: depend_on_referenced_packages
 // import 'package:localization/localization.dart';
 
 void main() {
@@ -34,12 +36,12 @@ class MyApp extends StatelessWidget {
           theme: themeLight(context),
           darkTheme: themeDark(context),
           home: SplashScreen(),
-          initialRoute: '/splashScreen',
-          localizationsDelegates: [
-            // GlobalMaterialLocalizations.delegate,
-            // GlobalWidgetsLocalizations.delegate,
-            // GlobalCupertinoLocalizations.delegate,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
           ],
+          initialRoute: '/splashScreen',
           supportedLocales: const [
             Locale('en', 'USA'), // English, UK
             Locale('pt', 'BR'), // Arabic, UAE
@@ -47,6 +49,11 @@ class MyApp extends StatelessWidget {
           routes: {
             '/splashScreen': (context) => SplashScreen(),
             '/homePage': (context) => HomePage(),
+          },
+          builder: (context, child) {
+            return MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+                child: child!);
           },
         );
       },

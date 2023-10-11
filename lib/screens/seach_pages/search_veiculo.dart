@@ -122,6 +122,16 @@ class SearchVeiculo extends SearchDelegate<String> {
                       ConstsWidget.buildPadding001(context,
                           child: ConstsWidget.buildTitleText(context,
                               fontSize: 20, title: numero)),
+                      ConstsWidget.buildPadding001(
+                        context,
+                        vertical: 0.005,
+                        child: Container(
+                          height: 1,
+                          // width: size.width * 0.8,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                      ),
                       buildDescricaoCarro(
                           title1: 'Tipo',
                           subTitle1: tipo,

@@ -27,7 +27,7 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
     return RefreshIndicator(
       onRefresh: () async {
         setState(() {
-          ConstsFuture.launchGetApi(context,
+          ConstsFuture.launchGetApi(
               'msgsprontas/index.php?fn=historicoAvisos&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&resposta=$filtrar');
         });
       },
@@ -78,7 +78,7 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                 ),
               ),
               FutureBuilder<dynamic>(
-                  future: ConstsFuture.launchGetApi(context,
+                  future: ConstsFuture.launchGetApi(
                       'msgsprontas/index.php?fn=historicoAvisos&idcond=${FuncionarioInfos.idcondominio}&idfuncionario=${FuncionarioInfos.idFuncionario}&resposta=$filtrar'),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -115,17 +115,24 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                                 child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                SizedBox(
+                                  height: size.height * 0.01,
+                                ),
                                 Column(
                                   children: [
                                     if (nome_morador != '')
                                       ConstsWidget.buildTitleText(context,
                                           title: nome_morador),
+                                    SizedBox(
+                                      height: size.height * 0.005,
+                                    ),
                                     ConstsWidget.buildTitleText(context,
                                         title: unidade),
                                   ],
                                 ),
                                 ConstsWidget.buildPadding001(
                                   context,
+                                  vertical: 0.02,
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -159,15 +166,13 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                                   ),
                                 ),
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    SizedBox(
-                                      height: size.height * 0.01,
-                                    ),
                                     SizedBox(
                                       width: size.width * 0.9,
                                       child: ConstsWidget.buildTitleText(
                                           context,
+                                          textAlign: TextAlign.center,
                                           title: titulo,
                                           color: Consts.kColorRed),
                                     ),
@@ -178,7 +183,11 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                                       width: size.width * 0.9,
                                       child: ConstsWidget.buildTitleText(
                                           context,
+                                          textAlign: TextAlign.center,
                                           title: texto),
+                                    ),
+                                    SizedBox(
+                                      height: size.height * 0.01,
                                     ),
                                   ],
                                 ),

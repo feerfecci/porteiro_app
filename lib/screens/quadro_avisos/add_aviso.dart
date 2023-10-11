@@ -48,18 +48,14 @@ class _AddAvisosState extends State<AddAvisos> {
                     textCapitalization: TextCapitalization.words,
                     maxLength: 70,
                     controller: tituloCntl),
-                ConstsWidget.buildPadding001(
-                  context,
-                  child: ConstsWidget.buildMyTextFormObrigatorio(
-                      context, 'Descrição',
-                      textCapitalization: TextCapitalization.sentences,
-                      minLines: 8,
-                      maxLines: 8,
-                      hintText:
-                          'Exemplo: Será realizada a manutenção do elevador do bloco C a partir de amanhã (21/06) as 14h. Por favor, utilize as escadarias',
-                      maxLength: 1000,
-                      controller: textoCntl),
-                ),
+                ConstsWidget.buildMyTextFormObrigatorio(context, 'Descrição',
+                    textCapitalization: TextCapitalization.sentences,
+                    minLines: 8,
+                    maxLines: 8,
+                    hintText:
+                        'Exemplo: Será realizada a manutenção do elevador do bloco C a partir de amanhã (21/06) as 14h. Por favor, utilize as escadarias',
+                    maxLength: 1000,
+                    controller: textoCntl),
                 SizedBox(
                   height: size.height * 0.01,
                 ),
@@ -89,9 +85,6 @@ class _AddAvisosState extends State<AddAvisos> {
                       }
                     }
                   },
-                ),
-                SizedBox(
-                  height: size.height * 0.02,
                 ),
                 if (listImage != [])
                   Padding(

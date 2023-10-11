@@ -113,9 +113,13 @@ class SearchProtocolos extends SearchDelegate<String> {
                                   child: MyBoxShadow(
                                     child: Column(
                                       children: [
-                                        ConstsWidget.buildTitleText(context,
-                                            title: '$divisao - $unidade',
-                                            fontSize: 20),
+                                        ConstsWidget.buildPadding001(
+                                          context,
+                                          child: ConstsWidget.buildTitleText(
+                                              context,
+                                              title: '$divisao - $unidade',
+                                              fontSize: 20),
+                                        ),
                                         ListTile(
                                           title: ConstsWidget.buildTitleText(
                                               context,
@@ -124,15 +128,21 @@ class SearchProtocolos extends SearchDelegate<String> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
+                                              SizedBox(
+                                                height: size.height * 0.006,
+                                              ),
                                               ConstsWidget.buildSubTitleText(
                                                   context,
                                                   subTitle: descricao),
                                               SizedBox(
-                                                height: size.height * 0.01,
+                                                height: size.height * 0.015,
                                               ),
                                               ConstsWidget.buildTitleText(
                                                   context,
                                                   title: 'Recebido em'),
+                                              SizedBox(
+                                                height: size.height * 0.006,
+                                              ),
                                               ConstsWidget.buildSubTitleText(
                                                   context,
                                                   subTitle: data_recebimento),
@@ -191,7 +201,8 @@ class SearchProtocolos extends SearchDelegate<String> {
                           context,
                           horizontal: 0.01,
                           child: ConstsWidget.buildCustomButton(
-                              context, 'Código de Entrega', onPressed: () {
+                              context, 'Código de Entrega',
+                              color: Consts.kColorRed, onPressed: () {
                             // emiteEntrega(listEntregar.join(','));
                             if (isChecked) {
                               ConstsFuture.navigatorPush(

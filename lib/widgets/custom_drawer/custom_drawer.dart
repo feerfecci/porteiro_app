@@ -36,12 +36,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
             iconColor: Theme.of(context).iconTheme.color,
             leading: Icon(
               leading,
-              size: SplashScreen.isSmall ? 25 : 30,
+              size: SplashScreen.isSmall ? 22 : 30,
             ),
             title: ConstsWidget.buildTitleText(context,
                 title: title, fontSize: 16),
             trailing: Icon(
-              size: SplashScreen.isSmall ? 25 : 30,
+              size: SplashScreen.isSmall ? 22 : 30,
               trailing,
             ),
           ),
@@ -52,7 +52,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     return SafeArea(
       child: SizedBox(
         height: size.height * 0.95,
-        width: size.width * 0.775,
+        width: size.width * 0.87,
         child: Drawer(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           shape: RoundedRectangleBorder(
@@ -64,7 +64,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             children: [
               SizedBox(
                 height: SplashScreen.isSmall
-                    ? size.height * 0.12
+                    ? size.height * 0.10
                     : size.height * 0.08,
                 width: double.maxFinite,
                 child: DrawerHeader(

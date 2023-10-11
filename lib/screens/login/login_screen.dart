@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:validatorless/validatorless.dart';
 import '../../repositories/shared_preferences.dart';
 import '../../widgets/snack_bar.dart';
+import 'esqueci_senha.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -180,6 +181,29 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                   starLogin();
                 }, isLoading: isLoading, title: 'Entrar'),
+                SizedBox(
+                  height: size.height * 0.01,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EsqueciSenhaScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Recuperar Senha',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

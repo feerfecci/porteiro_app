@@ -29,11 +29,11 @@ class _SplashScreenState extends State<SplashScreen> {
         });
         if (hasBiometrics) {
           if (auth) {
-            return ConstsFuture.fazerLogin(
+            await ConstsFuture.fazerLogin(
                 context, cacheInfos.first, cacheInfos.last);
           }
         } else {
-          return ConstsFuture.fazerLogin(
+          await ConstsFuture.fazerLogin(
               context, cacheInfos.first, cacheInfos.last);
         }
       } else {
@@ -49,6 +49,12 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 3), () {
       startLogin();
     });
+  }
+
+  @override
+  void dispose() {
+    startLogin();
+    super.dispose();
   }
 
   @override
