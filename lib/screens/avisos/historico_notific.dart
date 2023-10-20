@@ -84,7 +84,16 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return MyBoxShadow(
                           child: Column(
-                        children: [ShimmerWidget(height: size.height * 0.01)],
+                        children: [
+                          ShimmerWidget(height: size.height * 0.04),
+                          ConstsWidget.buildPadding001(
+                            context,
+                            child: ShimmerWidget(
+                                height: size.height * 0.06,
+                                width: size.width * 0.5),
+                          ),
+                          ShimmerWidget(height: size.height * 0.04)
+                        ],
                       ));
                     } else if (snapshot.hasData) {
                       if (!snapshot.data['erro']) {
@@ -107,7 +116,7 @@ class _HistoricoNotificScreenState extends State<HistoricoNotificScreen> {
                             String tipo_msg = apiHistorico['tipo_msg'];
                             String titulo = apiHistorico['titulo'];
                             String texto = apiHistorico['texto'];
-                            String datahora = DateFormat('HH:mm - dd/MM')
+                            String datahora = DateFormat('HH:mm • dd/MM')
                                 .format(
                                     DateTime.parse(apiHistorico['datahora']));
 

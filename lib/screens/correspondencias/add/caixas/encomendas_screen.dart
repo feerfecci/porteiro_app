@@ -30,6 +30,7 @@ class EncomendasScreen extends StatefulWidget {
 
 bool _isLoading = false;
 bool isLoadingAlertAddCorrep = false;
+bool remetentePersonalizado = false;
 setOrientation(Orientation orientation) {
   if (orientation == Orientation.landscape) {
     return SystemChrome.setPreferredOrientations(
@@ -43,11 +44,14 @@ setOrientation(Orientation orientation) {
 class _EncomendasScreenState extends State<EncomendasScreen> {
   final TextEditingController nomeEntregador = TextEditingController();
   final TextEditingController docEntregador = TextEditingController();
+  final TextEditingController remetenteText = TextEditingController();
+  final TextEditingController descricaoText = TextEditingController();
   final TextEditingController apCtrl = TextEditingController();
   final TextEditingController qntCtrl = TextEditingController(text: '1');
 
   final entregadorInfos = GlobalKey<FormState>();
   final itemsInfos = GlobalKey<FormState>();
+  final formRemetentePers = GlobalKey<FormState>();
 
   List<MultiItem> itemsMulti = <MultiItem>[];
   List<ModelApto> itemsModelApto = <ModelApto>[];
@@ -91,6 +95,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
     widget.idUnidade != null
         ? listIdUnidade.add(widget.idUnidade!)
         : listIdUnidade;
+    remetentePersonalizado = false;
     super.initState();
   }
 
@@ -383,7 +388,7 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                     });
                     ConstsFuture.launchGetApi(
                             // ignore: prefer_if_null_operators
-                            'correspondencias/?fn=incluirCorrespondenciasMulti&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idUnidade == null ? idApto : widget.idUnidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataNow&tipo=4&remetente=${DropSearchRemet.tituloRemente}&descricao=${DropSearchRemet.textoRemente}&nome_entregador=${nomeEntregador.text}&doc_entregador=${docEntregador.text}&qtd=${qntCtrl.text}')
+                            'correspondencias/?fn=incluirCorrespondenciasMulti&idcond=${FuncionarioInfos.idcondominio}&idunidade=${widget.idUnidade == null ? idApto : widget.idUnidade}&idfuncionario=${FuncionarioInfos.idFuncionario}&datarecebimento=$dataNow&tipo=4&remetente=${remetentePersonalizado ? remetenteText.text : DropSearchRemet.tituloRemente}&descricao=${remetentePersonalizado ? remetenteText.text : DropSearchRemet.textoRemente}&nome_entregador=${nomeEntregador.text}&doc_entregador=${docEntregador.text}&qtd=${qntCtrl.text}')
                         .then((value) {
                       setState(() {
                         _isLoading = false;
@@ -447,7 +452,40 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                     ],
                   ),
                 ),
-                DropSearchRemet(tipoAviso: 4, vertical: 0.01),
+                if (!remetentePersonalizado)
+                  DropSearchRemet(tipoAviso: 4, vertical: 0.01),
+                if (remetentePersonalizado)
+                  Form(
+                    key: formRemetentePers,
+                    child: Column(
+                      children: [
+                        ConstsWidget.buildMyTextFormObrigatorio(
+                            context, 'Remetente',
+                            controller: remetenteText),
+                        ConstsWidget.buildMyTextFormObrigatorio(
+                            context, 'Descrição',
+                            controller: descricaoText),
+                      ],
+                    ),
+                  ),
+                ConstsWidget.buildPadding001(
+                  context,
+                  child: ConstsWidget.buildCustomButton(
+                    context,
+                    'Personalizar',
+                    color: Consts.kColorVerde,
+                    onPressed: () {
+                      setState(() {
+                        remetentePersonalizado = !remetentePersonalizado;
+                        DropSearchRemet.tituloRemente = '';
+                        DropSearchRemet.textoRemente = '';
+                        DropSearchRemet.idRemet = null;
+                        remetenteText.clear();
+                        descricaoText.clear();
+                      });
+                    },
+                  ),
+                ),
                 Form(
                   key: itemsInfos,
                   child: Column(
@@ -480,76 +518,12 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                             : size.height * 0.02,
                       ),
                       AddRemoveFild(qntCtrl: qntCtrl),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     ElevatedButton(
-                      //       style: ElevatedButton.styleFrom(
-                      //           shape: CircleBorder(),
-                      //           backgroundColor: Consts.kColorApp),
-                      //       onPressed: () {
-                      //         FocusManager.instance.primaryFocus?.unfocus();
-                      //         if (qntCtrl.text != '') {
-                      //           if (int.parse(qntCtrl.text) > 1) {
-                      //             setState(() {
-                      //               qntCtrl.text =
-                      //                   '${int.parse(qntCtrl.text) - 1}';
-                      //             });
-                      //           }
-                      //         } else {
-                      //           setState(() {
-                      //             qntCtrl.text == '1';
-                      //           });
-                      //         }
-                      //       },
-                      //       child: Icon(
-                      //         Icons.remove,
-                      //         color: Colors.white,
-                      //       ),
-                      //     ),
-                      //     SizedBox(
-                      //       width: size.width * 0.3,
-                      //       child: ConstsWidget.buildMyTextFormObrigatorio(
-                      //           context, 'Quantidade',
-                      //           inputFormatters: [
-                      //             MaskTextInputFormatter(mask: '###')
-                      //           ],
-                      //           keyboardType: TextInputType.number,
-
-                      //           // initialValue: qntCtrl.text
-                      //           controller: qntCtrl),
-                      //     ),
-                      //     ElevatedButton(
-                      //       style: ElevatedButton.styleFrom(
-                      //           shape: CircleBorder(),
-                      //           backgroundColor: Consts.kColorApp),
-                      //       onPressed: () {
-                      //         FocusManager.instance.primaryFocus?.unfocus();
-                      //         if (qntCtrl.text != '') {
-                      //           if (int.parse(qntCtrl.text) >= 1 &&
-                      //               int.parse(qntCtrl.text) < 999) {
-                      //             setState(() {
-                      //               qntCtrl.text =
-                      //                   '${int.parse(qntCtrl.text) + 1}';
-                      //             });
-                      //           }
-                      //         } else {
-                      //           setState(() {
-                      //             qntCtrl.text = '1';
-                      //           });
-                      //         }
-                      //       },
-                      //       child: Icon(Icons.add),
-                      //     ),
-                      //   ],
-                      // ),
                       if (widget.idUnidade == null)
                         ConstsWidget.buildPadding001(
                           context,
                           child: ConstsWidget.buildLoadingButton(
                             context, title: 'Gravar e Adicionar Entrega',
                             isLoading: isLoadingAlertAddCorrep,
-                            color: Consts.kColorVerde,
                             // icon: Icons.add,
                             onPressed: () {
                               FocusManager.instance.primaryFocus?.unfocus();
@@ -559,11 +533,18 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                               var entregadorValid =
                                   entregadorInfos.currentState?.validate() ??
                                       false;
+                              var remetentePersValid =
+                                  formRemetentePers.currentState?.validate() ??
+                                      false;
                               if (itemsValid &&
                                   entregadorValid &&
+                                  remetentePersValid &&
                                   selectedItemAP == nomeApto &&
                                   !_apConfirmado &&
-                                  DropSearchRemet.tituloRemente != '') {
+                                  (remetentePersonalizado
+                                      ? remetenteText.text.isNotEmpty &&
+                                          remetenteText.text.isNotEmpty
+                                      : DropSearchRemet.tituloRemente != '')) {
                                 setState(() {
                                   isLoadingAlertAddCorrep = true;
                                 });
@@ -582,7 +563,6 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                             },
                           ),
                         ),
-
                       if (widget.idUnidade == null) buildListCorrep()
                     ],
                   ),
@@ -599,8 +579,12 @@ class _EncomendasScreenState extends State<EncomendasScreen> {
                             entregadorInfos.currentState?.validate() ?? false;
                         var itemsValid =
                             itemsInfos.currentState?.validate() ?? false;
+                        var remetentePersValid =
+                            formRemetentePers.currentState?.validate() ?? false;
 
-                        if (itemsValid && entregadorValid) {
+                        if (itemsValid &&
+                            entregadorValid &&
+                            remetentePersValid) {
                           if (qntCtrl.text.isNotEmpty) {
                             setState(() {
                               itemsMulti.add(

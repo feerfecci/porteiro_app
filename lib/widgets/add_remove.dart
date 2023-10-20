@@ -41,8 +41,9 @@ class _AddRemoveFildState extends State<AddRemoveFild> {
           ),
         ),
         SizedBox(
-          width: size.width * 0.3,
+          width: size.width * 0.27,
           child: ConstsWidget.buildMyTextFormObrigatorio(context, 'Quantidade',
+              textAlign: TextAlign.center,
               inputFormatters: [MaskTextInputFormatter(mask: '###')],
               keyboardType: TextInputType.number,
 
@@ -67,7 +68,7 @@ class _AddRemoveFildState extends State<AddRemoveFild> {
               });
             }
           },
-          child: Icon(Icons.add),
+          child: Icon(Icons.add, color: Colors.white),
         ),
       ],
     );

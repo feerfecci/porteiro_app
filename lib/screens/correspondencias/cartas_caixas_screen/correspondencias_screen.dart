@@ -13,7 +13,7 @@ import '../../../consts/consts.dart';
 import '../../../widgets/listview_all.dart';
 import '../../../widgets/page_erro.dart';
 import '../../../widgets/page_vazia.dart';
-import '../add_em_massa/caixas/encomendas_screen.dart';
+import '../add/caixas/encomendas_screen.dart';
 import 'add_corrresp_screen.dart';
 
 class CorrespondenciasScreen extends StatefulWidget {

@@ -32,6 +32,7 @@ class Consts {
   static const kColorApp = Color.fromARGB(255, 75, 132, 255);
   static const kColorRed = Color.fromARGB(255, 251, 80, 93);
   static const kColorVerde = Color.fromARGB(255, 44, 201, 104);
+  static const kColorAmarelo = Color.fromARGB(255, 250, 133, 70);
   // Color.fromARGB(255, 127, 99, 254);
 
   static const String iconApi = 'https://escritorioapp.com/img/ico-';

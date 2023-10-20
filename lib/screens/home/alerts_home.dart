@@ -1,5 +1,7 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names
 
+import 'package:app_porteiro/screens/correspondencias/add/caixas/encomendas_screen.dart';
+import 'package:app_porteiro/screens/correspondencias/add/multicartas_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,8 +13,6 @@ import '../../widgets/my_box_shadow.dart';
 import '../../widgets/page_erro.dart';
 import '../../widgets/page_vazia.dart';
 import '../../widgets/shimmer_widget.dart';
-import '../correspondencias/add_em_massa/caixas/encomendas_screen.dart';
-import '../correspondencias/add_em_massa/multicartas_screen.dart';
 import '../splash/splash_screen.dart';
 
 alertInformeSindico(BuildContext context) {
@@ -32,7 +32,7 @@ alertInformeSindico(BuildContext context) {
             children: [
               ConstsWidget.buildTitleText(context,
                   textAlign: TextAlign.center,
-                  title: 'Escolha um contato',
+                  title: 'Escolha um Contato',
                   fontSize: 18),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -152,9 +152,10 @@ alertMultiCorresp(BuildContext context) {
       children: [
         Column(
           children: [
-            ConstsWidget.buildOutlinedButton(
+            ConstsWidget.buildCustomButton(
               context,
-              title: 'Várias Caixas',
+              'Várias Caixas',
+              color: Color.fromARGB(255, 242, 131, 71),
               onPressed: () {
                 ConstsFuture.navigatorPush(context, EncomendasScreen());
               },
@@ -162,9 +163,10 @@ alertMultiCorresp(BuildContext context) {
             SizedBox(
               height: size.height * 0.02,
             ),
-            ConstsWidget.buildOutlinedButton(
+            ConstsWidget.buildCustomButton(
               context,
-              title: 'Várias Cartas',
+              'Várias Cartas',
+              color: Consts.kColorApp,
               onPressed: () {
                 ConstsFuture.navigatorPush(
                   context,

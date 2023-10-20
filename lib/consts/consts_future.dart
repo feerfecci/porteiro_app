@@ -14,7 +14,7 @@ class ConstsFuture {
   static Future<dynamic> launchGetApi(apiPortaria) async {
     var url = Uri.parse('${Consts.apiPortaria}$apiPortaria');
     var resposta = await http.get(url);
-    if (resposta.statusCode == 200) {
+    if (resposta.statusCode == 200 && resposta.body != "[]") {
       try {
         return json.decode(resposta.body);
       } on Exception {

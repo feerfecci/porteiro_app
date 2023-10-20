@@ -216,7 +216,7 @@ class _QuadroHistoricoNotificScreenState
                                                   context,
                                                   subTitle: texto,
                                                   maxLines: 10,
-                                                  textAlign: TextAlign.start),
+                                                  textAlign: TextAlign.center),
                                               SizedBox(
                                                 height: size.height * 0.01,
                                               ),

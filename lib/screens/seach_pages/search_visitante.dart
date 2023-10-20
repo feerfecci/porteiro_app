@@ -58,8 +58,10 @@ class SearchVisitante extends SearchDelegate<String> {
     var size = MediaQuery.of(context).size;
 
     if (query.isEmpty) {
-      return buildNoQuerySearch(context,
-          mesagem: 'Digite um Documento\n Para Localizar o Visitante');
+      return buildNoQuerySearchVermelho(context,
+          mensagem1: 'Digite um ',
+          mensagemVermelho: 'Documento Completo',
+          mensagem2: '\n Para Localizar o Visitante');
     } else {
       return StatefulBuilder(builder: (context, setState) {
         return FutureBuilder(
@@ -88,191 +90,241 @@ class SearchVisitante extends SearchDelegate<String> {
                     var nome_convidado = apiVisitas['nome_convidado'];
                     var doc_convidado = apiVisitas['doc_convidado'];
                     var acompanhante = apiVisitas['acompanhante'];
-                    var datahora_visita = DateFormat('HH:mm - dd/MM/yyyy')
+                    var datahora_visita = DateFormat('dd/MM/yyyy • HH:mm')
                         .format(DateTime.parse(apiVisitas['datahora_visita']));
                     var confirmado = apiVisitas['confirmado'];
                     var autorizado = apiVisitas['autorizado'];
                     return MyBoxShadow(
-                        child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ConstsWidget.buildSubTitleText(context,
-                                    subTitle: 'Nome Convidado'),
-                                ConstsWidget.buildTitleText(context,
-                                    title: '$nome_convidado'),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ConstsWidget.buildSubTitleText(context,
-                                    subTitle: 'Documento'),
-                                ConstsWidget.buildPadding001(
-                                  context,
-                                  child: ConstsWidget.buildTitleText(context,
-                                      title: '$doc_convidado'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        if (acompanhante != '')
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ConstsWidget.buildSubTitleText(context,
-                                      subTitle: 'Nome Acompanhante'),
-                                  ConstsWidget.buildTitleText(context,
-                                      title: '$acompanhante'),
-                                ],
-                              ),
-                            ],
+                        child: ConstsWidget.buildPadding001(
+                      context,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: size.height * 0.01,
                           ),
-                        ConstsWidget.buildPadding001(
-                          context,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ConstsWidget.buildSubTitleText(context,
-                                      subTitle: 'Nome Anfitrião'),
-                                  ConstsWidget.buildTitleText(context,
-                                      title: '$convidado_por'),
-                                ],
+                              SizedBox(
+                                width: size.width * 0.02,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ConstsWidget.buildSubTitleText(context,
-                                      subTitle: 'Local'),
+                                  ConstsWidget.buildSubTitleText(
+                                    context,
+                                    sizedWidth: 0.55,
+                                    subTitle: 'Nome Convidado',
+                                  ),
                                   ConstsWidget.buildPadding001(
                                     context,
                                     child: ConstsWidget.buildTitleText(context,
-                                        title: '$unidade'),
+                                        title: nome_convidado, maxLines: 5),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ConstsWidget.buildSubTitleText(context,
+                                      subTitle: 'Documento'),
+                                  ConstsWidget.buildPadding001(
+                                    context,
+                                    child: ConstsWidget.buildTitleText(context,
+                                        title: doc_convidado),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ConstsWidget.buildTitleText(context,
-                                title: datahora_visita),
-                            ConstsWidget.buildAtivoInativo(context, autorizado,
-                                verdadeiro: 'Autorizado', falso: 'Recusado'),
-                          ],
-                        ),
-                        ConstsWidget.buildPadding001(
-                          context,
-                          child: ConstsWidget.buildOutlinedButton(
+                          if (acompanhante != '')
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ConstsWidget.buildPadding001(
+                                      context,
+                                      child: ConstsWidget.buildSubTitleText(
+                                          context,
+                                          subTitle: 'Nome Acompanhante'),
+                                    ),
+                                    ConstsWidget.buildTitleText(context,
+                                        title: '$acompanhante'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ConstsWidget.buildPadding001(
                             context,
-                            title: 'Anunciar Visita',
-                            onPressed: () {
-                              double? fontSize = 18;
-                              TextStyle styleBold = TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 19);
-                              TextStyle style = TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color,
-                                  fontSize: fontSize,
-                                  height: size.height * 0.002);
-                              ConstsFuture.navigatorPush(
-                                  context,
-                                  EmiteAvisosScreen(
-                                      idunidade: idunidade,
-                                      localizado: unidade,
-                                      tipoAviso: 2,
-                                      nomeCadastrado: nome_convidado,
-                                      idVisita: idvisita,
-                                      title: 'Visitas'));
-
-                              // showModalAvisaDelivery(context,
-                              //     idunidade: idunidade,
-                              //     localizado: unidade,
-                              //     tipoAviso: 2,
-                              //     nomeCadastrado: nome_convidado,
-                              //     idVisita: idvisita,
-                              //     title: 'Visitas');
-                              // showModalBottomSheet(
-                              //   context: context,
-                              //   builder: (context) {
-                              //     return Column(
-                              //       children: [
-                              //         ConstsWidget.buildPadding001(
-                              //           context,
-                              //           horizontal: 0.02,
-                              //           child: RichText(
-                              //             text: TextSpan(
-                              //                 style: styleBold,
-                              //                 text: 'Cuidado!!  ',
-                              //                 children: [
-                              //                   TextSpan(
-                              //                     text:
-                              //                         'Após confirmar a visita, o condômino será avisado e não poderá mais voltar a ação',
-                              //                     style: styleBold,
-                              //                   ),
-                              //                 ]),
-                              //           ),
-                              //         ),
-                              //         ConstsWidget.buildPadding001(
-                              //           context,
-                              //           child: Row(
-                              //             mainAxisAlignment:
-                              //                 MainAxisAlignment.end,
-                              //             children: [
-                              //               ConstsWidget.buildOutlinedButton(
-                              //                 context,
-                              //                 title: 'Cancelar',
-                              //                 onPressed: () {
-                              //                   Navigator.pop(context);
-                              //                 },
-                              //               ),
-                              //               SizedBox(width: size.width * 0.02),
-                              //               ConstsWidget.buildCustomButton(
-                              //                 context,
-                              //                 'Confirmar',
-                              //                 onPressed: () {
-                              //                   Navigator.pop(context);
-                              //                   buildMinhaSnackBar(context,
-                              //                       title: 'Obrigado',
-                              //                       subTitle:
-                              //                           'A visita confirmada e condômino avisado');
-                              //                 },
-                              //               )
-                              //             ],
-                              //           ),
-                              //         ),
-                              //       ],
-                              //     );
-                              //   },
-                              // );
-                              // showAllDialog(context,
-                              //     title: ConstsWidget.buildTitleText(context,
-                              //         title: 'Anunciar Visita'),
-                              //     children: []);
-                            },
+                            child: Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.02,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ConstsWidget.buildPadding001(
+                                      context,
+                                      child: ConstsWidget.buildSubTitleText(
+                                          context,
+                                          subTitle: 'Nome Anfitrião'),
+                                    ),
+                                    ConstsWidget.buildTitleText(context,
+                                        title: convidado_por, sizedWidth: 0.55),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ConstsWidget.buildPadding001(
+                                      context,
+                                      child: ConstsWidget.buildSubTitleText(
+                                          context,
+                                          subTitle: 'Local'),
+                                    ),
+                                    ConstsWidget.buildTitleText(context,
+                                        title: '$unidade', sizedWidth: 0.35),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        )
-                      ],
+                          ConstsWidget.buildPadding001(
+                            context,
+                            vertical: 0.02,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.02,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ConstsWidget.buildSubTitleText(context,
+                                        subTitle: 'Data e Hora da Visita'),
+                                    SizedBox(
+                                      height: size.height * 0.01,
+                                    ),
+                                    ConstsWidget.buildTitleText(context,
+                                        title: datahora_visita,
+                                        sizedWidth: 0.55),
+                                  ],
+                                ),
+                                ConstsWidget.buildAtivoInativo(
+                                    context, autorizado,
+                                    verdadeiro: 'Autorizado',
+                                    falso: 'Recusado'),
+                              ],
+                            ),
+                          ),
+                          ConstsWidget.buildPadding001(
+                            context,
+                            child: ConstsWidget.buildCustomButton(
+                              context,
+                              'Anunciar Visita',
+                              color: Consts.kColorRed,
+                              onPressed: () {
+                                double? fontSize = 18;
+                                TextStyle styleBold = TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 19);
+                                TextStyle style = TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
+                                    fontSize: fontSize,
+                                    height: size.height * 0.002);
+                                ConstsFuture.navigatorPush(
+                                    context,
+                                    EmiteAvisosScreen(
+                                        idunidade: idunidade,
+                                        localizado: unidade,
+                                        tipoAviso: 2,
+                                        nomeCadastrado: nome_convidado,
+                                        idVisita: idvisita,
+                                        title: 'Visitas'));
+
+                                // showModalAvisaDelivery(context,
+                                //     idunidade: idunidade,
+                                //     localizado: unidade,
+                                //     tipoAviso: 2,
+                                //     nomeCadastrado: nome_convidado,
+                                //     idVisita: idvisita,
+                                //     title: 'Visitas');
+                                // showModalBottomSheet(
+                                //   context: context,
+                                //   builder: (context) {
+                                //     return Column(
+                                //       children: [
+                                //         ConstsWidget.buildPadding001(
+                                //           context,
+                                //           horizontal: 0.02,
+                                //           child: RichText(
+                                //             text: TextSpan(
+                                //                 style: styleBold,
+                                //                 text: 'Cuidado!!  ',
+                                //                 children: [
+                                //                   TextSpan(
+                                //                     text:
+                                //                         'Após confirmar a visita, o condômino será avisado e não poderá mais voltar a ação',
+                                //                     style: styleBold,
+                                //                   ),
+                                //                 ]),
+                                //           ),
+                                //         ),
+                                //         ConstsWidget.buildPadding001(
+                                //           context,
+                                //           child: Row(
+                                //             mainAxisAlignment:
+                                //                 MainAxisAlignment.end,
+                                //             children: [
+                                //               ConstsWidget.buildOutlinedButton(
+                                //                 context,
+                                //                 title: 'Cancelar',
+                                //                 onPressed: () {
+                                //                   Navigator.pop(context);
+                                //                 },
+                                //               ),
+                                //               SizedBox(width: size.width * 0.02),
+                                //               ConstsWidget.buildCustomButton(
+                                //                 context,
+                                //                 'Confirmar',
+                                //                 onPressed: () {
+                                //                   Navigator.pop(context);
+                                //                   buildMinhaSnackBar(context,
+                                //                       title: 'Obrigado',
+                                //                       subTitle:
+                                //                           'A visita confirmada e condômino avisado');
+                                //                 },
+                                //               )
+                                //             ],
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     );
+                                //   },
+                                // );
+                                // showAllDialog(context,
+                                //     title: ConstsWidget.buildTitleText(context,
+                                //         title: 'Anunciar Visita'),
+                                //     children: []);
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ));
                   },
                 );

@@ -169,7 +169,7 @@ class _WidgetCusttCorrespState extends State<AddCorrespScreen> {
                           });
                         }
                       },
-                      child: Icon(Icons.remove)),
+                      child: Icon(Icons.remove, color: Colors.white)),
                   SizedBox(
                     height: size.height * 0.1,
                   ),
@@ -207,7 +207,7 @@ class _WidgetCusttCorrespState extends State<AddCorrespScreen> {
                         });
                       }
                     },
-                    child: Icon(Icons.add),
+                    child: Icon(Icons.add, color: Colors.white),
                   ),
                 ],
               ),

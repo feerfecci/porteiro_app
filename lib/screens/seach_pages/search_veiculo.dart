@@ -88,8 +88,10 @@ class SearchVeiculo extends SearchDelegate<String> {
     }
 
     if (query.isEmpty) {
-      return buildNoQuerySearch(context,
-          mesagem: 'Digite uma Placa para\n Procurar um Veículo');
+      return buildNoQuerySearchVermelho(context,
+          mensagem1: 'Digite a ',
+          mensagemVermelho: 'Placa Completa',
+          mensagem2: ' para\n Procurar o Veículo');
     } else {
       return FutureBuilder(
         future: sugestoesVeiculos(),

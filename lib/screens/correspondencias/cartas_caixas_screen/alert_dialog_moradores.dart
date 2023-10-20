@@ -65,86 +65,92 @@ class _AlertListMoradoresState extends State<AlertListMoradores> {
               contentPadding: EdgeInsets.all(size.width * 0.02),
               insetPadding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.02, vertical: size.height * 0.05),
+              title: ConstsWidget.buildTitleText(context,
+                  title: 'Quem Está Retirando', textAlign: TextAlign.center),
               content: SizedBox(
                 width: size.width * 1,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ConstsWidget.buildClosePop(context,
-                        paddingX: 0.02, title: 'Quem está retirando'),
-                    SizedBox(
-                      height: snapshot.data['morador'].length <= 3
-                          ? SplashScreen.isSmall
-                              ? size.height * 0.45
-                              : size.height * 0.3
-                          : size.height * 0.6,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data['morador'].length,
-                        itemBuilder: (context, index) {
-                          return StatefulBuilder(builder: (context, setState) {
-                            return MyBoxShadow(
-                              child: ConstsWidget.buildCheckBox(context,
-                                  isChecked: isChecked, onChanged: (value) {
-                                setState(
-                                  () {
-                                    isChecked = value!;
-                                    if (value) {
-                                      idMorador = snapshot.data['morador']
-                                          [index]['idmorador'];
-                                    } else {
-                                      idMorador = 0;
-                                    }
-                                  },
-                                );
-                              },
-                                  title: snapshot.data['morador'][index]
-                                      ['nome_morador']),
-                            );
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.01,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ConstsWidget.buildOutlinedButton(
-                          context,
-                          title: "Cancelar",
-                          rowSpacing: 0.08,
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                    ConstsWidget.buildPadding001(
+                      context,
+                      child: SizedBox(
+                        height: snapshot.data['morador'].length > 4
+                            ? size.height * 0.6
+                            : null,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data['morador'].length,
+                          itemBuilder: (context, index) {
+                            return StatefulBuilder(
+                                builder: (context, setState) {
+                              return MyBoxShadow(
+                                child: ConstsWidget.buildCheckBox(context,
+                                    isChecked: isChecked, onChanged: (value) {
+                                  setState(
+                                    () {
+                                      isChecked = value!;
+                                      if (value) {
+                                        idMorador = snapshot.data['morador']
+                                            [index]['idmorador'];
+                                      } else {
+                                        idMorador = 0;
+                                      }
+                                    },
+                                  );
+                                },
+                                    title: snapshot.data['morador'][index]
+                                        ['nome_morador']),
+                              );
+                            });
                           },
                         ),
-                        ConstsWidget.buildCustomButton(
-                          context,
-                          "Continuar",
-                          rowSpacing: 0.06,
-                          onPressed: () {
-                            if (idMorador != 0) {
+                      ),
+                    ),
+                    // SizedBox(
+                    //   height: size.height * 0.01,
+                    // ),
+                    ConstsWidget.buildPadding001(
+                      context,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ConstsWidget.buildOutlinedButton(
+                            context,
+                            title: "Cancelar",
+                            rowSpacing: 0.08,
+                            onPressed: () {
                               Navigator.of(context).pop();
-                              ConstsFuture.navigatorPush(
-                                  context,
-                                  EmiteEntregaScreen(
-                                      idunidade: widget.idunidade,
-                                      idMorador: idMorador,
-                                      tipoCompara: 'senha',
-                                      listEntregar: widget.listEntregar));
+                            },
+                          ),
+                          ConstsWidget.buildCustomButton(
+                            context,
+                            "Continuar",
+                            color: Consts.kColorRed,
+                            rowSpacing: 0.06,
+                            onPressed: () {
+                              if (idMorador != 0) {
+                                Navigator.of(context).pop();
+                                ConstsFuture.navigatorPush(
+                                    context,
+                                    EmiteEntregaScreen(
+                                        idunidade: widget.idunidade,
+                                        idMorador: idMorador,
+                                        tipoCompara: 'senha',
+                                        listEntregar: widget.listEntregar));
 
-                              // showModalEmiteEntrega(context,
-                              //     idunidade: widget.idunidade,
-                              //     idMorador: idMorador,
-                              //     tipoCompara: 'senha',
-                              //     listEntregar: widget.listEntregar);
-                            } else {
-                              buildMinhaSnackBar(context, hasError: true);
-                            }
-                          },
-                        )
-                      ],
+                                // showModalEmiteEntrega(context,
+                                //     idunidade: widget.idunidade,
+                                //     idMorador: idMorador,
+                                //     tipoCompara: 'senha',
+                                //     listEntregar: widget.listEntregar);
+                              } else {
+                                buildMinhaSnackBar(context, hasError: true);
+                              }
+                            },
+                          )
+                        ],
+                      ),
                     )
                   ],
                 ),

@@ -28,6 +28,7 @@ class ConstsWidget {
     double fontSize = 18,
     TextAlign? textAlign,
     double? sizedWidth,
+    double? height,
     TextOverflow? overflow = TextOverflow.ellipsis,
     required String title,
     int? maxLines,
@@ -41,6 +42,7 @@ class ConstsWidget {
         maxLines: maxLines,
         overflow: overflow,
         style: TextStyle(
+            height: height,
             fontWeight: FontWeight.bold,
             fontSize: SplashScreen.isSmall ? (fontSize - 3) : fontSize,
             color: color ?? Theme.of(context).textTheme.bodyLarge!.color),
@@ -53,18 +55,23 @@ class ConstsWidget {
     Color? color,
     double? fontSize = 16,
     required String subTitle,
+    double? sizedWidth,
     TextOverflow? overflow = TextOverflow.ellipsis,
     TextAlign? textAlign,
     int? maxLines,
   }) {
-    return Text(
-      subTitle,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
-      style: TextStyle(
-          fontSize: SplashScreen.isSmall ? (fontSize! - 2) : fontSize,
-          color: color ?? Theme.of(context).textTheme.bodyLarge!.color),
+    var size = MediaQuery.of(context).size;
+    return SizedBox(
+      width: sizedWidth == null ? null : size.width * sizedWidth,
+      child: Text(
+        subTitle,
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
+        style: TextStyle(
+            fontSize: SplashScreen.isSmall ? (fontSize! - 2) : fontSize,
+            color: color ?? Theme.of(context).textTheme.bodyLarge!.color),
+      ),
     );
   }
 
@@ -135,8 +142,12 @@ class ConstsWidget {
           textCapitalization: textCapitalization,
           validator: validator ??
               Validatorless.multiple([Validatorless.required(mensagem)]),
-          decoration: buildTextFieldDecoration(context,
-              title: title, hintText: hintText, isobrigatorio: true)
+          decoration: buildTextFieldDecoration(
+            context,
+            title: title,
+            hintText: hintText,
+            isobrigatorio: true,
+          )
           // InputDecoration(
           //   contentPadding: EdgeInsets.symmetric(
           //       horizontal: size.width * 0.045, vertical: size.height * 0.025),
@@ -177,6 +188,7 @@ class ConstsWidget {
           horizontal: size.width * 0.035, vertical: size.height * 0.025),
       filled: true,
       fillColor: Theme.of(context).canvasColor,
+      labelStyle: TextStyle(),
       label: isobrigatorio
           ? Row(
               mainAxisSize: MainAxisSize.min,

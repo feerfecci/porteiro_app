@@ -53,6 +53,7 @@ class _MultiCartasState extends State<MultiCartas> {
           );
         });
       }
+      print(listarUniApi);
     } else {
       return {'erro': true, 'mensagem': 'Erro no Servidor'};
     }
@@ -62,8 +63,8 @@ class _MultiCartasState extends State<MultiCartas> {
     setState(() {
       hasError.clear();
       isLoading = false;
-      DropSearchRemet.tituloRemente == null;
-      DropSearchRemet.textoRemente == null;
+      DropSearchRemet.tituloRemente = null;
+      DropSearchRemet.textoRemente = null;
     });
   }
 
@@ -225,7 +226,6 @@ class _MultiCartasState extends State<MultiCartas> {
                             if (e.nomeUnidade == addedItem.toString()) {
                               setState(() {
                                 listUnidade.add(e.idap);
-                                // print(selectedItems);
                               });
                             }
                           }).toString();
