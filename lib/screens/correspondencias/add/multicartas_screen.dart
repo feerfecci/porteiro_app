@@ -104,17 +104,16 @@ class _MultiCartasState extends State<MultiCartas> {
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        text: 'Aqui você avisará ',
-                        style: buildTextStyle(),
+                        text: '',
                         children: [
                           TextSpan(
-                            text: 'todas as unidades',
+                            text: 'Não avise ',
                             style: buildTextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: SplashScreen.isSmall ? 18 : 20),
                           ),
                           TextSpan(
-                              text: ', exceto quais selecionar abaixo',
+                              text: 'as unidades selecionadas abaixo:',
                               style: buildTextStyle()),
                         ],
                       ),

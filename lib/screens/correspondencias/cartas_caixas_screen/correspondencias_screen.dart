@@ -14,7 +14,7 @@ import '../../../widgets/listview_all.dart';
 import '../../../widgets/page_erro.dart';
 import '../../../widgets/page_vazia.dart';
 import '../add/caixas/encomendas_screen.dart';
-import 'add_corrresp_screen.dart';
+import '../add/add_corrresp_screen.dart';
 
 class CorrespondenciasScreen extends StatefulWidget {
   final int? idunidade;
@@ -121,9 +121,9 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
                   )
                 ],
               ));
-            } else if (!snapshot.hasError &&
+            } else if (snapshot.hasData &&
                 snapshot.data['mensagem'] !=
-                    "Nenhuma correspondência registrada para essa unidade") {
+                    "Nenhuma Correspondência Registrada Para Essa Unidade") {
               if (!snapshot.data['erro']) {
                 return Column(
                   children: [
@@ -309,7 +309,7 @@ class _CorrespondenciasScreenState extends State<CorrespondenciasScreen> {
               }
             } else if (!snapshot.hasError &&
                 snapshot.data['mensagem'] ==
-                    "Nenhuma correspondência registrada para essa unidade") {
+                    "Nenhuma Correspondência Registrada Para Essa Unidade") {
               return PageVazia(title: snapshot.data['mensagem']);
             } else {
               return PageErro();

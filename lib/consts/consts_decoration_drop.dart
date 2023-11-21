@@ -10,7 +10,6 @@ class DecorationDropSearch {
     return DropDownDecoratorProps(
       textAlign: TextAlign.center,
       dropdownSearchDecoration: InputDecoration(
-        hintText: 'asdgfasdgsad',
         hintStyle: TextStyle(color: Colors.black, fontSize: 18),
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
@@ -27,10 +26,13 @@ class DecorationDropSearch {
         ),
         alignment: Alignment.center,
         color: Theme.of(context).colorScheme.primary,
-        icon: Icon(Icons.arrow_downward,
-            color:
-                //  Colors.red
-                Theme.of(context).textTheme.bodyLarge!.color));
+        icon: Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Icon(Icons.arrow_downward,
+              color:
+                  //  Colors.red
+                  Theme.of(context).textTheme.bodyLarge!.color),
+        ));
   }
 
   static searchFieldProps(BuildContext context, {String? hintText}) {

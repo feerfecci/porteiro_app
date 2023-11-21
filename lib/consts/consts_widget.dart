@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:validatorless/validatorless.dart';
 import '../screens/splash/splash_screen.dart';
 import '../widgets/shimmer_widget.dart';
@@ -10,6 +13,73 @@ import 'package:badges/badges.dart' as badges;
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ConstsWidget {
+  static alertDialogUpdate(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    // Navigator.pop(context);
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => GestureDetector(
+              child: AlertDialog(
+                insetPadding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.05,
+                    vertical: size.height * 0.05),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                title: Text('Nova Atualização',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center),
+                content: SizedBox(
+                  width: double.maxFinite,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Padding(
+                      //   padding:
+                      //       EdgeInsets.symmetric(vertical: size.height * 0.025),
+                      //   child: Image(
+                      //     image: NetworkImage(
+                      //         '${Consts.arquivoAssets}logo-login-f.png'),
+                      //   ),
+                      // ),
+                      Container(
+                        child: Text(
+                          'Por favor, atualize o aplicativo para uma melhor experiência e correções',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  ConstsWidget.buildCustomButton(
+                    context,
+                    'Abrir Loja de Aplicativo',
+                    onPressed: () {
+                      if (Platform.isAndroid) {
+                        launchUrl(
+                            Uri.parse(
+                                'https://play.google.com/store/apps/details?id=com.portariaapp.porteiroapp1'),
+                            mode: LaunchMode.externalApplication);
+                        print('launch google');
+                      } else if (Platform.isIOS) {
+                        // launchUrl(Uri.parse('https://apple.co/3IakBuM'),
+                        //     mode: LaunchMode.externalApplication);
+
+                        print('launch apple');
+                      }
+
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+            ));
+  }
+
   static Widget buildPadding001(BuildContext context,
       {double horizontal = 0, double vertical = 0.01, required Widget? child}) {
     var size = MediaQuery.of(context).size;
@@ -120,6 +190,7 @@ class ConstsWidget {
       TextCapitalization textCapitalization = TextCapitalization.none,
       bool obscureText = false,
       Iterable<String>? autofillHints,
+      void Function(PointerDownEvent)? onTapOutside,
       final void Function(String? text)? onSaved}) {
     // var size = MediaQuery.of(context).size;
     return ConstsWidget.buildPadding001(
@@ -132,6 +203,7 @@ class ConstsWidget {
           textAlign: textAlign,
           obscureText: obscureText,
           maxLength: maxLength,
+          onTapOutside: onTapOutside,
           minLines: minLines,
           textInputAction: TextInputAction.next,
           keyboardType: keyboardType,
@@ -337,7 +409,7 @@ class ConstsWidget {
       onPressed: isLoading ? () {} : onPressed,
       child: buildPadding001(context,
           vertical: SplashScreen.isSmall ? height + 0.005 : height,
-          child: isLoading == false
+          child: !isLoading
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -556,29 +628,36 @@ class ConstsWidget {
       required bool showBadge,
       required Widget? child,
       BadgePosition? position}) {
+    BadgeShape shape = title >= 10 ? BadgeShape.square : BadgeShape.circle;
+    String titleString = title > 99
+        ? '+99'
+        : title == 0
+            ? ''
+            : title.toString();
+    double? fontSize = title >= 10
+        ? SplashScreen.isSmall
+            ? 12
+            : 14
+        : SplashScreen.isSmall
+            ? 14
+            : 16;
+
     return badges.Badge(
         showBadge: showBadge,
+        // stackFit: StackFit.expand,
         badgeAnimation: badges.BadgeAnimation.fade(toAnimate: false),
         badgeContent: Text(
-          title > 99
-              ? '+99'
-              : title == 0
-                  ? ''
-                  : title.toString(),
+          titleString,
           style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: title >= 10
-                  ? SplashScreen.isSmall
-                      ? 12
-                      : 14
-                  : SplashScreen.isSmall
-                      ? 14
-                      : 16),
+              fontSize: fontSize),
         ),
         position: position,
         badgeStyle: badges.BadgeStyle(
           badgeColor: Consts.kColorRed,
+          borderRadius: BorderRadius.circular(16),
+          shape: shape,
         ),
         child: child);
   }

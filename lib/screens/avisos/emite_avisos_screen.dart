@@ -99,9 +99,12 @@ class _EmiteAvisosScreenState extends State<EmiteAvisosScreen> {
                   },
                   elevation: 24,
                   isExpanded: true,
-                  icon: Icon(
-                    Icons.arrow_downward,
-                    color: Theme.of(context).iconTheme.color,
+                  icon: Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Icon(
+                      Icons.arrow_downward,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
                   ),
                   borderRadius: BorderRadius.circular(16),
                   hint: Text('Selecione Um Aviso'),

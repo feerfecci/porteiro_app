@@ -87,12 +87,15 @@ class _EspacosScreenState extends State<EspacosScreen> {
                         String nome_morador = apiReservas['nome_morador'];
                         int idunidade = apiReservas['idunidade'];
                         String unidade = apiReservas['unidade'];
-                        String data_reserva = apiReservas['data_reserva'];
+                        String data_reserva_ini =
+                            apiReservas['data_reserva_ini'];
+                        String data_reserva_fim =
+                            apiReservas['data_reserva_fim'];
                         String datahora = apiReservas['datahora'];
 
                         DateTime now = DateTime.now();
                         int difference =
-                            DateTime(DateTime.parse(data_reserva).day)
+                            DateTime(DateTime.parse(data_reserva_ini).day)
                                 .difference(DateTime(now.day))
                                 .inDays;
 
@@ -146,22 +149,47 @@ class _EspacosScreenState extends State<EspacosScreen> {
                                       ],
                                     ),
                                   ),
-                                  ConstsWidget.buildPadding001(
-                                    context,
-                                    child: Column(
-                                      children: [
-                                        ConstsWidget.buildSubTitleText(context,
-                                            subTitle: 'Inicio da Reserva'),
-                                        SizedBox(
-                                          height: size.height * 0.005,
-                                        ),
-                                        ConstsWidget.buildTitleText(context,
-                                            title:
-                                                DateFormat('dd/MM/yyyy • HH:mm')
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ConstsWidget.buildPadding001(
+                                        context,
+                                        child: Column(
+                                          children: [
+                                            ConstsWidget.buildSubTitleText(
+                                                context,
+                                                subTitle: 'Inicio da Reserva'),
+                                            SizedBox(
+                                              height: size.height * 0.005,
+                                            ),
+                                            ConstsWidget.buildTitleText(context,
+                                                title: DateFormat(
+                                                        'dd/MM/yyyy • HH:mm')
                                                     .format(DateTime.parse(
-                                                        data_reserva))),
-                                      ],
-                                    ),
+                                                        data_reserva_ini))),
+                                          ],
+                                        ),
+                                      ),
+                                      ConstsWidget.buildPadding001(
+                                        context,
+                                        child: Column(
+                                          children: [
+                                            ConstsWidget.buildSubTitleText(
+                                                context,
+                                                subTitle: 'Término da Reserva'),
+                                            SizedBox(
+                                              height: size.height * 0.005,
+                                            ),
+                                            ConstsWidget.buildTitleText(context,
+                                                title: DateFormat(
+                                                        'dd/MM/yyyy • HH:mm')
+                                                    .format(DateTime.parse(
+                                                        data_reserva_fim))),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),

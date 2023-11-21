@@ -9,6 +9,7 @@ import 'package:app_porteiro/screens/seach_pages/search_visitante.dart';
 import 'package:app_porteiro/screens/seach_pages/search_veiculo.dart';
 import 'package:app_porteiro/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_version_checker/flutter_app_version_checker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,6 +32,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DateTime timeBackPressed = DateTime.now();
+  final _checker = AppVersionChecker(
+    appId: 'com.portariaapp.porteiroapp1',
+    androidStore: AndroidStore.googlePlayStore,
+  );
   Future oneSignalNotification() async {
     OneSignal.shared.setAppId('d75e42a6-49bd-4c8d-b13f-51e054634942');
     OneSignal.shared.deleteTags([
@@ -83,7 +88,15 @@ class _HomePageState extends State<HomePage> {
     var size = MediaQuery.of(context).size;
 
     int lenghtNumeroSindico = 0;
+    void checkerVersion() {
+      _checker.checkUpdate().then((value) {
+        if (value.canUpdate) {
+          ConstsWidget.alertDialogUpdate(context);
+        }
+      });
+    }
 
+    checkerVersion();
     return WillPopScope(
       onWillPop: () async {
         final differenceBack = DateTime.now().difference(timeBackPressed);
@@ -118,34 +131,32 @@ class _HomePageState extends State<HomePage> {
                   textAlign: TextAlign.center,
                   title: FuncionarioInfos.nome_condominio!,
                   fontSize: SplashScreen.isSmall ? 18 : 20),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               iconTheme: IconThemeData(
                   color: Theme.of(context).textTheme.bodyLarge!.color),
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              toolbarHeight: SplashScreen.isSmall
+                  ? size.height * 0.09
+                  : size.height * 0.07,
               elevation: 0,
-              leadingWidth: size.width * 0.13,
+              leadingWidth: SplashScreen.isSmall
+                  ? size.height * 0.08
+                  : size.height * 0.06,
               leading: Padding(
                   padding: EdgeInsets.only(
-                    left: size.width * 0.025,
-                    top: size.height * 0.01,
-                    bottom: size.height * 0.01,
-                  ),
+                      left: size.width * 0.025,
+                      top: SplashScreen.isSmall
+                          ? size.height * 0.02
+                          : size.height * 0.012,
+                      bottom: SplashScreen.isSmall
+                          ? size.height * 0.005
+                          : size.height * 0.01),
                   child: Center(
                     child: ConstsWidget.buildCachedImage(
                       context,
                       iconApi:
                           'https://a.portariaapp.com/img/logo_vermelho.png',
                     ),
-                  )
-
-                  //  FutureBuilder(
-                  //   future: ConstsFuture.apiImage(
-                  //     'https://a.portariaapp.com/img/logo_vermelho.png',
-                  //   ),
-                  //   builder: (context, snapshot) {
-                  //     return SizedBox(child: snapshot.data);
-                  //   },
-                  // ),
-                  ),
+                  )),
             ),
             endDrawer: CustomDrawer(),
             body: ListView(

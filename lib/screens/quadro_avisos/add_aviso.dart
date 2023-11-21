@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:app_porteiro/screens/quadro_avisos/quadro_avisos.dart';
 
@@ -18,7 +19,18 @@ class AddAvisos extends StatefulWidget {
   State<AddAvisos> createState() => _AddAvisosState();
 }
 
+bool isLoading = false;
+
 class _AddAvisosState extends State<AddAvisos> {
+  @override
+  void initState() {
+    listImage = [];
+    nameImage = '';
+    pathImage = '';
+    isLoading = false;
+    super.initState();
+  }
+
   TextEditingController textoCntl = TextEditingController();
   TextEditingController tituloCntl = TextEditingController();
   final _keyForm = GlobalKey<FormState>();
@@ -26,32 +38,36 @@ class _AddAvisosState extends State<AddAvisos> {
   List<String> listImage = [];
   String? nameImage = '';
   String? pathImage = '';
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return StatefulBuilder(builder: (context, setState) {
-      return ScaffoldAll(
-        title: 'Enviar Aviso',
-        body: Form(
-          key: _keyForm,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.height * 0.02),
-            child: ListView(
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
+    return ScaffoldAll(
+      title: 'Enviar Aviso',
+      body: Form(
+        key: _keyForm,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: size.height * 0.02),
+          child: StatefulBuilder(builder: (context, setState) {
+            return Column(
+              // shrinkWrap: true,
+              // physics: ClampingScrollPhysics(),
               children: [
                 ConstsWidget.buildCamposObrigatorios(
                   context,
                 ),
                 ConstsWidget.buildMyTextFormObrigatorio(context, 'Título',
                     hintText: 'Exemplo: Manutenção do elevador do bloco C',
-                    textCapitalization: TextCapitalization.words,
-                    maxLength: 70,
-                    controller: tituloCntl),
+                    textCapitalization: TextCapitalization.sentences,
+                    onTapOutside: (p0) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                }, maxLength: 70, controller: tituloCntl),
                 ConstsWidget.buildMyTextFormObrigatorio(context, 'Descrição',
                     textCapitalization: TextCapitalization.sentences,
                     minLines: 8,
-                    maxLines: 8,
+                    maxLines: 8, onTapOutside: (p0) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                     hintText:
                         'Exemplo: Será realizada a manutenção do elevador do bloco C a partir de amanhã (21/06) as 14h. Por favor, utilize as escadarias',
                     maxLength: 1000,
@@ -63,6 +79,7 @@ class _AddAvisosState extends State<AddAvisos> {
                   context,
                   title: 'Adicionar Arquivo',
                   onPressed: () async {
+                    // FocusManager.instance.primaryFocus?.u  nfocus();
                     final picker = ImagePicker();
                     final pickedFile =
                         await picker.pickImage(source: ImageSource.gallery);
@@ -121,35 +138,49 @@ class _AddAvisosState extends State<AddAvisos> {
                           );
                         },
                       )),
-                ConstsWidget.buildCustomButton(context, 'Enviar Aviso',
-                    color: Consts.kColorRed, onPressed: () {
-                  var formValid = _keyForm.currentState?.validate();
-                  if (formValid!) {
-                    upload(nameImage: nameImage, pathImage: pathImage)
-                        .then((value) {
-                      if (!value['erro']) {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        ConstsFuture.navigatorPush(
-                            context, QuadroHistoricoNotificScreen());
-                        buildMinhaSnackBar(context,
-                            title: 'Muito Obrigado!',
-                            subTitle: value['mensagem']);
-                      } else {
-                        buildMinhaSnackBar(
-                          context,
-                          hasError: true,
+                StatefulBuilder(builder: (context, setState) {
+                  return ConstsWidget.buildLoadingButton(context,
+                      title: 'Enviar Aviso',
+                      isLoading: isLoading,
+                      color: Consts.kColorRed, onPressed: () {
+                    var formValid = _keyForm.currentState?.validate();
+                    if (formValid!) {
+                      setState(
+                        () {
+                          isLoading = true;
+                        },
+                      );
+                      upload(nameImage: nameImage, pathImage: pathImage)
+                          .then((value) {
+                        setState(
+                          () {
+                            isLoading == false;
+                          },
                         );
-                      }
-                    });
-                  }
+                        if (!value['erro']) {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          ConstsFuture.navigatorPush(
+                              context, QuadroHistoricoNotificScreen());
+                          buildMinhaSnackBar(context,
+                              title: 'Muito Obrigado!',
+                              subTitle: value['mensagem']);
+                        } else {
+                          buildMinhaSnackBar(
+                            context,
+                            hasError: true,
+                          );
+                        }
+                      });
+                    }
+                  });
                 }),
               ],
-            ),
-          ),
+            );
+          }),
         ),
-      );
-    });
+      ),
+    );
   }
 
   Future upload(

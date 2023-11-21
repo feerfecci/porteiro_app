@@ -8,7 +8,8 @@ import '../../widgets/scaffold_all.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class PoliticaScreen extends StatefulWidget {
-  const PoliticaScreen({super.key});
+   bool hasDrawer;
+   PoliticaScreen({this.hasDrawer = false,super.key});
 
   @override
   State<PoliticaScreen> createState() => _PoliticaScreenState();
@@ -33,7 +34,7 @@ class _PoliticaScreenState extends State<PoliticaScreen> {
       onRefresh: () async {
         setState(() {});
       },
-      child: ScaffoldAll(
+      child: ScaffoldAll(hasDrawer: widget.hasDrawer,
         title: 'Política de Privacidade',
         body: FutureBuilder<dynamic>(
             future: politicaApi(),

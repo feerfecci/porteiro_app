@@ -123,6 +123,7 @@ class SearchProtocolos extends SearchDelegate<String> {
                                         ListTile(
                                           title: ConstsWidget.buildTitleText(
                                               context,
+                                              maxLines: 3,
                                               title: remetente),
                                           subtitle: Column(
                                             crossAxisAlignment:
@@ -159,13 +160,23 @@ class SearchProtocolos extends SearchDelegate<String> {
                                                   setState(
                                                     () {
                                                       isChecked = value!;
-                                                      value == true
-                                                          ? listEntregar.add(
-                                                              idcorrespondencia
-                                                                  .toString())
-                                                          : listEntregar.remove(
+                                                      if (value) {
+                                                        if (!listEntregar.contains(
+                                                            idcorrespondencia
+                                                                .toString())) {
+                                                          listEntregar.add(
                                                               idcorrespondencia
                                                                   .toString());
+                                                        }
+                                                      } else {
+                                                        if (listEntregar.contains(
+                                                            idcorrespondencia
+                                                                .toString())) {
+                                                          listEntregar.remove(
+                                                              idcorrespondencia
+                                                                  .toString());
+                                                        }
+                                                      }
                                                     },
                                                   );
                                                 }, title: 'Entregar');
@@ -179,24 +190,6 @@ class SearchProtocolos extends SearchDelegate<String> {
                             );
                           },
                         ),
-                        // ConstsWidget.buildLoadingButton(context, onPressed: () {
-                        //   setState(
-                        //     () {
-                        //       isLoadingCodigo = !isLoadingCodigo;
-                        //     },
-                        //   );
-                        //   // emiteEntrega(listEntregar.join(','));
-                        //   Timer(Duration(seconds: 2), () {
-                        //     setState(
-                        //       () {
-                        //         isLoadingCodigo = !isLoadingCodigo;
-                        //         showModalEmiteEntrega(context,
-                        //             idunidade: idunidade, protocoloRetirada: query);
-                        //         listEntregar.clear();
-                        //       },
-                        //     );
-                        //   });
-                        // }, isLoading: isLoadingCodigo, title: 'Código de Entrega'),
                         ConstsWidget.buildPadding001(
                           context,
                           horizontal: 0.01,

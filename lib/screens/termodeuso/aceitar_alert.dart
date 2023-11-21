@@ -74,7 +74,7 @@ class _AceitarTermosScreenState extends State<AceitarTermosScreen> {
                       return SizedBox(
                         height: SplashScreen.isSmall
                             ? size.height * 0.06
-                            : size.height * 0.63,
+                            : size.height * 0.6,
                         child: ListView(
                           children: [
                             // Padding(

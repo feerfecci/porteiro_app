@@ -16,6 +16,7 @@ class AddCorrespScreen extends StatefulWidget {
   final int idunidade;
   final int? tipoAviso;
   final String? localizado;
+
   const AddCorrespScreen(
       {required this.title,
       required this.idunidade,
@@ -31,6 +32,7 @@ class _WidgetCusttCorrespState extends State<AddCorrespScreen> {
   TextEditingController qtdCartas = TextEditingController(text: '1');
   final _formKey = GlobalKey<FormState>();
   bool loadingRetirada = false;
+
   @override
   void initState() {
     super.initState();
@@ -122,14 +124,18 @@ class _WidgetCusttCorrespState extends State<AddCorrespScreen> {
                       context,
                       'Remetente',
                       onSaved: (text) {
-                        remetenteText = text;
+                        setState(() {
+                          remetenteText = text;
+                        });
                       },
                     ),
                     ConstsWidget.buildMyTextFormObrigatorio(
                       context,
                       'Descrição',
                       onSaved: (text) {
-                        descricaoText = text;
+                        setState(() {
+                          descricaoText = text;
+                        });
                       },
                     ),
                     SizedBox(
@@ -219,6 +225,7 @@ class _WidgetCusttCorrespState extends State<AddCorrespScreen> {
                   color: Consts.kColorRed,
                   title: 'Salvar e avisar',
                   onPressed: () {
+                    _formKey.currentState!.save();
                     if (_formKey.currentState!.validate() &&
                         ((remetenteText != null &&
                                 DropSearchRemet.idRemet == null) ||

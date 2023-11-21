@@ -36,6 +36,7 @@ dependencies:
   flutter_local_notifications: ^15.1.1
   cached_network_image: ^3.2.3
   date_time_picker: ^2.1.0
+  flutter_app_version_checker: ^0.3.2
 
 flutter_icons:  
   

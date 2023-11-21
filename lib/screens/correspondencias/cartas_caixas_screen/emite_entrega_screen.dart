@@ -58,7 +58,7 @@ class _EmiteEntregaScreenState extends State<EmiteEntregaScreen> {
 
     var url = Uri.parse(tipoCompara == 'codigo'
         //tipoCompara 1 CÓDIGO
-        ? '${Consts.apiPortaria}correspondencias/?fn=compararProtocolos&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&protocolo=$protocoloRetirada&protocoloentrega=${codigoConfirCrtl.text}&nomePortador=$nomePortador&documentoPortador=$documentoPortador'
+        ? '${Consts.apiPortaria}correspondencias/?fn=compararProtocolos&idcond=${FuncionarioInfos.idcondominio}&idunidade=$idunidade&protocolo=$protocoloRetirada&protocoloentrega=${codigoConfirCrtl.text}&nome_portador=$nomePortador&documento_portador=$documentoPortador'
         //tipoCompara 2 SENHA
         : '${Consts.apiPortaria}correspondencias/?fn=compararSenhaRetirada&idcond=${FuncionarioInfos.idcondominio}&idmorador=${widget.idMorador}&listacorrespondencias=$listEntregar&senha_retirada=$senhaCripto');
     var resposta = await http.get(url);

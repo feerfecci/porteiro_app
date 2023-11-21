@@ -108,7 +108,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 onPressed: () => launchUrl(
                     Uri.parse(
                         'https://www.portariaapp.com/seja-um-representante'),
-                    mode: LaunchMode.externalNonBrowserApplication),
+                    mode: LaunchMode.inAppWebView),
               ),
               buidListTile(
                 title: 'Política de privacidade',
@@ -128,14 +128,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 onPressed: () => launchUrl(
                     Uri.parse(
                         'https://www.portariaapp.com/indicar-para-amigos'),
-                    mode: LaunchMode.externalNonBrowserApplication),
+                    mode: LaunchMode.inAppWebView),
               ),
               buidListTile(
                 title: 'Central de Ajuda',
                 leading: Icons.support,
                 onPressed: () => launchUrl(
                     Uri.parse('https://www.portariaapp.com/central-de-ajuda'),
-                    mode: LaunchMode.externalNonBrowserApplication),
+                    mode: LaunchMode.inAppWebView),
               ),
               buidListTile(
                 title: 'Efetuar logoff',

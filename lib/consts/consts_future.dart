@@ -59,7 +59,8 @@ class ConstsFuture {
 
   static bool pageRouteFinished = false;
 
-  static fazerLogin(BuildContext context, String usuario, String senha) async {
+  static Future fazerLogin(
+      BuildContext context, String usuario, String senha) async {
     var senhaCripto = md5.convert(utf8.encode(senha)).toString();
     var url = Uri.parse(
         'https://a.portariaapp.com/api/login-funcionario/?fn=login-funcionario&usuario=$usuario&senha=$senhaCripto');
@@ -92,8 +93,13 @@ class ConstsFuture {
                         context,
                       );
                     } else {
-                      ConstsFuture.navigatorPushRemoveUntil(
-                          context, HomePage());
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(),
+                          ));
+                      // ConstsFuture.navigatorPushRemoveUntil(
+                      //     context, HomePage());
                     }
                   }));
         } else {
@@ -101,7 +107,7 @@ class ConstsFuture {
           return buildMinhaSnackBar(context, hasError: true);
         }
       } else {
-        await ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
+        // await ConstsFuture.navigatorPushRemoveUntil(context, LoginScreen());
         return buildMinhaSnackBar(context, hasError: true);
       }
     }
@@ -116,7 +122,7 @@ class ConstsFuture {
         // HomePage.qntEventos = value['reserva_espacos'].length;
         List listMap = value['reserva_espacos'];
         listMap.map((e) {
-          final dateReserva = DateTime.parse(e['data_reserva']);
+          final dateReserva = DateTime.parse(e['data_reserva_ini']);
 
           DateTime now = DateTime.now();
           int difference =
